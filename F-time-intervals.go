@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -83,21 +82,22 @@ func validateSyntaxAndPrepare(rawIntervals []string) ([]TimeInterval, error) {
 		rawFrom := raws[0]
 		rawTo := raws[1]
 
-		if !isRawValid(rawFrom) {
-			return timeIntervals, errors.New("time from is invalid")
-		}
-
-		if !isRawValid(rawTo) {
-			return timeIntervals, errors.New("time to is invalid")
-		}
-
 		preparedRawFrom := prepareStringDate(rawFrom)
 		preparedRawTo := prepareStringDate(rawTo)
 
 		//fmt.Fprintln(outf, "validateSyntaxAndPrepare STEP 1 >> rawFrom: ", rawFrom, "; rawTo: ", rawTo, "; preparedRawFrom: ", preparedRawFrom, "; preparedRawTo: ", preparedRawTo)
 
-		from := prepareDate(preparedRawFrom)
-		to := prepareDate(preparedRawTo)
+		from, errFrom := prepareDate(preparedRawFrom)
+
+		if errFrom != nil {
+			return timeIntervals, errors.New("time from is invalid")
+		}
+
+		to, errTo := prepareDate(preparedRawTo)
+
+		if errTo != nil {
+			return timeIntervals, errors.New("time to is invalid")
+		}
 
 		//fmt.Fprintln(outf, "validateSyntaxAndPrepare STEP 2 >> from: ", from, "; to: ", to)
 
@@ -107,51 +107,10 @@ func validateSyntaxAndPrepare(rawIntervals []string) ([]TimeInterval, error) {
 	return timeIntervals, nil
 }
 
-func prepareDate(str string) time.Time {
+func prepareDate(str string) (time.Time, error) {
 	t, err := time.Parse(time.RFC3339, str)
 
-	if err != nil {
-		defer outf.Flush()
-		panic(err)
-	}
-
-	return t
-}
-
-func isRawValid(raw string) bool {
-	raws := strings.Split(raw, ":")
-	rawHH := raws[0]
-	rawMM := raws[1]
-	rawSS := raws[2]
-
-	hh, err := strconv.Atoi(rawHH)
-	if err != nil {
-		return false
-	}
-
-	mm, err := strconv.Atoi(rawMM)
-	if err != nil {
-		return false
-	}
-
-	ss, err := strconv.Atoi(rawSS)
-	if err != nil {
-		return false
-	}
-
-	if hh < 0 || hh > 23 {
-		return false
-	}
-
-	if mm < 0 || mm > 59 {
-		return false
-	}
-
-	if ss < 0 || ss > 59 {
-		return false
-	}
-
-	return true
+	return t, err
 }
 
 func prepareStringDate(raw string) string {
