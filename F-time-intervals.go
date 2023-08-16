@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 	"time"
 )
@@ -14,6 +15,10 @@ var outf = bufio.NewWriter(os.Stdout)
 type TimeInterval struct {
 	from time.Time
 	to   time.Time
+}
+type AnalyzeResult struct {
+	result bool
+	number int
 }
 
 func readSet(in *bufio.Reader) []string {
@@ -47,6 +52,8 @@ func readSet(in *bufio.Reader) []string {
 }
 
 func readAndValidateTimeIntervals(in *bufio.Reader) {
+	c := make(chan AnalyzeResult)
+
 	var setsCount int
 
 	fmt.Fscan(in, &setsCount)
@@ -54,9 +61,23 @@ func readAndValidateTimeIntervals(in *bufio.Reader) {
 	for i := 0; i < setsCount; i++ {
 		var timeIntervals = readSet(in)
 
-		var isCorrect = areTimeIntervalsCorrect(timeIntervals)
+		go areTimeIntervalsCorrect(timeIntervals, i, c)
+	}
 
-		if isCorrect {
+	results := make([]AnalyzeResult, setsCount)
+
+	for i := 0; i < setsCount; i++ {
+		result := <-c
+
+		results[i] = result
+	}
+
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].number < results[j].number
+	})
+
+	for _, result := range results {
+		if result.result {
 			fmt.Fprintln(outf, "YES")
 		} else {
 			fmt.Fprintln(outf, "NO")
@@ -64,14 +85,14 @@ func readAndValidateTimeIntervals(in *bufio.Reader) {
 	}
 }
 
-func areTimeIntervalsCorrect(timeIntervals []string) bool {
+func areTimeIntervalsCorrect(timeIntervals []string, number int, channel chan AnalyzeResult) {
 	intervals, err := validateSyntaxAndPrepare(timeIntervals)
 
 	if err != nil {
-		return false
+		channel <- AnalyzeResult{result: false, number: number}
+	} else {
+		channel <- AnalyzeResult{result: validateIntervals(intervals), number: number}
 	}
-
-	return validateIntervals(intervals)
 }
 
 func validateSyntaxAndPrepare(rawIntervals []string) ([]TimeInterval, error) {
