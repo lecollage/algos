@@ -33,11 +33,9 @@ func readSet(in *bufio.Reader) []string {
 		22:42:50-23:17:46
 	*/
 
-	// read matrix description
+	// read set description
 	var intervalsCount int
 	fmt.Fscan(in, &intervalsCount)
-
-	//fmt.Fprintln(outf, intervalsCount)
 
 	// read intervals
 	var intervals = make([]string, intervalsCount)
@@ -72,14 +70,20 @@ func readAndValidateTimeIntervals(in *bufio.Reader) {
 		results[i] = result
 	}
 
+	printResults(results)
+}
+
+func printResults(results []AnalyzeResult) {
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].number < results[j].number
 	})
 
 	for _, result := range results {
 		if result.result {
+			//fmt.Fprintln(outf, "YES", i)
 			fmt.Fprintln(outf, "YES")
 		} else {
+			//fmt.Fprintln(outf, "NO", i)
 			fmt.Fprintln(outf, "NO")
 		}
 	}
@@ -125,6 +129,10 @@ func validateSyntaxAndPrepare(rawIntervals []string) ([]TimeInterval, error) {
 		timeIntervals = append(timeIntervals, TimeInterval{from: from, to: to})
 	}
 
+	sort.Slice(timeIntervals, func(i, j int) bool {
+		return timeIntervals[i].from.Before(timeIntervals[j].from)
+	})
+
 	return timeIntervals, nil
 }
 
@@ -140,29 +148,27 @@ func prepareStringDate(raw string) string {
 
 // (StartDate1 <= EndDate2) and (StartDate2 <= EndDate1)
 func validateIntervals(intervals []TimeInterval) bool {
-	for i, intervalOne := range intervals {
-		startDate := intervalOne.from
-		endDate := intervalOne.to
+	if len(intervals) == 1 {
+		return intervals[0].from.Before(intervals[0].to)
+	}
 
-		//fmt.Fprintln(outf, "validateIntervals STEP 1 >> startDate: ", startDate, "; endDate: ", endDate)
+	for i := 1; i < len(intervals); i++ {
+		startDatePrev := intervals[i-1].from
+		endDatePrev := intervals[i-1].to
 
-		if startDate.After(endDate) {
+		startDateNext := intervals[i].from
+		endDateNext := intervals[i].to
+
+		if startDatePrev.After(endDatePrev) || startDateNext.After(endDateNext) {
 			return false
 		}
 
-		for j := i + 1; j < len(intervals); j++ {
-			intervalTwo := intervals[j]
+		if endDatePrev.After(startDateNext) || endDatePrev.Equal(startDateNext) {
+			return false
+		}
 
-			startDate1 := intervalOne.from
-			startDate2 := intervalTwo.from
-			endDate1 := intervalOne.to
-			endDate2 := intervalTwo.to
-
-			//fmt.Fprintln(outf, "validateIntervals STEP 2 >> startDate1: ", startDate1, "; startDate2: ", startDate2, "; endDate1:", endDate1, "; endDate2:", endDate2)
-
-			if (startDate1.Before(endDate2) || startDate1.Equal(endDate2)) && (startDate2.Before(endDate1) || startDate2.Equal(endDate1)) {
-				return false
-			}
+		if startDatePrev.Equal(startDateNext) || endDatePrev.Equal(endDateNext) {
+			return false
 		}
 	}
 
