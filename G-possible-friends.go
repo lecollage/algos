@@ -66,7 +66,7 @@ func buildHostsGraph() {
 func buildPossibleFriendsGraph() {
 	results := make([]PossibleFriendsResult, 0)
 	for host := range hostsGraph {
-		fmt.Fprintln(outG, "buildPossibleFriendsGraph  >> host:", host, hostsGraph[host])
+		//fmt.Fprintln(outG, "buildPossibleFriendsGraph  >> host:", host, hostsGraph[host])
 
 		exceptions := make([]int, 0)
 		exceptions = append(exceptions, host)
@@ -127,7 +127,7 @@ func getPossibleFriends(friends []int, host int, exceptions []int) PossibleFrien
 		}
 	}
 
-	fmt.Fprintln(outG, "getPossibleFriends STEP 10 >> possibleFriendsGraph for :", host, possibleFriendsGraph)
+	//fmt.Fprintln(outG, "getPossibleFriends STEP 10 >> possibleFriendsGraph for :", host, possibleFriendsGraph)
 
 	// find the max of possible friends
 	max := 0
@@ -138,7 +138,7 @@ func getPossibleFriends(friends []int, host int, exceptions []int) PossibleFrien
 		}
 	}
 
-	fmt.Fprintln(outG, "getPossibleFriends STEP 11 >> max:", max)
+	//fmt.Fprintln(outG, "getPossibleFriends STEP 11 >> max:", max)
 
 	var possibleFriends = make([]int, 0)
 
@@ -149,7 +149,11 @@ func getPossibleFriends(friends []int, host int, exceptions []int) PossibleFrien
 		}
 	}
 
-	fmt.Fprintln(outG, "getPossibleFriends STEP 12 >> result:", possibleFriends)
+	sort.Slice(possibleFriends, func(i, j int) bool {
+		return possibleFriends[i] < possibleFriends[j]
+	})
+
+	//fmt.Fprintln(outG, "getPossibleFriends STEP 12 >> result:", possibleFriends)
 
 	return PossibleFriendsResult{
 		host:            host,
@@ -160,7 +164,7 @@ func getPossibleFriends(friends []int, host int, exceptions []int) PossibleFrien
 func main() {
 	buildHostsGraph()
 
-	fmt.Fprintln(outG, "hostsGraph:", hostsGraph)
+	//fmt.Fprintln(outG, "hostsGraph:", hostsGraph)
 
 	buildPossibleFriendsGraph()
 
