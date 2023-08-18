@@ -56,7 +56,6 @@ func getInputSlice() []int {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	return numbers(scanner.Text())
-
 }
 
 func readReportsAndAnalyze() {
@@ -74,12 +73,19 @@ func readReportsAndAnalyze() {
 		fmt.Fscan(inE, &setLength)
 
 		var items []int
-		items = getInputSlice()
 
-		//fmt.Println(items)
+		for j := 0; j < setLength; j++ {
+			var item int
+
+			fmt.Fscan(inE, &item)
+
+			items = append(items, item)
+		}
 
 		go analyzeItems(items, i, c)
 	}
+
+	//fmt.Println(results)
 
 	for i := 0; i < setsCount; i++ {
 		result := <-c
@@ -108,17 +114,16 @@ func printResultsE(results []AnalyzeResultE) {
 
 func analyzeItems(items []int, index int, c chan AnalyzeResultE) {
 	currentItem := items[0]
-	processedItems := make([]int, 0)
-	processedItems = append(processedItems, currentItem)
+	processedItems := make(map[int]bool)
+	processedItems[items[0]] = true
 
 	for _, item := range items {
 		if item != currentItem {
-			if !containsE(processedItems, item) {
-				processedItems = append(processedItems, item)
+			if !processedItems[item] {
+				processedItems[item] = true
 				currentItem = item
 			} else {
 				c <- AnalyzeResultE{index: index, result: false}
-
 				return
 			}
 		}
