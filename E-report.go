@@ -76,7 +76,7 @@ func readReportsAndAnalyze() {
 		var items []int
 		items = getInputSlice()
 
-		fmt.Println(items)
+		//fmt.Println(items)
 
 		go analyzeItems(items, i, c)
 	}
@@ -97,11 +97,11 @@ func printResultsE(results []AnalyzeResultE) {
 
 	for _, result := range results {
 		if result.result {
-			fmt.Fprintln(outE, "YES", result.index)
-			//fmt.Fprintln(outE, "YES")
+			//fmt.Fprintln(outE, "YES", result.index)
+			fmt.Fprintln(outE, "YES")
 		} else {
-			fmt.Fprintln(outE, "NO", result.index)
-			//fmt.Fprintln(outE, "NO")
+			//fmt.Fprintln(outE, "NO", result.index)
+			fmt.Fprintln(outE, "NO")
 		}
 	}
 }
@@ -128,7 +128,7 @@ func analyzeItems(items []int, index int, c chan AnalyzeResultE) {
 }
 
 func main() {
-	fmt.Println("START >> ")
+	//fmt.Println("START >> ")
 	readReportsAndAnalyze()
 
 	defer outE.Flush()
