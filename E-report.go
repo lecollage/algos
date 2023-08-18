@@ -4,12 +4,27 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 var inE = bufio.NewReader(os.Stdin)
 var outE = bufio.NewWriter(os.Stdout)
+
+type AnalyzeResultE struct {
+	result bool
+	index  int
+}
+
+func containsE[T comparable](s []T, e T) bool {
+	for _, v := range s {
+		if v == e {
+			return true
+		}
+	}
+	return false
+}
 
 /*
 5
@@ -49,6 +64,10 @@ func readReportsAndAnalyze() {
 
 	fmt.Fscan(inE, &setsCount)
 
+	c := make(chan AnalyzeResultE)
+
+	results := make([]AnalyzeResultE, setsCount)
+
 	for i := 0; i < setsCount; i++ {
 		var setLength int
 
@@ -58,7 +77,54 @@ func readReportsAndAnalyze() {
 		items = getInputSlice()
 
 		fmt.Println(items)
+
+		go analyzeItems(items, i, c)
 	}
+
+	for i := 0; i < setsCount; i++ {
+		result := <-c
+
+		results[i] = result
+	}
+
+	printResultsE(results)
+}
+
+func printResultsE(results []AnalyzeResultE) {
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].index < results[j].index
+	})
+
+	for _, result := range results {
+		if result.result {
+			fmt.Fprintln(outE, "YES", result.index)
+			//fmt.Fprintln(outE, "YES")
+		} else {
+			fmt.Fprintln(outE, "NO", result.index)
+			//fmt.Fprintln(outE, "NO")
+		}
+	}
+}
+
+func analyzeItems(items []int, index int, c chan AnalyzeResultE) {
+	currentItem := items[0]
+	processedItems := make([]int, 0)
+	processedItems = append(processedItems, currentItem)
+
+	for _, item := range items {
+		if item != currentItem {
+			if !containsE(processedItems, item) {
+				processedItems = append(processedItems, item)
+				currentItem = item
+			} else {
+				c <- AnalyzeResultE{index: index, result: false}
+
+				return
+			}
+		}
+	}
+
+	c <- AnalyzeResultE{index: index, result: true}
 }
 
 func main() {
