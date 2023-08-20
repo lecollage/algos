@@ -51,14 +51,8 @@ func buildDictionary() {
 	//fmt.Println("dictionaryWords: ", dictionaryWords)
 	//fmt.Println("requestWords: ", requestWords, requestWords[0], len(requestWords))
 
-	c := make(chan SubSuffixResult)
-
 	for i := 0; i < dictionarySize; i++ {
-		go addToSuffixDictionary(dictionaryWords[i], i, c)
-	}
-
-	for i := 0; i < dictionarySize; i++ {
-		result := <-c
+		result := addToSuffixDictionary(dictionaryWords[i], i)
 
 		for suffix, word := range result.subDictionary {
 			//fmt.Printf("suffix[%s] word[%s]\n", suffix, word)
@@ -66,15 +60,10 @@ func buildDictionary() {
 			suffixDictionary[suffix] = append(suffixDictionary[suffix], word)
 		}
 	}
-
-	//fmt.Println("suffixDictionary: ", suffixDictionary)
 }
 
-func addToSuffixDictionary(word string, i int, c chan SubSuffixResult) {
-	//substring := word[1:]
+func addToSuffixDictionary(word string, i int) SubSuffixResult {
 	subDictionary := make(map[string]string)
-
-	//subDictionary[substring] = word
 
 	for i := 0; i < len(word); i++ {
 		substring := word[i:]
@@ -82,7 +71,7 @@ func addToSuffixDictionary(word string, i int, c chan SubSuffixResult) {
 		subDictionary[substring] = word
 	}
 
-	c <- SubSuffixResult{index: i, subDictionary: subDictionary}
+	return SubSuffixResult{index: i, subDictionary: subDictionary}
 }
 
 func readWords(size int) []string {
