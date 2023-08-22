@@ -13,12 +13,12 @@ var outI = bufio.NewWriter(os.Stdout)
 type Processor struct {
 	index  int
 	energy int
-	tasks  []Task
 }
 
 type Task struct {
 	from int
 	to   int
+	time int
 }
 
 var processorsCount int
@@ -26,6 +26,8 @@ var tasksCount int
 
 var processors []Processor = make([]Processor, 0)
 var tasks []Task = make([]Task, 0)
+
+var busyTimes = make([]int, 0)
 
 /*
 4 7
@@ -43,6 +45,8 @@ var tasks []Task = make([]Task, 0)
 func readHeader() {
 	fmt.Fscan(inI, &processorsCount)
 
+	busyTimes = make([]int, processorsCount)
+
 	fmt.Fscan(inI, &tasksCount)
 }
 
@@ -57,7 +61,6 @@ func readProcessors() {
 		processors = append(processors, Processor{
 			index:  j,
 			energy: energy,
-			tasks:  make([]Task, 0),
 		})
 	}
 }
@@ -72,7 +75,7 @@ func readTasks() {
 
 		//fmt.Println("word: ", word)
 
-		tasks = append(tasks, Task{from: from, to: from + time})
+		tasks = append(tasks, Task{from: from, to: from + time, time: time})
 	}
 }
 
@@ -80,29 +83,21 @@ func sortProcessorsByEnergy() {
 	sort.Slice(processors, func(i, j int) bool {
 		return processors[i].energy < processors[j].energy
 	})
+
+	for i := 0; i < processorsCount; i++ {
+		busyTimes[i] = 0
+	}
 }
 
 func applyTasksToProcessors() int {
 	totalCost := 0
 
 	for _, task := range tasks {
-	out:
-		for i := 0; i < len(processors); i++ {
-			if len(processors[i].tasks) == 0 {
-				processors[i].tasks = make([]Task, 0)
-				processors[i].tasks = append(processors[i].tasks, task)
-				//fmt.Println("applyTasksToProcessors >> STEP 1 ", processors[i], task)
-
-				totalCost += (task.to - task.from) * processors[i].energy
-
-				break out
-			} else if processors[i].tasks[len(processors[i].tasks)-1].to <= task.from {
-				processors[i].tasks = append(processors[i].tasks, task)
-				//fmt.Println("applyTasksToProcessors >> STEP 2 ", processors[i], task)
-
-				totalCost += (task.to - task.from) * processors[i].energy
-
-				break out
+		for i := 0; i < processorsCount; i++ {
+			if busyTimes[i] <= task.from {
+				busyTimes[i] = task.to
+				totalCost += task.time * processors[i].energy
+				break
 			}
 		}
 	}
@@ -124,6 +119,7 @@ func main() {
 
 	//fmt.Println("processors: ", processors)
 	//fmt.Println("totalCost: ", totalCost)
+	//fmt.Println("busyTimes: ", busyTimes)
 
 	//calculateCost()
 	fmt.Fprintln(outI, totalCost)
