@@ -1,162 +1,100 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
-type LinkedListInput struct {
-	id    string
-	Next  string
-	value int
+var prices = make([]int, 0)
+var knownSums = make(map[string]int)
+var maxTransactionsCount = 0
+
+func buildKeyX3(price int, index int, sign int) string {
+	return fmt.Sprintf("%d|%d", index, price*sign)
 }
 
-type LinkedList struct {
-	Value int
-	Next  *LinkedList
+func isKnownSum(index int, sign int) bool {
+	key := buildKeyX3(prices[index], index, sign)
+	_, ok := knownSums[key]
+
+	return ok
 }
 
-type List struct {
-	head *LinkedList
+func getKnownSum(index int, sign int) int {
+	key := buildKeyX3(prices[index], index, sign)
+	value := knownSums[key]
+
+	return value
 }
 
-func (l *List) add(value int) {
-	newNode := &LinkedList{Value: value}
+func setSum(index int, sign int, profit int) {
+	key := buildKeyX3(prices[index], index, sign)
 
-	if l.head == nil {
-		l.head = newNode
-		return
-	}
-
-	curr := l.head
-	for curr.Next != nil {
-		curr = curr.Next
-	}
-
-	curr.Next = newNode
+	knownSums[key] = profit
 }
 
-func (l *List) len() int {
-	if l.head == nil {
-		return 0
+func calculateProfit(current int, sign int, transactionsCount int) int {
+	fmt.Println()
+	fmt.Println(`calculateProfit START >> current: `, current, `; sign: `, sign, `; transactionsCount: `, transactionsCount)
+	//if isKnownSum(current, sign) {
+	//	return getKnownSum(current, sign)
+	//}
+
+	if transactionsCount == 0 {
+		//if current == len(prices)-1 {
+		//	return math.MinInt
+		//}
+
+		return prices[current] * sign
 	}
 
-	len := 0
+	next := current + 1
 
-	curr := l.head
-	for curr.Next != nil {
-		curr = curr.Next
-		len++
+	if next == len(prices) {
+		return prices[current] * sign
 	}
 
-	return len + 1
-}
+	maxProfit := math.MinInt
+	for ; next < len(prices); next++ {
+		sum := sign * prices[next]
+		nextSign := sign * -1
+		profit := sum + calculateProfit(next, nextSign, transactionsCount-1)
 
-func (l *List) getKthNode(k int) *LinkedList {
-	if l.head == nil {
-		return nil
-	}
+		setSum(next, sign, profit)
 
-	curr := l.head
-	for k > 0 {
-		curr = curr.Next
-		k--
-	}
-
-	return curr
-}
-
-func printList(node *LinkedList) {
-	curr := node
-	for curr != nil {
-		fmt.Printf("%d ", curr.Value)
-
-		curr = curr.Next
-
-		if curr != nil {
-			fmt.Printf("-> ")
+		if profit > maxProfit {
+			maxProfit = profit
 		}
 	}
-	fmt.Println()
+
+	fmt.Println(`calculateProfit STEP 1 >> maxProfit: `, maxProfit)
+
+	return maxProfit
 }
 
-func ShiftLinkedList(head *LinkedList, rawK int) *LinkedList {
-	list := &List{head: head}
+func MaxProfitWithKTransactions(pricesPar []int, k int) int {
+	prices = pricesPar
+	maxTransactionsCount = k
+	transactionsCount := k * 2
 
-	if rawK == 0 {
-		return head
+	maxProfit := math.MinInt
+	for i := 0; i < len(prices)-1; i++ {
+		sign := -1
+		sum := sign * (prices[i])
+		nextSign := sign * -1
+		profit := sum + calculateProfit(i, nextSign, transactionsCount-1)
+
+		if profit > maxProfit {
+			maxProfit = profit
+		}
 	}
 
-	len := list.len()
-
-	if rawK == len {
-		return head
-	}
-
-	k := rawK
-
-	if rawK < 0 {
-		k = k + (len * (int((k * -1) / len)))
-		// fmt.Println("STEP 1 k: ", k)
-		k = len + k
-		// fmt.Println("STEP 2 k: ", k)
-	} else {
-		k = k - (len * (int(k / len)))
-	}
-
-	if k == 0 || k == len {
-		return head
-	}
-
-	move := len - k
-
-	// fmt.Println("new k: ", k, "; list.len: ", list.len(), "; rawK/list.len(): ", rawK/list.len())
-
-	// fmt.Println("move: ", move, "; k: ", k)
-
-	kNode := list.getKthNode(move - 1)
-
-	// fmt.Println("k node: ")
-	// printList(kNode)
-
-	lastNode := list.getKthNode(len - 1)
-
-	// fmt.Println("last node: ")
-	// printList(lastNode)
-
-	cutNode := kNode.Next
-
-	kNode.Next = nil
-
-	// get last node
-	lastNode.Next = head
-
-	// fmt.Println("result: ")
-	// printList(cutNode)
-
-	return cutNode
-}
-
-func prepareLinkedList(nodes *[]LinkedListInput) *LinkedList {
-	list := &List{}
-
-	for _, node := range *nodes {
-		list.add(node.value)
-	}
-
-	return list.head
+	return maxProfit
 }
 
 func main() {
-	nodes := []LinkedListInput{
-		{id: "0", Next: "1", value: 0},
-		{id: "1", Next: "2", value: 1},
-		{id: "2", Next: "3", value: 2},
-		{id: "3", Next: "4", value: 3},
-		{id: "4", Next: "5", value: 4},
-		{id: "5", Next: "", value: 5},
-	}
-
-	head := prepareLinkedList(&nodes)
-
-	// printList(head)
-	res := ShiftLinkedList(head, -6)
-	printList(res)
+	prices := []int{5, 11, 3, 50, 60, 90}
+	k := 2
+	fmt.Println("FINAL profit: ", MaxProfitWithKTransactions(prices, k))
+	//fmt.Println("knownSums: ", knownSums)
 }

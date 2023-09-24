@@ -1,5 +1,6 @@
-//// This example demonstrates an integer heap built using the heap interface.
-//package main
+// // This example demonstrates an integer heap built using the heap interface.
+package main
+
 //
 //import (
 //	"container/heap"
