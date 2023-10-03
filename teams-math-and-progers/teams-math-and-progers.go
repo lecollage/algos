@@ -72,54 +72,6 @@ var out = bufio.NewWriter(os.Stdout)
 2,2-3,1
 3,1-0,0
 
-		for current.maths > 0 && current.progers > 0 && current.maths+current.progers >= 4 {
-			if current.maths-current.progers >= 3 {
-				current.maths -= 3
-				current.progers -= 1
-			} else if current.progers-current.maths >= 3 {
-				current.maths -= 1
-				current.progers -= 3
-			} else {
-				current.maths -= 2
-				current.progers -= 2
-			}
-			teams++
-		}
-
-		for current.maths > 0 && current.progers > 0 && current.maths+current.progers >= 4 {
-			if current.maths-current.progers >= 3 {
-				current.maths -= 3
-				current.progers -= 1
-				teams++
-			} else if current.progers-current.maths >= 3 {
-				current.maths -= 1
-				current.progers -= 3
-				teams++
-			} else if current.progers+current.maths == 4 && current.progers != current.maths {
-				if current.maths > current.progers {
-					current.maths -= 3
-					current.progers -= 1
-				} else {
-					current.maths -= 1
-					current.progers -= 3
-				}
-				teams++
-			} else {
-				min := current.maths
-
-				if current.progers < current.maths {
-					min = current.progers
-				}
-
-				pairs := int(min / 2)
-				teams += pairs
-				current.progers -= (pairs * 2)
-				current.maths -= (pairs * 2)
-
-				// fmt.Println("2 >> ", current)
-			}
-		}
-
 */
 
 type Case struct {

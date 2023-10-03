@@ -29,12 +29,12 @@ YES
 */
 
 func readInput() ([]int, []int) {
-	var arraySize, searchArraySize int
+	var arraySize, targetsArraySize int
 	array := make([]int, 0)
-	searchArray := make([]int, 0)
+	targets := make([]int, 0)
 
 	fmt.Fscan(in, &arraySize)
-	fmt.Fscanln(in, &searchArraySize)
+	fmt.Fscanln(in, &targetsArraySize)
 
 	for i := 0; i < arraySize; i++ {
 		var elem int
@@ -43,32 +43,32 @@ func readInput() ([]int, []int) {
 		array = append(array, elem)
 	}
 
-	for i := 0; i < searchArraySize; i++ {
+	for i := 0; i < targetsArraySize; i++ {
 		var elem int
 		fmt.Fscan(in, &elem)
 
-		searchArray = append(searchArray, elem)
+		targets = append(targets, elem)
 	}
 
-	return array, searchArray
+	return array, targets
 }
 
-func find(array []int, search int) bool {
+func find(array []int, target int) bool {
 	left := 0
 	right := len(array) - 1
 
 	for right >= left {
 		middle := int((right + left) / 2)
 
-		if array[middle] == search {
+		if array[middle] == target {
 			return true
 		}
 
-		if array[middle] < search {
+		if array[middle] < target {
 			left = middle + 1
 		}
 
-		if array[middle] > search {
+		if array[middle] > target {
 			right = middle - 1
 		}
 	}
@@ -76,13 +76,13 @@ func find(array []int, search int) bool {
 	return false
 }
 
-func calculate(array []int, searchArray []int) []string {
+func calculate(array []int, targets []int) []string {
 	results := make([]string, 0)
 
-	for i := 0; i < len(searchArray); i++ {
+	for i := 0; i < len(targets); i++ {
 		result := "NO"
 
-		if find(array, searchArray[i]) {
+		if find(array, targets[i]) {
 			result = "YES"
 		}
 
@@ -94,11 +94,11 @@ func calculate(array []int, searchArray []int) []string {
 
 func main() {
 	// fmt.Println("START >> ")
-	array, searchArray := readInput()
+	array, targets := readInput()
 
 	// fmt.Println("1 >> ", array, searchArray)
 
-	results := calculate(array, searchArray)
+	results := calculate(array, targets)
 
 	for i := 0; i < len(results); i++ {
 		result := results[i]
