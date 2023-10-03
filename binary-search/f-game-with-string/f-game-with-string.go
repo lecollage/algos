@@ -107,26 +107,6 @@ func readInput() (string, string, []int) {
 	return t, p, array
 }
 
-// func getSubstring(t string, exclude []int) string {
-// 	if len(exclude) == 0 {
-// 		return t
-// 	}
-
-// 	result := ""
-
-// 	j := 0
-
-// 	for i := 0; i < len(t); i++ {
-// 		if exclude[j] == i {
-// 			j++
-// 		} else {
-// 			result += string(t[i])
-// 		}
-// 	}
-
-// 	return result
-// }
-
 func modifyString(t string, exclude []int) string {
 	if len(exclude) == 0 {
 		return t
@@ -189,23 +169,17 @@ func calculate(t, p string, array []int) int {
 	left := 0
 	right := len(t)
 
-	fmt.Println(left, right)
-	out.Flush()
-
 	stop := 20
 
-	for left < right {
+	for left+1 < right {
 		middle := int((left + right) / 2)
 		lettersToExclude := array[0:middle]
 		modified := modifyString(t, lettersToExclude)
 
-		fmt.Println(modified, lettersToExclude, left, middle, right)
-		out.Flush()
-
 		if doesInclude(p, modified) {
-			right = middle
-		} else {
 			left = middle
+		} else {
+			right = middle
 		}
 
 		if stop == 0 {
@@ -215,14 +189,14 @@ func calculate(t, p string, array []int) int {
 		stop--
 	}
 
-	return right - 1
+	return left
 }
 
 func main() {
 	// fmt.Println("START >> ")
 	t, p, array := readInput()
 
-	fmt.Println("1 >> ", t, p, array)
+	// fmt.Println("1 >> ", t, p, array)
 
 	result := calculate(t, p, array)
 
