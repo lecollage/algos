@@ -18,6 +18,9 @@ max(|xi-x|/vi) <= T
 |xi-x|/vi <= T, i=1..n
 |xi-x| <= T*vi
 
+xi+T*vi, xi-T*vi = x
+
+[xi−t⋅vi, xi+t⋅vi]
 */
 
 package main
@@ -25,6 +28,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 )
 
@@ -46,7 +50,7 @@ var out = bufio.NewWriter(os.Stdout)
 
 type Person struct {
 	x int
-	y int
+	v int
 }
 
 func readInput() []Person {
@@ -57,25 +61,62 @@ func readInput() []Person {
 	array := make([]Person, 0)
 
 	for i := 0; i < arrayLength; i++ {
-		var x, y int
+		var x, v int
 		fmt.Fscan(in, &x)
-		fmt.Fscan(in, &y)
-		array = append(array, Person{x: x, y: y})
+		fmt.Fscan(in, &v)
+		array = append(array, Person{x: x, v: v})
 	}
 
 	return array
 }
 
-func calculate(people []Person) int {
-	right := 1
+func good(t float64, people []Person) bool {
+	maxL := float64(math.MinInt)
+	minK := float64(math.MaxInt)
 
-	return right
+	for _, person := range people {
+		// [xi−t⋅vi, xi+t⋅vi]
+		l := float64(person.x) - t*float64(person.v)
+		k := float64(person.x) + t*float64(person.v)
+
+		if l > maxL {
+			maxL = l
+		}
+
+		if k < minK {
+			minK = k
+		}
+	}
+
+	// fmt.Println("4 >> ", x, c, eq)
+
+	return maxL < minK
+}
+
+func calculate(people []Person) float64 {
+	var left float64 = 0
+	var right float64 = 500
+	var middle float64 = 0
+
+	// fmt.Println("3 >> ", left, right)
+
+	for i := 0; i < 100; i++ {
+		middle = (right + left) * 0.5
+
+		if good(middle, people) {
+			right = middle
+		} else {
+			left = middle
+		}
+	}
+
+	return middle
 }
 
 func main() {
 	people := readInput()
 
-	fmt.Println("1 >> ", people)
+	// fmt.Println("1 >> ", people)
 
 	result := calculate(people)
 
