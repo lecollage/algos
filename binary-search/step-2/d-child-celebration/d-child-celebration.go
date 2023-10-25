@@ -163,8 +163,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
-	"sort"
 )
 
 var in = bufio.NewReader(os.Stdin)
@@ -205,199 +205,97 @@ func readInput() ([]Worker, int) {
 	return array, m
 }
 
-// после надувания zi шариков устает и отдыхает yi минут
-func calculateLengths(workers []Worker, baloonsCount int) []int {
-	lenghts := make([]int, 0)
-
-	for _, worker := range workers {
-		lenght := worker.t * baloonsCount
-		var restCount int
-
-		if baloonsCount%worker.z == 0 {
-			restCount = baloonsCount / worker.z
-		} else {
-			restCount = int(baloonsCount / worker.z)
-		}
-
-		lenght += worker.y * restCount
-		lenghts = append(lenghts, lenght)
-	}
-
-	return lenghts
-}
-
-func getMaxLength(lengths []int) int {
-	max := lengths[0]
-
-	for _, l := range lengths {
-		if l > max {
-			max = l
-		}
-	}
-
-	return max
-}
-
 /*
--OXXX
-OOXXO0
+si = zi * ti + yi
+Tfull=T/si
+
+1 2
+2 1 1
+1 1 2
+-> 1
 
 
--OXXX|
-OOXXO|
-| -> 0
-0| -> 1 availTime / t
 
-OOX|
-
-OOXX|O
+3 2
+2 2 5
+1 1 10
+-> 4
 */
 
-func howManyBaloonsMayProduce(availableTime int, worker Worker) int {
-	if availableTime < worker.t {
-		return 0
-	}
-
-	if availableTime/worker.t <= worker.z {
-		return int(availableTime / worker.t)
-	}
-
-	// 1
-	// workTime := worker.t * worker.z
-	// restTime := worker.y
-	// sessionTime := workTime + restTime
-
-	// availableTime -= sessionTime
-
-	// return worker.z + howManyBaloonsMayProduce(availableTime, worker)
-
-	// 2
-	// baloons := 0
-
-	// for availableTime > 0 {
-	// 	for i := 0; i < worker.z; i++ {
-	// 		availableTime -= worker.t
-
-	// 		if availableTime < 0 {
-	// 			return baloons
-	// 		}
-
-	// 		baloons++
-	// 	}
-
-	// 	availableTime -= worker.y
-	// }
-
-	// 3
-
-	if availableTime%(worker.t*worker.z+worker.y) == 0 {
-		return availableTime / (worker.t*worker.z + worker.y)
-	}
-
-	sessions := availableTime / (worker.t*worker.z + worker.y)
-	baloons := sessions * worker.z
-
-	availableTime -= sessions * (worker.t*worker.z + worker.y)
-
-	for availableTime > 0 {
-		for i := 0; i < worker.z; i++ {
-			availableTime -= worker.t
-
-			if availableTime < 0 {
-				return baloons
-			}
-
-			baloons++
-		}
-
-		availableTime -= worker.y
-	}
-
-	return baloons
-}
-
-func canProduceBaloons(availableTime int, workers []Worker, baloonsCount int) (bool, []Worker) {
+func canProduceBaloons(time int, workers []Worker, baloonsCount int) bool {
 	commonBaloonsCount := 0
-	busyWorkers := make([]Worker, 0)
 
 	for _, worker := range workers {
-		// fmt.Println("7 >> worker: ", worker, availableTime, howManyBaloonsMayProduce(availableTime, worker))
-		workerBaloons := howManyBaloonsMayProduce(availableTime, worker)
-		busyWorkers = append(busyWorkers, Worker{t: worker.t, z: worker.z, y: worker.y, work: workerBaloons, id: worker.id})
-		commonBaloonsCount += workerBaloons
+		cycleTime := worker.z*worker.t + worker.y
+		fullCyclesCount := int(time / cycleTime)
 
-		// fmt.Println("8 >> commonBaloonsCount: ", commonBaloonsCount)
+		commonBaloonsCount += fullCyclesCount * worker.z
+
+		restTime := time % cycleTime
+		restBaloonsCount := int(restTime / worker.t)
+
+		if restBaloonsCount <= worker.z {
+			commonBaloonsCount += restBaloonsCount
+		} else {
+			commonBaloonsCount += worker.z
+		}
+
 		if commonBaloonsCount >= baloonsCount {
-			return true, busyWorkers
+			return true
 		}
 	}
 
-	// fmt.Println("9 >> commonBaloonsCount: ", commonBaloonsCount)
-
-	return false, busyWorkers
+	return false
 }
 
-func calculate(workers []Worker, baloonsCount int) (int, []Worker) {
-	lengths := calculateLengths(workers, baloonsCount)
-	maxLength := getMaxLength(lengths)
+func calculate(workers []Worker, baloonsCount int) int {
+	var left int = -1
+	var right int = math.MaxInt
 
-	// fmt.Println("5 >> lengths: ", lengths, "; maxLength: ", maxLength)
-
-	var left int = baloonsCount
-	var right int = maxLength
-
-	for left != right {
+	for left+1 < right {
 		var middle = int((left + right) / 2)
-		var can bool
 
-		// fmt.Println("6 >> lengths: ", left, middle, right)
-		can, workers = canProduceBaloons(middle, workers, baloonsCount)
-		if can {
+		if canProduceBaloons(middle, workers, baloonsCount) {
 			right = middle
 		} else {
 			left = middle
 		}
 	}
 
-	return left, workers
-}
-
-func findWorkerById(workers []Worker, id int) *Worker {
-	for i := 0; i < len(workers); i++ {
-		if workers[i].id == id {
-			return &workers[i]
-		}
-	}
-
-	return nil
+	return right
 }
 
 func main() {
 	// fmt.Println("START >> ")
 	workers, baloonsCount := readInput()
+	time := calculate(workers, baloonsCount)
 
-	sort.Slice(workers, func(i, j int) bool {
-		return workers[i].t < workers[j].t
-	})
+	fmt.Println(time)
 
-	// fmt.Println("1 >> ", workers, baloonsCount)
+	requiredBaloonsCount := baloonsCount
 
-	minLength, busyWorkers := calculate(workers, baloonsCount)
+	for _, worker := range workers {
+		cycleTime := worker.z*worker.t + worker.y
+		fullCyclesCount := int(time / cycleTime)
+		currBaloonsCount := fullCyclesCount * worker.z
+		restTime := time % cycleTime
+		restBaloonsCount := int(restTime / worker.t)
 
-	sort.Slice(workers, func(i, j int) bool {
-		return workers[i].id < workers[j].id
-	})
-
-	fmt.Println(minLength)
-	// fmt.Println("busyWorkers: ", busyWorkers)
-	for i := 0; i < len(workers); i++ {
-		busyWorker := findWorkerById(busyWorkers, workers[i].id)
-
-		if busyWorker != nil {
-			fmt.Print(busyWorker.work, " ")
+		if restBaloonsCount <= worker.z {
+			currBaloonsCount += restBaloonsCount
 		} else {
-			fmt.Print("0 ")
+			currBaloonsCount += worker.z
 		}
+
+		if requiredBaloonsCount <= 0 {
+			fmt.Print(0, " ")
+		} else if requiredBaloonsCount < currBaloonsCount {
+			fmt.Print(requiredBaloonsCount, " ")
+		} else {
+			fmt.Print(currBaloonsCount, " ")
+		}
+
+		requiredBaloonsCount -= currBaloonsCount
 	}
 
 	defer out.Flush()
