@@ -24,63 +24,68 @@ process.stdin.on("end", (_) => {
 function readline() {
     return inputString[currentLine++];
 }
-/*
 
-
-*/
-
-const calcMaxCost = (arrA, arrB, maxWeight, w1, w2) => {
-    let i = 0, j = 0, restWeight = maxWeight, cost = 0
-
-    while((restWeight >= w1 || restWeight >= w2) && (i < arrA.length || j < arrB.length)) {
-        if((i < arrA.length && restWeight >= w1 && arrA[i]*w2 >= arrB[j]*w1) || j === arrB.length || w2 > restWeight) {
-            cost += arrA[i]
-            restWeight -= w1
-            i++
-        } else {
-            cost += arrB[j]
-            restWeight -= w2
-            j++
-        }
+const calcMaxCost = (arrA, arrB, maxWeight, weightA, weightB) => {
+    if(maxWeight < weightA && maxWeight < weightB) {
+        return 0
     }
 
-    console.log(i, j, arrA[i], arrB[j])
+    // берём только из первого
+    const maxA = Math.min(Math.trunc(maxWeight / weightA), arrA.length)
+    const prefixSumsA = new Array(maxA)
+    let costA = 0
 
-    // if (arrA[i] * w2 < arrB[j] * w1) {
-    //     restWeight += w1
-    //     cost -= arrA[i]
+    for(let i = 0; i < maxA; i++) {
+        costA += arrA[i]
+        prefixSumsA[i] = costA
+    }
 
-    //     restWeight -= w2
-    //     cost += arrB[j]
-    // } else {
-    //     restWeight += w2
-    //     cost -= arrB[j]
+    // берём только из второго
+    const maxB = Math.min(Math.trunc(maxWeight / weightB), arrB.length)
+    const prefixSumsB = new Array(maxB)
+    let costB = 0
 
-    //     restWeight -= w1
-    //     cost += arrA[i]
-    // }
+    for(let i = 0; i < maxB; i++) {
+        costB += arrB[i]
+        prefixSumsB[i] = costB
+    }
+
+    // инит суммы
+    let maxCost = Math.max(costA, costB)
+
+    // берём из первого и из второго
+    for(let i = 0; i < arrA.length; i++) {
+        let currentCost = 0, restWeight = maxWeight;
+
+        restWeight -= (i+1) * weightA
+
+        if(restWeight < 0) {
+            return maxCost
+        }
+
+        currentCost += prefixSumsA[i]
+
+        const j = Math.min(Math.trunc(restWeight / weightB), arrB.length)
+
+        restWeight -= j * weightB
+
+        if(j > 0) {
+            currentCost += prefixSumsB[j-1]
+        }
+
+        maxCost = Math.max(maxCost, currentCost)
+    }
 
 
-    return cost
+    return Math.max(maxCost, costA, costB)
 }
-/**
-23 - 5 = 18; 12
-18 - 5 = 13; 22
-13 - 5 = 7;  31
-7  - 3 = 4;  39
-4  - 3 = 1;  46
-
-23 - 3 - 5 - 3 - 5 - 5 = 2
-8 + 12 + 7 + 10 + 9 = 46
- */
-
 
 function main() {
     const [, , s, A, B] = readline().split(' ').map(Number)
     const arrA = readline().split(' ').map(Number).sort((a, b) => b - a)
     const arrB = readline().split(' ').map(Number).sort((a, b) => b - a)
 
-    console.log(s, A, B, arrA, arrB)
+    // console.log(s, A, B, arrA, arrB)
     
     console.log(calcMaxCost(arrA, arrB, s, A, B))
 }
@@ -95,4 +100,56 @@ n, m, s, A, B
 
 выходные данные
 47
+
+
+
+входные данные
+6 7 16 3 5
+7 4 3 1 5 8
+10 12 7 3 8 9 7
+
+выходные данные
+37
+
+
+
+входные данные
+6 7 5 3 5
+7 4 3 1 5 8
+10 12 7 3 8 9 7
+
+выходные данные
+12
+
+
+
+входные данные
+6 7 4 3 5
+7 4 3 1 5 8
+10 12 7 3 8 9 7
+
+выходные данные
+8
+
+
+
+
+входные данные
+6 7 2 3 5
+7 4 3 1 5 8
+10 12 7 3 8 9 7
+
+выходные данные
+0
+
+
+
+
+входные данные
+6 7 19 3 5
+7 4 3
+10 12
+
+выходные данные
+36
 */
