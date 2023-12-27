@@ -25,6 +25,7 @@ function readline() {
     return inputString[currentLine++];
 }
 
+/*
 const calcMaxCost = (arrA, arrB, maxWeight, weightA, weightB) => {
     if(maxWeight < weightA && maxWeight < weightB) {
         return 0
@@ -78,6 +79,41 @@ const calcMaxCost = (arrA, arrB, maxWeight, weightA, weightB) => {
 
 
     return Math.max(maxCost, costA, costB)
+}
+*/
+
+const calcMaxCost = (arrA, arrB, maxWeight, weightA, weightB) => {
+    // преф суммы A
+    arrA.unshift(0)
+
+    for (let i = 1; i < arrA.length; i++) {
+        arrA[i] += arrA[i-1]
+    }
+
+    // преф суммы B
+    arrB.unshift(0)
+
+    for (let i = 1; i < arrB.length; i++) {
+        arrB[i] += arrB[i-1]
+    }
+
+    let maxCost = 0, j = arrB.length - 1
+
+    for(let i = 0; i < arrA.length; i++) {
+        let remainingWeightB = maxWeight - i * weightA
+
+        if(remainingWeightB < 0) {
+            return maxCost
+        }
+
+        while(j * weightB > remainingWeightB) {
+            j--
+        }
+
+        maxCost = Math.max(maxCost, arrA[i] + arrB[j])
+    }
+
+    return maxCost
 }
 
 function main() {
