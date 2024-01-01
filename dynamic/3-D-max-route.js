@@ -2,7 +2,7 @@
  * @param {number} mtx
  * @return {number}
  */
-var calcMostExpensivePath = function(mtx) {
+var calcMostExpensivePath_1 = function(mtx) {
     if(!mtx?.length) {
         return {
             sum: 0,
@@ -77,6 +77,57 @@ var calcMostExpensivePath = function(mtx) {
     }
 };
 
+var calcMostExpensivePath_2 = function(mtx) {
+    if(!mtx?.length) {
+        return {
+            sum: 0,
+            path: [],
+        }
+    }
+
+    // add paddings (two lines of zeros)
+    let n = mtx[0]?.length || 0
+
+    mtx.unshift(new Array(n).fill(0))
+    
+    const m = mtx.length
+    
+    for(let i = 0; i < m; i++) {
+        mtx[i].unshift(0)
+    }
+
+    n++
+
+    // do the calculation
+    for(let i = 1; i < m; i++) {
+        for(let j = 1; j < n; j++) {
+            mtx[i][j] += Math.max(mtx[i - 1][j], mtx[i][j - 1])
+        }
+    }
+
+    // calc the max path
+    let i = m - 1, j = n - 1
+    const path = []
+
+    while(i * j !== 1) {
+        const left = mtx[i][j - 1]
+        const top = mtx[i - 1][j]
+
+        if(top > left) {
+            i--
+            path.push('D')
+        } else {
+            j--
+            path.push('R')
+        }
+    }
+
+    return {
+        sum: mtx[m - 1][n - 1],
+        path: path.reverse(),
+    }
+};
+
 [
     [],
     [[1]],
@@ -90,7 +141,7 @@ var calcMostExpensivePath = function(mtx) {
         [9, 9, 9, 9, 9]
     ]
 ].forEach((mtx) => {
-    const {sum, path} = calcMostExpensivePath(mtx)
+    const {sum, path} = calcMostExpensivePath_2(mtx)
     console.log(sum);
     console.log(path);
     console.log();
