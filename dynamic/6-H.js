@@ -28,7 +28,7 @@ var calcPathsCount = function(N, M) {
     //     const x = []
     //     for(let i = 2, j = artI; i <= artI && j > 1; i++, j--) {
     //         x.push(`${i},${j}`)
-
+    
     //         mtx[i][j] += mtx[i-2][j-1] + mtx[i-2][j+1] + mtx[i-1][j-2] + mtx[i+1][j-2]
     //     }
     //     console.log(x.join(';'))
