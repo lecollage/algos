@@ -30,7 +30,7 @@ var calc = (mtx) => {
       }
     }
     
-    console.log(mtx)
+    // console.log(mtx)
 
     return mtx[maxI][maxJ]
 }
