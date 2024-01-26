@@ -37,15 +37,6 @@ const calc = (N) => {
   return steps[N]
 }
 
-
-/*
-5
-3 1 1
-
-3
-3
-*/
-
 [
   10,
   3,
