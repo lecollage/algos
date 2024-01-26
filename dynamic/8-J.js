@@ -20,7 +20,7 @@ var calc = (mtx) => {
     for(let i = 1; i < mtx.length; i++) {
       for(let j = 1; j < mtx[0].length; j++) {
         if(mtx[i][j] !== 0){
-          mtx[i][j] = Math.min(...[mtx[i-1][j], mtx[i][j-1], mtx[i-1][j-1]]) + 1
+          mtx[i][j] = Math.min(mtx[i-1][j], mtx[i][j-1], mtx[i-1][j-1]) + 1
         }
 
         if(mtx[i][j] > mtx[maxI][maxJ]) {

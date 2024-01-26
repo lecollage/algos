@@ -16,6 +16,8 @@ const calc = (arr) => {
     }
 
     // Arrange
+    arr.sort((a, b) => a - b)
+
     const dp = new Array(arr.length)
 
     for(let i = 0; i < arr.length; i++) {
@@ -26,14 +28,12 @@ const calc = (arr) => {
     dp[0][0] = 0
     dp[0][1] = 0
 
-    dp[1][0] = 0
+    dp[1][0] = arr[1] - arr[0]
     dp[1][1] = arr[1] - arr[0]
 
-    dp[2][0] = dp[1][1]
-    dp[2][1] = dp[1][1] + (arr[2] - arr[1])
 
     // calc
-    for(let i = 3; i < arr.length; i++) {
+    for(let i = 2; i < arr.length; i++) {
       dp[i][0] = dp[i-1][1]
       dp[i][1] = Math.min(dp[i-1][0], dp[i-1][1]) + (arr[i] - arr[i-1])
 
