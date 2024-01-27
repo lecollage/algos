@@ -7,6 +7,10 @@ const calc = (N) => {
     return 0
   }
 
+  if(N === 1) {
+    return 8
+  }
+
   // Arrange
   const dp = new Array(N)
 
