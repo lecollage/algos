@@ -7,12 +7,30 @@ const calc = (N) => {
     return ''
   }
 
-  const steps = new Array(N+1).fill(0)
+  const steps = new Array(3 * N+1).fill(N)
 
-  for(let i = 2; i < N+1; i++) {
-    steps[i] = Math.min(steps[i-1], i%2===0 ? steps[i/2] : N, i%3===0 ? steps[i/3] : N) + 1
+  // for(let i = 2; i < N+1; i++) {
+  //   steps[i] = Math.min(steps[i-1], i%2===0 ? steps[i/2] : N, i%3===0 ? steps[i/3] : N) + 1
+  // }
+  steps[1] = 0;
+  for(let i = 1; i < N; i++) {
+    steps[i+1] += steps[i];
+    steps[i*2] = Math.min(steps[i*2], steps[i] + 1);
+    steps[i*3] = Math.min(steps[i*3], steps[i] + 1); 
   }
 
+
+  
+  /* N = 10
+  N 0 N N N N N N N N N N N N N N N N N N N N N N N N N N N N
+  N 0 1 1 N N N N N N N N N N N N N N N N N N N N N N N N N N
+  N 0 1 1 2 N 2 N N N N N N N N N N N N N N N N N N N N N N N
+
+
+
+
+  N 0 1 1 2 3 2 N N 2 3 N N N N N N N N N 4 N N N N N N N N N
+  */
   let i = N
   const operations = []
 
@@ -49,3 +67,5 @@ const calc = (N) => {
     console.log(count);
     console.log();
 })
+
+// (((((1*3*3*3+1)*3+1)*2*2*2+1)*2+1)*2*2+1)*3*2
