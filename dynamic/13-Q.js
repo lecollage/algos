@@ -34,8 +34,6 @@ const calc = (str) => {
 
   dp.forEach(row => console.log(...row))
 
-  // console.log(JSON.stringify(dp, null, 2))
-
   return dp[0][L-1]
 }
 
@@ -43,6 +41,11 @@ const calc = (str) => {
   'HTEOLFEOLEH',
   'ABCDEF',
   'THISISEASI',
+  'AAA',
+  'AACCA',
+  'ABAA',
+  'CABAAC1',
+  '',
 ].forEach(N => {
     console.log(N)
     const count = calc(N)
