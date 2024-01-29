@@ -17,8 +17,8 @@ const calc = (str) => {
   }
 
   // Init
-  for(let i = 0, j = 0; i < L; i++, j++) {
-    dp[i][j] = 1
+  for(let i = 0; i < L; i++) {
+    dp[i][i] = 1
   }
 
   // Calc
@@ -45,6 +45,8 @@ const calc = (str) => {
   'AACCA',
   'ABAA',
   'CABAAC1',
+  'AA',
+  'AAAA',
   '',
 ].forEach(N => {
     console.log(N)
