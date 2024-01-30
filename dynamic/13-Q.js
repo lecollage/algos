@@ -34,6 +34,24 @@ const calc = (str) => {
 
   dp.forEach(row => console.log(...row))
 
+  const result = []
+  let i = 0, j = L - 1
+  while (i < j) {
+      if (str[i] === str[j]) {
+          result.push(str[i])
+          console.log(`i,j: `, i,j)
+          i += 1
+          j -= 1
+      } else if (dp[i][j - 1] > dp[i + 1][j]) {
+          j -= 1
+      } else {
+          i += 1
+      }
+  }
+
+  console.log(`i, j: `, i, j)
+  console.log(`result: `, [...result, ...result.reverse()])
+
   return dp[0][L-1]
 }
 
