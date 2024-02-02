@@ -28,7 +28,7 @@ const calcHelper = (nums, startFrom, memo) => {
  * @param {number[]} arr
  * @return {string}
  */
-const calc = (numsб) => {
+const calc = (nums) => {
   if(!nums?.length) {
     return 0
   }
