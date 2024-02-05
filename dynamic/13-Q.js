@@ -26,9 +26,14 @@ const calc = (str) => {
 
   for(let d = 0; d < diagCnt; d++) {
     for(let i = 0, j = d + 1; j < L; i++, j++) {
-      const add = str[i] === str[j] ? 2 : 0
+      // const add = str[i] === str[j] ? 2 : 0
 
-      dp[i][j] = Math.max(dp[i+1][j-1] + add, dp[i+1][j], dp[i][j-1])
+      // dp[i][j] = Math.max(dp[i+1][j-1] + add, dp[i+1][j], dp[i][j-1])
+      if (str[i] === str[j]) {
+        dp[i][j] = dp[i+1][j-1] + 2
+      } else {
+        dp[i][j] = Math.max(dp[i][j-1], dp[i+1][j])
+      }
     }
   }
 
@@ -39,7 +44,7 @@ const calc = (str) => {
   while (i < j) {
       if (str[i] === str[j]) {
           result.push(str[i])
-          console.log(`i,j: `, i,j)
+          // console.log(`i,j: `, i,j)
           i += 1
           j -= 1
       } else if (dp[i][j - 1] > dp[i + 1][j]) {
@@ -49,10 +54,11 @@ const calc = (str) => {
       }
   }
 
-  console.log(`i, j: `, i, j)
-  console.log(`result: `, [...result, ...result.reverse()])
+  // console.log(`i, j: `, i, j)
+  const resStr = [...result, i === j ? str[i] : '', ...result.reverse()]
+  console.log(resStr)
 
-  return dp[0][L-1]
+  return [dp[0][L-1], resStr.join('')]
 }
 
 [
@@ -76,5 +82,23 @@ const calc = (str) => {
 /*
 0 1 2 3 4 5 6 7 8 9
 T H I S I S E A S I
+
+THISISEASI
+
+ISISEASI
+
+
+HTEOLFEOLEH
+1 1 1 1 1 1 3 3 3 5 7
+0 1 1 1 1 1 3 3 3 5 5
+0 0 1 1 1 1 3 3 3 5 5
+0 0 0 1 1 1 1 3 3 3 3
+0 0 0 0 1 1 1 1 3 3 3
+0 0 0 0 0 1 1 1 1 3 3
+0 0 0 0 0 0 1 1 1 3 3
+0 0 0 0 0 0 0 1 1 1 1
+0 0 0 0 0 0 0 0 1 1 1
+0 0 0 0 0 0 0 0 0 1 1
+0 0 0 0 0 0 0 0 0 0 1
 
 */

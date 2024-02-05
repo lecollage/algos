@@ -10,6 +10,7 @@ const calcHelper = (n, i, memo) => {
   const key = `${n}:${i}`
 
   if(memo.has(key)) {
+    console.log(key, memo.get(key))
     return memo.get(key)
   }
 
