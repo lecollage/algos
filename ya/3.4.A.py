@@ -1,19 +1,21 @@
-steps = []
+    
+def solve(n):    
+    steps = []
 
-def hanoiTower(n, fromPeg, toPeg):
-    if n == 1: 
+    def hanoiTower(n, fromPeg, toPeg):
+        if n == 1: 
+            # print(fromPeg, toPeg)
+            return steps.append([fromPeg, toPeg])
+        unusedPeg = 6 - fromPeg - toPeg
+
+        hanoiTower(n-1, fromPeg, unusedPeg)
         # print(fromPeg, toPeg)
-        return steps.append([fromPeg, toPeg])
-    unusedPeg = 6 - fromPeg - toPeg
-
-    hanoiTower(n-1, fromPeg, unusedPeg)
-    # print(fromPeg, toPeg)
-    steps.append([fromPeg, toPeg])
-    hanoiTower(n-1, unusedPeg, toPeg)
+        steps.append([fromPeg, toPeg])
 
 
 N = int(input())
-hanoiTower(N, 1, 3)
+solve(N, 1, 3)
+steps = []
 
 print(len(steps))
 for step in steps:
