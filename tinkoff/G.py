@@ -1,4 +1,4 @@
-def calc(N: int, path):
+def calc(N: int, path): 
     # print(N, path)
     if N == 0:
         print(path)

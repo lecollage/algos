@@ -1,16 +1,19 @@
 def calc(N: int, K: int, path):
     if K == 0:
         print(' '.join([str(i) for i in path]))
-        return
+        return []
 
     for i in range(K, N): 
-        calc(i, K-1, [*path, i]) 
+        newPath = [*path, calc(i, K-1) ]
     
 
 N, K = map(int, input().split())
 
 for i in range(K, N+1):
-        calc(i, K-1, [i])
+        calc(i, K-1)
+
+
+
 
 '''
 5 3
