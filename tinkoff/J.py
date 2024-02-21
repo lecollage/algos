@@ -8,38 +8,58 @@ dict = {
     "]": ["(", ")", "[", "]"],
 }
 
-def calc(N: int, stack: List[int], path: str): 
-    # print(N, stack, path)
-
-    if N == 0 and not stack:
-        print(' '.join([str(i) for i in path]))
-        print()
-        return
+def pathIsCorrect(path: List[int]):
+    if path[-1] == "(" or path[-1] == "[":
+        return False
+     
+    stack = []
     
-    if N == 0:
-        return 
-
-    possibleElems = dict[stack[-1]] if stack else dict[""]
-
-    # print(possibleElems)
-    
-    for el in possibleElems:
+    for el in path:
         if stack:
             if stack[-1] == "(" and el == ")":
                 stack.pop()
-                calc(N-1, stack, [*path, ")"])
             elif stack[-1] == "[" and el == "]":
                 stack.pop()
-                calc(N-1, stack, [*path, "]"])
+            else:
+                stack.append(el)
         else:
-            calc(N-1, [*stack, el], [*path, el])
+            stack.append(el)
+
+    return True if not stack else False
+     
+
+
+def calc(N: int, stack: List[int]): 
+    if N == 0:
+        if pathIsCorrect(stack):
+            print(''.join([str(i) for i in stack]))
+        return
+    
+    possibleElems = ["(","[",  ")", "]"]
+
+    for el in possibleElems:
+            calc(N-1, [*stack, el])
     
   
-
-
 N = int(input())
 
-calc(N, [], "")
+calc(N, [])
+
+# print(pathIsCorrect("()") == True)
+# print(pathIsCorrect("[]") == True)
+# print(pathIsCorrect("[") == False)
+# print(pathIsCorrect("(") == False)
+# print(pathIsCorrect("[]]") == False)
+# print(pathIsCorrect("[])") == False)
+# print(pathIsCorrect("[[])") == False)
+# print(pathIsCorrect("[(])") == False)
+# print(pathIsCorrect("[()]") == True)
+# print(pathIsCorrect("[[]]") == True)
+# print(pathIsCorrect("(())") == True)
+# print(pathIsCorrect("(()") == False)
+# print(pathIsCorrect("(()]") == False)
+# print(pathIsCorrect("]") == False)
+# print(pathIsCorrect(")") == False)
 
 
 '''
