@@ -19,19 +19,21 @@ def calc(N: int, stack: List[int], path: str):
     possibleElems = dict[stack[-1]] if stack else dict[""]
 
     for el in possibleElems:
+        newStack = [*stack]
+
         if stack:
             if stack[-1] == "(" and el == ")":
-                newStack = [*stack]
                 newStack.pop()
                 calc(N-1, newStack, [*path, ")"])
             elif stack[-1] == "[" and el == "]":
-                newStack = [*stack]
                 newStack.pop()
                 calc(N-1, newStack, [*path, "]"])
             else:
-                calc(N-1, [*stack, el], [*path, el])
+                newStack.append(el)
+                calc(N-1, newStack, [*path, el])
         else:
-            calc(N-1, [*stack, el], [*path, el])
+            newStack.append(el)
+            calc(N-1, newStack, [*path, el])
 
 
 N = int(input())
