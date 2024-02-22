@@ -2,66 +2,38 @@ from typing import List
 
 dict = {
     "": ["(", "["],
-    "(": [")", "[", "("],
-    ")": ["(", "[", ")", "]"],
-    "[": ["(", "[", "]"],
+    "(": ["(", "[", ")"],
+    ")": ["(", ")", "[", "]"],
+    "[": ["[", "(", "]"],
     "]": ["(", ")", "[", "]"],
 }
 
-def pathIsCorrect(path: List[int]):
-    if path[-1] == "(" or path[-1] == "[":
-        return False
-     
-    stack = []
-    
-    for el in path:
-        if stack:
-            if stack[-1] == "(" and el == ")":
-                stack.pop()
-            elif stack[-1] == "[" and el == "]":
-                stack.pop()
-            else:
-                stack.append(el)
-        else:
-            stack.append(el)
-
-    return True if not stack else False
-     
-
-
-def calc(N: int, stack: List[int]): 
-    if N == 0:
-        if pathIsCorrect(stack):
-            print(''.join([str(i) for i in stack]))
+def calc(N: int, stack: List[int], path: str): 
+    if N == 0 and not stack:
+        print(''.join([str(i) for i in path]))
         return
-    
-    possibleElems = ["(","[",  ")", "]"]
+
+    if N == 0:
+        return 
+
+    possibleElems = dict[stack[-1]] if stack else dict[""]
 
     for el in possibleElems:
-            calc(N-1, [*stack, el])
-    
-  
+        if stack:
+            if stack[-1] == "(" and el == ")":
+                newStack = [*stack]
+                newStack.pop()
+                calc(N-1, newStack, [*path, ")"])
+            elif stack[-1] == "[" and el == "]":
+                newStack = [*stack]
+                newStack.pop()
+                calc(N-1, newStack, [*path, "]"])
+            else:
+                calc(N-1, [*stack, el], [*path, el])
+        else:
+            calc(N-1, [*stack, el], [*path, el])
+
+
 N = int(input())
 
-calc(N, [])
-
-# print(pathIsCorrect("()") == True)
-# print(pathIsCorrect("[]") == True)
-# print(pathIsCorrect("[") == False)
-# print(pathIsCorrect("(") == False)
-# print(pathIsCorrect("[]]") == False)
-# print(pathIsCorrect("[])") == False)
-# print(pathIsCorrect("[[])") == False)
-# print(pathIsCorrect("[(])") == False)
-# print(pathIsCorrect("[()]") == True)
-# print(pathIsCorrect("[[]]") == True)
-# print(pathIsCorrect("(())") == True)
-# print(pathIsCorrect("(()") == False)
-# print(pathIsCorrect("(()]") == False)
-# print(pathIsCorrect("]") == False)
-# print(pathIsCorrect(")") == False)
-
-
-'''
-
-'''
+calc(N, [], "")
