@@ -1,29 +1,29 @@
-from typing import Tuple
+from typing import Tuple, List
 
-def calc(querie: Tuple[int, int, int]):
-    global a
-    
-    x, y, s = querie
-    
-    for i in range(x, y+1):
-        a[i] += s
+def calc(query: Tuple[int, int, int], arr: List[int]):
+    x, y, s = query
 
-    print()
+    arr[x] = s 
+    if y+1 < len(arr):
+        arr[y+1] -= s
+    
+    return arr
 
 
 queries = [
-    [2,4,5],
-    [1,3,2],  
-    [0,1,1]
+    [2,3,5],
+    [0,0,1]
 ]
 
 n = int(input())
 a = [0] * n
 
 for q in queries:
-    calc(q)
+    a = calc(q, a)
 
-for i in range(n):
-    ...
+print(a)
+
+for i in range(1, n):
+    a[i] += a[i-1]
 
 print(a)
