@@ -21,8 +21,6 @@ a = [0] * n
 for q in queries:
     a = calc(q, a)
 
-print(a)
-
 for i in range(1, n):
     a[i] += a[i-1]
 
