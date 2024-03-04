@@ -5,25 +5,22 @@ class Solution:
         if len(nums1) == 0:
             return []
         
-        stack = []
+        stack = [len(nums2)]
         dict = {}
 
         for i in range(len(nums2)-1, -1, -1):
-            while (stack and nums2[stack[-1]] <= nums2[i]):
+            while (len(stack) > 1 and nums2[stack[-1]] <= nums2[i]):
                 stack.pop()
             
-            if stack: 
-                dict[nums2[i]] = stack[-1]
-            else: 
-                dict[nums2[i]] = -1
+            dict[nums2[i]] = stack[-1]
 
             stack.append(i)
             
         # print(dict)
 
         output = [0] * len(nums1)
-        for i in range(0, len(nums1)):
-            output[i] = nums2[dict[nums1[i]]] if dict[nums1[i]] >= 0 else -1
+        for i, x in enumerate(nums1):
+            output[i] = nums2[dict[x]] if dict[x] != len(nums2) else -1
 
         return output
 
