@@ -3,7 +3,7 @@ import math
 paths = []
 
 def calc(N, attemps, path):
-    # print(N, attemps, path)
+    print(N, attemps, path)
 
     if N < 0:
         return
@@ -12,9 +12,6 @@ def calc(N, attemps, path):
         return
 
     if N == 0:
-        # while len(path) < 4:
-            # path.append(0)
-
         revercedPath = path[::-1]
         print(revercedPath)
         paths.append(set(revercedPath))
@@ -39,8 +36,8 @@ def calc(N, attemps, path):
 
 
 inputs = [
-    7,
-    # 10000
+    # 7,
+    10000
 ]
 
 for N in inputs:

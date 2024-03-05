@@ -3,7 +3,7 @@ def calc(intervals):
         return 0
 
     intervals.sort(key=lambda tup: (tup[1],tup[0]))
-    print(intervals)
+    # print(intervals)
 
     champInteval = intervals[0]
     removed = set()
@@ -13,12 +13,14 @@ def calc(intervals):
         left = interval[0]
         right = interval[1]
 
-        if right <= champInteval[0] or left == champInteval[1]:
+        # print(interval, champInteval)
+
+        if left <= champInteval[1]:
             removed.add(i)
         else:
             champInteval = interval
 
-    print(removed)
+    # print(removed)
 
     return len(intervals) - len(removed)
 
@@ -37,36 +39,36 @@ def calc(intervals):
 
 
 inputs = [
-    # [
-    #     [2, 3],
-    #     [4, 5],
-    #     [1, 3],
-    #     [5, 10],
-    # ],
-    # [
-    #     [1, 2],
-    #     [2, 3],
-    #     [4, 5],
-    #     [4, 5],
-    #     [5, 6],
-    # ],
-    # [
-    #     [1, 50],
-    #     [49, 50],
-    # ],
-    # [
-    #     [1, 50],
-    #     [50, 51],
-    #     [10, 20],
-    #     [21, 30],
-    # ],
-    # [],
-    # [
-        # [1, 1]
-    # ],
-    # [
-    #     [0, 0]
-    # ],
+    [
+        [2, 3],
+        [4, 5],
+        [1, 3],
+        [5, 10],
+    ],
+    [
+        [1, 2],
+        [2, 3],
+        [4, 5],
+        [4, 5],
+        [5, 6],
+    ],
+    [
+        [1, 50],
+        [49, 50],
+    ],
+    [
+        [1, 50],
+        [50, 51],
+        [10, 20],
+        [21, 30],
+    ],
+    [],
+    [
+        [1, 1]
+    ],
+    [
+        [0, 0]
+    ],
 
     [
         [1, 15],
