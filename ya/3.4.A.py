@@ -7,8 +7,7 @@ def hanoiTower(n, fromPeg, toPeg):
     unusedPeg = 6 - fromPeg - toPeg
 
     hanoiTower(n-1, fromPeg, unusedPeg)
-    # print(fromPeg, toPeg)
-    steps.append([fromPeg, toPeg])
+
     hanoiTower(n-1, unusedPeg, toPeg)
 
 
