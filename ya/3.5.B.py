@@ -2,25 +2,17 @@ from typing import List
 
 def mergeTwoArrs(arrOne: List[int], arrTwo: List[int]):
     mergedArr = []
-
     i = 0
     j = 0
 
-    shortArr = arrOne
-    longArr = arrTwo
-
-    if len(arrTwo) < len(arrOne):
-        shortArr = arrTwo
-        longArr = arrOne
-
-    while i < len(shortArr) or j < len(longArr):
-        if i < len(shortArr) and (j == len(longArr) or shortArr[i] <= longArr[j]):
-            mergedArr.append(shortArr[i])
+    while i < len(arrOne) or j < len(arrTwo):
+        if j>=len(arrTwo) or (i<len(arrOne) and arrOne[i]<=arrTwo[j]):
+            mergedArr.append(arrOne[i])
             i+=1
         else:
-            mergedArr.append(longArr[j])
+            mergedArr.append(arrTwo[j])
             j+=1
-    
+
     return mergedArr
 
 def merge(arrs: List[List[int]]):
@@ -56,7 +48,12 @@ print(' '.join([str(i) for i in mergedArr]))
 # print(mergeTwoArrs([-2],[4,5,6,7],))
 # print(mergeTwoArrs([-2],[],))
 # print(mergeTwoArrs([],[-2],))
-# print(mergeTwoArrs([],[],))
+# print(mergeTwoArrs([],[]))
+# print(mergeTwoArrs([-5],[-1]))
+# print(mergeTwoArrs([-5,-1],[-10,-1])) # [-10, -5, -2, -1]
+# print(mergeTwoArrs([-5,-1],[10,100000,1000000,1000000000])) # [-10, -5, -2, -1]
+# print(mergeTwoArrs([10,100000,1000000,1000000001],[-5,-1,100000,1000000000])) # [-10, -5, -2, -1]
+
 
 '''
 3
@@ -86,5 +83,11 @@ print(' '.join([str(i) for i in mergedArr]))
 1
 1
 21
+
+2
+1
+1000000
+1
+1000000000
 '''
 
