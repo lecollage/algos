@@ -1,5 +1,3 @@
-from typing import List
-
 '''
 Quick Sort Algorithm
 
@@ -20,6 +18,9 @@ partition(arr, beg, end)
 return pIndex + 1
 '''
 
+from typing import List
+import random
+
 def partition(arr: List[int], low: int, high: int):
     pivot = arr[high]
     i = low-1
@@ -32,11 +33,16 @@ def partition(arr: List[int], low: int, high: int):
     arr[i+1], arr[high] = arr[high], arr[i+1]
 
     return i+1
+
+def randomizedPartition(arr: List[int], low: int, high: int):
+    i = random.randint(low, high)
+    arr[i], arr[high] = arr[high], arr[i]
+    return partition(arr, low, high)
         
 
 def quickSort(arr: List[int], low: int, high: int):
     if low < high:
-        pivotIndex = partition(arr, low, high)
+        pivotIndex = randomizedPartition(arr, low, high)
         quickSort(arr, low, pivotIndex-1)
         quickSort(arr, pivotIndex+1, high)
 
