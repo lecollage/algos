@@ -31,7 +31,9 @@ arrs = []
 N = int(input())
 for i in range(0, N):
     arrLen = int(input())
-    arrs.append(list(map(int, input().strip().split())))
+    arr = list(map(int, input().strip().split()))
+    arr.sort()
+    arrs.append(arr)
 
 mergedArr = merge(arrs)
 print(' '.join([str(i) for i in mergedArr]))
