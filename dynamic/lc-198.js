@@ -1,5 +1,5 @@
-let memo = new Map()
 /* top-down + memo approach
+let memo = new Map()
 const robHelper = (nums, start) => {
     if(memo.has(start)) {
         return memo.get(start)
