@@ -23,14 +23,14 @@ def getLowerBound(arr: List[int], target: int) -> int:
     
     return left
 
-def getUpperBound(arr: List[int], target: int) -> int:
+def getUpperBound(arr: List[int], target: int, leftIndex: int) -> int:
     if target < arr[0]:
         return 0
 
     if target >= arr[-1]:
         return len(arr)
 
-    left = 0
+    left = leftIndex
     right = len(arr)-1
 
     while(left < right):
@@ -47,8 +47,6 @@ def getUpperBound(arr: List[int], target: int) -> int:
     return left
 
 def process(arr: List[int], leftTarget: int, rightTarget: int) -> int:
-    arr.sort()
-
     if leftTarget > arr[-1]:
         return 0
     
@@ -56,12 +54,13 @@ def process(arr: List[int], leftTarget: int, rightTarget: int) -> int:
         return 0
 
     leftIndex = getLowerBound(arr, leftTarget)
-    rightIndex = getUpperBound(arr, rightTarget)
+    rightIndex = getUpperBound(arr, rightTarget, leftIndex)
 
     return rightIndex - leftIndex
 
 N = int(input())
 arr = list(map(int, input().strip().split()))
+arr.sort()
 M = int(input())
 
 allBorders = []
