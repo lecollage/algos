@@ -1,6 +1,6 @@
 from typing import List
 
-def getLeftIndex(arr: List[int], target: int) -> int:
+def getLowerBound(arr: List[int], target: int) -> int:
     if target <= arr[0]:
         return 0
     
@@ -8,26 +8,22 @@ def getLeftIndex(arr: List[int], target: int) -> int:
         return len(arr)-1
 
     left = 0
-    right = len(arr)-1
+    right = len(arr)
 
-    while(left + 1 < right):
+    while(left < right):
         middle = int(left + (right - left) / 2)
 
-        if arr[middle] <= target :
-            left = middle
-
-        if arr[middle] > target:
+        if target <= arr[middle]:
             right = middle
+        else:
+            left = middle + 1
 
-    if arr[left] == target:
-        return left
+    if left < len(arr) and arr[left] < target:
+        return left + 1
     
-    if arr[right] == target:
-        return right
-    
-    return right
+    return left
 
-def getRightIndex(arr: List[int], target: int) -> int:
+def getUpperBound(arr: List[int], target: int) -> int:
     if target < arr[0]:
         return 0
 
@@ -37,16 +33,18 @@ def getRightIndex(arr: List[int], target: int) -> int:
     left = 0
     right = len(arr)-1
 
-    while(left + 1 < right):
+    while(left < right):
         middle = int(left + (right - left) / 2)
 
         if arr[middle] <= target :
-            left = middle
-
-        if arr[middle] > target:
+            left = middle + 1
+        else: 
             right = middle
 
-    return right
+    if left < len(arr) and arr[left] <= target:
+        return left + 1
+
+    return left
 
 def process(arr: List[int], leftTarget: int, rightTarget: int) -> int:
     arr.sort()
@@ -57,8 +55,8 @@ def process(arr: List[int], leftTarget: int, rightTarget: int) -> int:
     if rightTarget < arr[0]:
         return 0
 
-    leftIndex = getLeftIndex(arr, leftTarget)
-    rightIndex = getRightIndex(arr, rightTarget)
+    leftIndex = getLowerBound(arr, leftTarget)
+    rightIndex = getUpperBound(arr, rightTarget)
 
     return rightIndex - leftIndex
 
@@ -228,4 +226,3 @@ for i, input in enumerate(inputs):
 
 5 2 2 0 
 '''
-
