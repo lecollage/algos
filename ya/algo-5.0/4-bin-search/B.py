@@ -1,12 +1,20 @@
 def isGood(fieldLength: int, maxBoatLength: int):
-   K = maxBoatLength
-   T = K+1 # length of the maximum boat + minimum free space
-   A = 1+1 # length of the minimum boat + minimum free space
-   N = K
-   S = int(((T + A) * N)/2 - 1)
-   # print(K, S)
+   # print('START isGood', fieldLength, maxBoatLength)
 
-   return S <= fieldLength
+   freeSpace = fieldLength
+   K = maxBoatLength
+   boatCount = 1
+
+   while freeSpace > 0 and K > 0:
+      freeSpace = freeSpace-(K+1)*boatCount
+      boatCount = boatCount+1
+      K = K - 1
+
+   freeSpace = freeSpace + 1
+
+   # print(maxBoatLength, K, freeSpace)
+
+   return freeSpace >= 0 and K == 0
 
 def binSearch(fieldLength: int) -> int:
    if fieldLength == 1:
@@ -47,28 +55,16 @@ inputs = [
        1
     ],
     [
-       9,
+       15,
        3
     ],
     [
-       10,
-       3
+       49,
+       5
     ],
     [
-       11,
-       3
-    ],
-    [
-       12,
-       3
-    ],
-    [
-       13,
-       4
-    ],
-    [
-       10**18,
-       1414213560
+       55,
+       5
     ],
 ]
 
