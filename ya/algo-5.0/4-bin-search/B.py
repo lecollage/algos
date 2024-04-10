@@ -1,20 +1,13 @@
-def isGood(fieldLength: int, maxBoatLength: int):
-   # print('START isGood', fieldLength, maxBoatLength)
+def calcShipsSpace(k: int):
+    cntSpaces = max((1+k)*k//2-1, 0)
+    sumOfBigShips = (k+k**2)*k//2
+    sumOfExcess = k*(k+1)*(2*k+1)//6-(1+k)*k//2
 
-   freeSpace = fieldLength
-   K = maxBoatLength
-   boatCount = 1
+    return cntSpaces + sumOfBigShips - sumOfExcess
 
-   while freeSpace > 0 and K > 0:
-      freeSpace = freeSpace-(K+1)*boatCount
-      boatCount = boatCount+1
-      K = K - 1
-
-   freeSpace = freeSpace + 1
-
-   # print(maxBoatLength, K, freeSpace)
-
-   return freeSpace >= 0 and K == 0
+def isGood(fieldLength: int, maxShipLength: int):
+   # print('START isGood', fieldLength, maxShipLength)
+   return fieldLength >= calcShipsSpace(maxShipLength)
 
 def binSearch(fieldLength: int) -> int:
    if fieldLength == 1:
