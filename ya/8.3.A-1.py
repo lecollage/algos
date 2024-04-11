@@ -1,7 +1,4 @@
 def calc(target: int) -> int:
-    if target == 1:
-        return [0, '1']
-
     dp = [0]*(target+1)
     dp[1] = 0
 
@@ -22,16 +19,12 @@ def calc(target: int) -> int:
     path = [i]
 
     while not i == 1:
-        minimum = dp[i-1]
-
-        if i%2==0 and dp[int(i/2)] < minimum:
-            minimum = dp[int(i/2)]
-            i = int(i/2)
-        elif i%3==0 and dp[int(i/3)] < minimum:
-            minimum = dp[int(i/3)]
-            i = int(i/3)
-        else:
+        if dp[i] == 1+dp[i-1]:
             i = i-1
+        elif i%2==0 and dp[i]==1+dp[int(i/2)]:
+            i = int(i/2)
+        elif i%3==0 and dp[i]==1+dp[int(i/3)]:
+            i = int(i/3)
 
         path.append(i)
         
@@ -100,4 +93,7 @@ for _, input in enumerate(inputs):
 x+1
 x*2
 x*3
+
+1 3 9 10 11 33 99 297 891 2673 8019 16038 16039 48117 96234
+1 3 9 10 11 33 99 297 891 2673 8019 16038 16039 48117 96234
 '''
