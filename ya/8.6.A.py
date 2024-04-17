@@ -5,7 +5,6 @@ def calc(maxWeight: int, weights: List[int]) -> int:
 
     dp = [[True] + [False] * maxWeight for _ in range(0, n+1)]
     weights = [0, *weights]
-    # dp = [[True, *([False] * maxWeight)] for _ in range(0, n+1)]
 
     max = 0
 
