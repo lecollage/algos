@@ -26,9 +26,6 @@ const calc = (str) => {
 
   for(let d = 0; d < diagCnt; d++) {
     for(let i = 0, j = d + 1; j < L; i++, j++) {
-      // const add = str[i] === str[j] ? 2 : 0
-
-      // dp[i][j] = Math.max(dp[i+1][j-1] + add, dp[i+1][j], dp[i][j-1])
       if (str[i] === str[j]) {
         dp[i][j] = dp[i+1][j-1] + 2
       } else {
