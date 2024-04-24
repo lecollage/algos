@@ -68,3 +68,23 @@ s = Solution()
 for input in inputs:
     print(s.countSubstrings(input[0]) == input[1])
     # print(s.isPalindrome(input[0], input[2], input[3]) == input[4])
+
+
+'''
+    
+abxxba
+
+abx
+
+xx
+bxxb
+
+aaa
+
+a
+a
+a
+aa
+aa
+aaa
+'''
