@@ -1,26 +1,69 @@
 from typing import List
 
-def calc(maxWeight: int, weights: List[int]) -> int:
-    ...
+def calc(weights: List[int]) -> bool:
+    if len(weights) < 3:
+        return False
 
-target, N = map(int, input().strip().split())
-arr = list(map(int, input().strip().split()))
+    sum = 0
 
-print(calc(target, arr))
+    for _, weight in enumerate(weights):
+        sum = sum + weight
+    
+    if sum%3 != 0:
+        return False
+
+    maxWeight = int(sum/3)
+
+
+    dp=[]
+
+    for i in range(0, maxWeight):
+        for j in range(0, maxWeight):
+            for k in range(0, maxWeight):
+                dp[i][j][k] = False
+
+    print(dp)
+
+    return True
+
+# N = input()
+# arr = list(map(int, input().strip().split()))
+# print(calc(N, arr))
 
 inputs = [
+    # [
+    #     [1, 2, 3, 4, 5, 5, 7, 7, 8, 10, 12, 19, 25],
+    #     True
+    # ],
+    # [
+    #     [1, 2, 3, 4, 5, 6, 7],
+    #     True
+    # ],
+    # [
+    #     [12, 13, 14, 15, 23],
+    #     True
+    # ],
     [
-        6, 4,
-        [1, 1, 3, 1],
-        6
+        [12],
+        False
     ],
- 
+    [
+        [12, 18],
+        False
+    ],
+    [
+        [3, 3, 4],
+        False
+    ],
+    [
+        [3, 3, 3],
+        True
+    ]
 ]
 
 for i, input in enumerate(inputs):
-    maxWeight = input[0]
-    weights = input[2]
-    print(calc(maxWeight, weights) == input[3])
+    weights = input[0]
+    print(calc(weights) == input[1])
 
 
 '''
@@ -61,9 +104,9 @@ for i, input in enumerate(inputs):
     25                                      f                                   
 
 
-dp[i][j]=dp[i-1][j-v[i-1]] || dp[i-1][j]
+dp[i][j]=dp[i-1][j] || dp[i-1][j-v[i-1]]
 
-dp[i][j][k]=dp[i-1][j-v[i-1]][k] || dp[i-1][j][k] || dp[i-1][j][k-v[i-1]]
+dp[i][j][k]=dp[i-1][j][k] || dp[i-1][j-v[i-1]][k] || dp[i-1][j][k-v[i-1]]
 '''
 
 
