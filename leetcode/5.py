@@ -1,62 +1,53 @@
 class Solution:
-    def getPalindromesCount(self, s, l, r) -> int:
-        length = 0
+    def getPalindrome(self, s, l, r) -> int:
+        palindrome = ""
 
-        if  l >= 0 and r < len(s) and r-l == 1 and s[l] == s[r]:
-            length = 1
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            palindrome = s[l:r+1]
+            # print(l,r)
+            l = l-1
+            r = r+1
 
-        while l >= 0 and r < len(s):
-            if s[l] == s[r]:
-                l = l-1
-                r = r+1
-                length = r-l
-            else:
-                return -1, l, r
-        print('getPalindromesCount', length, l, r, s[l:r])
-        return length, l, r
-    
+        return palindrome
+
     def longestPalindrome(self, s) -> int:
-        max = 0
-        maxL = -1
-        maxR = -1
+        maxPalindrome = s[0]
+
         for i in range(0, len(s)):
-            first, l, r = self.getPalindromesCount(s, i, i)
+            palindrome1 = self.getPalindrome(s, i, i)
 
-            if first > max:
-                print('first', first, l, r)
-                max = first
-                maxL = l
-                maxR = r
+            if len(palindrome1) > len(maxPalindrome):
+                maxPalindrome = palindrome1
 
-            second, l, r = self.getPalindromesCount(s, i, i+1)
+            palindrome2 = self.getPalindrome(s, i, i+1)
 
-            if second > max:
-                print('second', second, l, r)
-                max = second
-                maxL = l
-                maxR = r
+            if len(palindrome2) > len(maxPalindrome):
+                maxPalindrome = palindrome2
 
+        return maxPalindrome
 
-        if maxL < 0:
-            maxL = 0
-        # maxR = maxR if maxR < len(s) else len(s)
-        print(maxL, maxR)
-
-        return s[maxL:maxR]
 
 inputs = [
-    # ["a", "a"],
-    # ["aa", "aa"],
-    # ["abc", "a"],
+    ["a", "a"],
+    ["aa", "aa"],
+    ["abc", "a"],
     ["xaaa", "aaa"],
-    # ["abcba", "abcba"],
-    # ["abxxba", "abxxba"],
-    # ["babad", "bab"],
-    # ["cbbd", "bb"],
+    ["abcba", "abcba"],
+    ["abxxba", "abxxba"],
+    ["babad", "bab"],
+    ["cbbd", "bb"],
+    [
+        "ayeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    ],
 ]
 
 s = Solution()
 for input in inputs:
-    print(s.longestPalindrome(input[0]))
-    # print(s.longestPalindrome(input[0]) == input[1])
+    # print(input[0][0:2])
+    # print(s.getPalindrome(input[0], 0, 1))
+    # print(s.getPalindrome(input[0], 0, 0))
+    # print(s.getPalindrome(input[0], 1, 1))
+    # print(s.getPalindrome(input[0], 1, 2))
+    print(s.longestPalindrome(input[0]) == input[1])
     # print(s.isPalindrome(input[0], input[2], input[3]) == input[4])
