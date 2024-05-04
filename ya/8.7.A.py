@@ -11,20 +11,46 @@ def calc(weights: List[int]) -> bool:
     
     if sum%3 != 0:
         return False
-
     maxWeight = int(sum/3)
+    weights = [0, *weights]
+    L = len(weights)
 
+    dp = [
+        [
+            [
+                False for _ in range(maxWeight)
+            ] * (maxWeight) for _ in range(maxWeight)
+        ] * (L) for _ in range(L)
+    ]
 
-    dp=[]
+    # print(dp[0])
+    # print("")
+    # print(dp[0][0])
+    # print("")
+    print(dp[0][0][0])
+    # print("")
 
-    for i in range(0, maxWeight):
+    dp[0][0][0] = True
+
+    for i in range(1, L):
         for j in range(0, maxWeight):
             for k in range(0, maxWeight):
-                dp[i][j][k] = False
+                dp[i][j][k] = dp[i-1][j][k]
 
-    print(dp)
+                if j > weights[i]:
+                    dp[i][j][k] = dp[i-1][j-weights[i]][k] or dp[i][j][k]
 
-    return True
+                if k > weights[i]:
+                    dp[i][j][k] = dp[i-1][j][k-weights[i]] or dp[i][j][k]
+
+                print(i, j, dp[i][j])
+
+    print(dp[-1])
+
+    return dp[-1][-1][-1]
+
+
+#  or dp[i-1][j][k-weights[i-1]]
 
 # N = input()
 # arr = list(map(int, input().strip().split()))
@@ -43,18 +69,18 @@ inputs = [
     #     [12, 13, 14, 15, 23],
     #     True
     # ],
-    [
-        [12],
-        False
-    ],
-    [
-        [12, 18],
-        False
-    ],
-    [
-        [3, 3, 4],
-        False
-    ],
+    # [
+    #     [12],
+    #     False
+    # ],
+    # [
+    #     [12, 18],
+    #     False
+    # ],
+    # [
+    #     [3, 3, 4],
+    #     False
+    # ],
     [
         [3, 3, 3],
         True
