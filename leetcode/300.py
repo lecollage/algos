@@ -1,39 +1,29 @@
 from typing import List
 
 class Solution:
-    cache = {}
-
-    def calc(self, nums: List[int], startFrom: int) -> int:
-        if startFrom in self.cache:
-            return self.cache[startFrom]
-
-        maxLength = 1
-
-        for i in range(startFrom, len(nums)):
-            if nums[i] > nums[startFrom]:
-                length = self.calc(nums, i)+1
-
-                if length > maxLength:
-                    maxLength = length
-
-        self.cache[startFrom] = maxLength
-
-        return maxLength
-
     def lengthOfLIS(self, nums: List[int]) -> int:
-        self.cache = {}
+        minEl = min(nums)
+        maxEl = max(nums)
 
-        maxLength = 1
+        dp = [0 for _ in range(0, maxEl+1)]
 
-        for i in range(0, len(nums)):
-            length = self.calc(nums, i)
+        for i, el in enumerate(nums):
+            maxLength = dp[el]
+            found = False
 
-            if length > maxLength:
-                maxLength = length
+            for j in range(el-1, -1, -1):
+                # print(j, el, dp[j], dp[el], maxLength)
+                if dp[j] >= maxLength:
+                    maxLength = dp[j]
+                    found = True
 
-        # print(self.cache)
+            if found:
+                dp[el] = maxLength + 1
+            else:
+                dp[el] = 1
+            # print(dp)
 
-        return maxLength
+        return max(dp)
 
 inputs = [
     [
@@ -45,11 +35,15 @@ inputs = [
         4,
     ],
     [
-        [5,3,7,101,18], # 5,7,101 
+        [5,3,7,9,8], # 5,7,9
         3,
     ],
     [
-        [0,1,0,3,2,3],
+        [1,3,2,3],
+        3,
+    ],
+    [
+        [1,8,9,2,6,3,4],
         4,
     ],
     [
