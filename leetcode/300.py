@@ -1,31 +1,32 @@
 from typing import List
 
 class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        offset = 10**4
-        dp = [0 for _ in range(0, offset*2+1)]
+    # def lengthOfLIS(self, nums: List[int]) -> int:
+    #     offset = 10**4
+    #     dp = [0 for _ in range(0, offset*2+1)]
 
-        for i, el in enumerate(nums):
-            maxLength = dp[el]
-            found = False
+    #     for i, el in enumerate(nums):
+    #         maxLength = dp[el]
+    #         found = False
 
-            start = el + offset if el >= 0 else el + offset
+    #         currIndx = el + offset
 
-            # print(start)
+    #         # print(start)
 
-            for j in range(start-1, -1, -1):
-                # print(j, el, dp[j], dp[el], maxLength)
-                if dp[j] >= maxLength:
-                    maxLength = dp[j]
-                    found = True
+    #         for j in range(currIndx-1, -1, -1):
+    #             if dp[j] > 0:
+    #                 maxLength = dp[j]
+    #                 # print("maxLength", maxLength)
+    #                 found = True
+    #                 break
 
-            if found:
-                dp[start] = maxLength + 1
-            else:
-                dp[start] = 1
-            # print(el, dp[9998], dp[9999], dp[10000], dp[10001], dp[10002], dp[10003])
+    #         if found:
+    #             dp[currIndx] = maxLength + 1
+    #         else:
+    #             dp[currIndx] = 1
+    #         print(el, [dp[9998], dp[9999], dp[10000], dp[10001], dp[10002], dp[10003], dp[10004], dp[10005], dp[10006], dp[10007], dp[10018], dp[10101]], max(dp))
 
-        return max(dp)
+    #     return max(dp)
 
 # from typing import List
 
@@ -53,55 +54,88 @@ class Solution:
 
 #         return max(dp)
 
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        if len(nums) == 1:
+            return 1
+
+        dp = [0 for _ in range(0, len(nums))]
+        dp[len(nums)-1] = 1
+
+        absoluteMax = 0
+
+        for i in range(len(nums)-2, -1, -1):
+            maxLength = 0
+
+            for j in range(i, len(nums), 1):
+                # print(i, j, nums[i], nums[j], dp)
+
+                if dp[j] > maxLength and nums[i] < nums[j]:
+                    maxLength = dp[j]
+                    
+            dp[i] = maxLength+1
+
+            if dp[i] > absoluteMax:
+                absoluteMax = dp[i]
+            # print("AFTER ", i, nums[i],  dp)
+
+        # print(dp)
+
+        return absoluteMax
+
+
 inputs = [
-    # [
-    #     [1,3,6,7,9,4,10,5,6], # 1,3,6,7,9,10
-    #     6,
-    # ],
-    # [
-    #     [10,9,2,5,3,7,101,18], # 2,5,7,101 | 2,3,5,6
-    #     4,
-    # ],
-    # [
-    #     [5,3,7,9,8], # 5,7,9
-    #     3,
-    # ],
-    # [
-    #     [1,3,2,3],
-    #     3,
-    # ],
-    # [
-    #     [1,8,9,2,6,3,4],
-    #     4,
-    # ],
-    # [
-    #     [7,7,7,7,7,7,7],
-    #     1,
-    # ],
-    # [
-    #     [3,4,2,6],
-    #     3,
-    # ],
-    # [
-    #     [6,4,2],
-    #     1,
-    # ],
-    # [
-    #     [6],
-    #     1,
-    # ],
-    # [
-    #     [1, 2, 0],
-    #     2,
-    # ],
-    # [
-    #     [0,1,2],
-    #     3,
-    # ],
-    # [
-    #     [-1, 0,1,2],
-    #     4,
-    # ],
+    [
+        [1,3,6,7,9,4,10,5,6], # 1,3,6,7,9,10
+        6,
+    ],
+    [
+        [10,9,2,5,3,7,101,18], # 2,5,7,101 | 2,3,5,6
+        4,
+    ],
+    [
+        [5, 2,101,18,19],
+        3,
+    ],
+    [
+        [5,3,7,9,8], # 5,7,9
+        3,
+    ],
+    [
+        [1,3,2,3],
+        3,
+    ],
+    [
+        [1,8,9,2,6,3,4], # 1,2,3,4
+        4,
+    ],
+    [
+        [7,7,7,7,7,7,7],
+        1,
+    ],
+    [
+        [3,4,2,6],
+        3,
+    ],
+    [
+        [6,4,2],
+        1,
+    ],
+    [
+        [6],
+        1,
+    ],
+    [
+        [1, 2, 0],
+        2,
+    ],
+    [
+        [0,1,2],
+        3,
+    ],
+    [
+        [-1, 0,1,2],
+        4,
+    ],
     [
         [-1,-2],
         1,
@@ -109,6 +143,14 @@ inputs = [
     [
         [-2, -1],
         2,
+    ],
+    [
+        [-10**4, -1],
+        2,
+    ],
+    [
+        [-10**4, -1, 0, 1, 10**4],
+        5,
     ]
 ]
 
