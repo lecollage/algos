@@ -1,5 +1,11 @@
 from typing import List
 
+# dp[5] = 6 . . . . 6
+# dp[6] = 4 . . . . 2 4
+
+
+
+
 class Solution:
     # def lengthOfLIS(self, nums: List[int]) -> int:
     #     offset = 10**4
