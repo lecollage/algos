@@ -1,25 +1,37 @@
 from typing import List
 
-def getMatrix(v: int, e: int, edges: List[List[int]]):
-    matrix = [
-        0 for _ in range(0, v)
-    ]
+def isTree(v: int, e: int, edges: List[List[int]]) -> bool:
+    if v-1 != e:
+        return False
 
-    for _, [v, u] in enumerate(edges):
-        ...
+    graph = [[] for _ in range(0, v)]
 
-
+    for _, [A,B] in enumerate(edges):
+        graph[A].append(B)
+        graph[B].append(A)
     
+    visited = [False for _ in range(0, v)]
 
-    return matrix
+    def dfs(vertex: int):
+        for el in graph[vertex]:
+            if visited[el]:
+                continue
+
+            visited[el] = True
+            dfs(el)
+
+    dfs(0)
+            
+    return sum(visited) == len(visited)
+
 
 edges = []
 v, e = map(int, input().split())
 for _ in range(0, e):
     n1, n2 = map(int, input().split())
-    edges.append([n1, n2])
+    edges.append([n1-1, n2-1])
 
-print(*getMatrix(v,e, edges), sep='\n')
+print(isTree(v,e, edges))
 
 
 
@@ -52,11 +64,9 @@ visited: [True,True,True]
 -----------------------
 
 4 3
-
 1 2
 1 3
 2 3
-4
 
         [
 0        [1,2]
@@ -66,10 +76,15 @@ visited: [True,True,True]
         ]
 
 
+{
+    1: [2,3],
+    2: [3],
 
-    
+}
 
+6 3
 
-
-
+800 2
+1 3
+2 3
 '''
