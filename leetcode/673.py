@@ -10,37 +10,32 @@ class Solution:
         lenghts = [0 for _ in range(0, len(nums))]
         counts = [1 for _ in range(0, len(nums))]
 
-        lenghts[0]=1
+        lenghts[-1]=1
 
-        for i in range(1, len(nums)):
-            currMax = 0
-            currMaxIndexes = []
-            currMaxCount = 1
+        for i in range(len(nums)-2, -1, -1):
+            currMaxLenIndx = 0
+            # currMaxLenIndxes = []
+            currCount = 1
 
-            for j in range(i, -1, -1):
-                # print(nums[i], nums[j], lenghts[j], currMax)
-                if nums[i] > nums[j] and lenghts[j] >= currMax:
-                    if currMax == lenghts[j]:
-                        currMaxIndexes.append(j)
-                    else:
-                        currMax = lenghts[j]
-                        currMaxCount = counts[j]
-                        currMaxIndexes = [j]
+            for j in range(i+1, len(nums), 1): 
+                if nums[j] >= nums[i]:
+                    if nums[j] > nums[i] and lenghts[j] > lenghts[currMaxLenIndx]:
+                        currMaxLenIndx = j
+                        # currMaxLenIndxes = [j]
+                        currCount = counts[j]
+                    elif lenghts[j] == lenghts[currMaxLenIndx] or nums[j] == nums[i]:
+                        # currMaxLenIndxes.append(j)
+                        currCount = currCount + 1
 
-            lenghts[i] = currMax+1
-            print(i, currMaxIndexes, currMaxCount)
+            lenghts[i] = lenghts[currMaxLenIndx] + 1
+            counts[i] = currCount
+            # print('currMaxLenIndxes', currMaxLenIndxes, currCount)
 
-            if len(currMaxIndexes) > 1:
-                for _, el in enumerate(currMaxIndexes):
-                    counts[el] = currMaxCount+1
-                counts[i] = currMaxCount+1
-            else:
-                counts[i] = currMaxCount
 
-        print(lenghts)
-        print(counts)
+        # print(lenghts)
+        # print(counts)
 
-        return counts[-1]
+        return counts[0]
 
 inputs = [
     [
@@ -50,6 +45,14 @@ inputs = [
     [
         [2,2,2,2,2],
         5
+    ],
+    [
+        [2],
+        1
+    ],
+    [
+        [2,2],
+        1
     ],
     # [
     #     [2],
