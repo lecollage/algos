@@ -1,23 +1,12 @@
 from typing import List
 
 class Solution:
-    visited = set()
-
-    def getKey(self, i: int, j: int) -> str:
-        return str(i)+":"+str(j)
-
     def explore(self, i: int, j: int, grid: List[List[str]]):
         stack = [[i,j]]
 
         while len(stack) > 0:
             i, j = stack.pop()
-
-            key = self.getKey(i,j)
-
-            if key in self.visited:
-                continue
-
-            self.visited.add(key)
+            grid[i][j]="0"
 
             if i > 0 and grid[i-1][j] == '1':
                 stack.append([i-1,j])
@@ -37,7 +26,7 @@ class Solution:
         
         for i in range(0, len(grid)):
             for j in range(0, len(grid[i])):
-                if grid[i][j] == '1' and not self.getKey(i,j) in self.visited:
+                if grid[i][j] == '1':
                     islands = islands + 1
                     # print('explore starts', i, j)
                     self.explore(i, j, grid)
@@ -62,6 +51,12 @@ inputs = [
             ["0","0","0","1","1"]
         ],
         3
+    ],
+    [
+        [
+            ["0"],
+        ],
+        0
     ]
 ]
 
