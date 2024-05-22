@@ -26,6 +26,7 @@ class Solution:
         if root is None:
             return
         
+        
         self.execInorderTraversal(root.left)
         self.arr.append(root.val)
         self.execInorderTraversal(root.right)
@@ -37,4 +38,12 @@ class Solution:
         
         
 # @lc code=end
+
+
+'''
+1
+3
+2
+
+'''
 
