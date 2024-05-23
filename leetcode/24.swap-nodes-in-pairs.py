@@ -28,9 +28,9 @@ class Solution:
         dummy = ListNode(None, head)
         prev = dummy
         curr = head
-        nxt = curr.next
 
         while curr and curr.next:
+            nxt = curr.next
             prev.next = curr.next
 
             if nxt is not None:
@@ -41,7 +41,6 @@ class Solution:
 
             prev = curr
             curr = curr.next
-            nxt = curr.next if curr is not None else None
 
         return dummy.next
 
