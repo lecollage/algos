@@ -73,8 +73,6 @@ inputs = [
         [0,0,0,0,0], #[0,0]
         2
     ],
-    
-    
 ]
 s = Solution()
 for [arr, expected] in inputs:
