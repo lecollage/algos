@@ -19,33 +19,22 @@ class ListNode:
 #         self.next = next
 class Solution:
     def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
-        if head is None:
-            return None
-        
-        preHead = ListNode(-1, head)
-        node = preHead
+        dummy = ListNode(-1, head)
 
-        # rem all from the beginning
-        while node.next is not None and node.next.val == val:
-            if node.next.next is not None:
-                node.next = node.next.next
-            else:
-                node.next = None
+        prev = dummy
+        curr: ListNode = dummy.next
 
-        if node.next is None:
-            return None
-        
-        # start from a new position
-        head = node.next
+        while curr:
+            next = curr.next
 
-        # rem the rest
-        while node is not None and node.next is not None:
-            if node.next.val == val:
-                node.next = node.next.next
-            else:
-                node = node.next
+            if curr.val == val:
+                prev.next = next
+            else: 
+                prev = curr
 
-        return head
-        
+            curr = next
+
+        return dummy.next
+
 # @lc code=end
 
