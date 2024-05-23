@@ -12,23 +12,22 @@ class Solution:
         left = 0
         right = len(nums)-1
 
-        while right - left > 1:
+        while (right - left) > 1:
             middle = left + int((right - left)/2)
 
-            if nums[middle] <= target:
+            if target >= nums[middle]: 
                 left = middle
-            else:
+            else: 
                 right = middle
-
-        # print(left, right)
-
+        
         if target > nums[right]:
-            return right + 1
+            return right+1
         
         if target > nums[left]:
             return left + 1
-
+        
         return left
+
 # @lc code=end
 
 
@@ -55,7 +54,6 @@ inputs = [
        0
     ],
 ]
-
 s = Solution()
 for [arr, target, expected] in inputs:
     res = s.searchInsert(arr, target)
