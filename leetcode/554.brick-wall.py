@@ -9,88 +9,83 @@ from typing import List
 # @lc code=start
 class Solution:
     def leastBricks(self, wall: List[List[int]]) -> int:
-        intersections = [
-            # [0 for _ in row] for row in wall
-        ]
+        # joints = []
+        jointCounts = {}
+        maxCount = 0
 
-        maxLen = 1
-        
         for row in wall:
-            maxLen = max(maxLen, len(row))
+            jointRow = []
 
-            intersectRow = []
-
-            for i in range(0, len(row)):
+            for i in range(0, len(row)-1):
                 el = row[i]
 
-                for _ in range(0, el-1, 1):
-                    intersectRow.append(1)
-                
-                if i == len(row)-1:
-                    intersectRow.append(1)
+                if i == 0:
+                    jointRow.append(el)
                 else:
-                    intersectRow.append(0)
+                    jointRow.append(el + jointRow[-1])
 
-            intersections.append(intersectRow)
+                if jointRow[-1] in jointCounts:
+                    jointCounts[jointRow[-1]] = jointCounts[jointRow[-1]] + 1
+                else:
+                    jointCounts[jointRow[-1]] = 1
 
-        if maxLen == 1:
-            return len(wall)
+                maxCount = max(jointCounts[jointRow[-1]], maxCount)
 
-        width = len(intersections[0])
+            # joints.append(jointRow)
 
-        minSum = 10**4
+        # print(joints)
+        # print(jointCounts)
+        # print(maxCount)
 
-        for i in range(0, width):
-            count = 0
-
-            for row in intersections:
-                if row[i] == 1:
-                    count = count+1
-
-            minSum = min(minSum, count)
-
-        # print(intersections)
-        # print(minSum)
-
-        return minSum
+        return len(wall) - maxCount
 # @lc code=end
 
 
 inputs = [
+    # [
+    #     [
+    #         [1,2,2,1],
+    #         [3,1,2],
+    #         [1,3,2],
+    #         [2,4],
+    #         [3,1,2],
+    #         [1,3,1,1]
+    #     ],
+    #     2
+    # ],
+    # [
+    #     [
+    #         [1],
+    #         [1],
+    #         [1]
+    #     ],
+    #     3
+    # ],
+    # [
+    #     [
+    #         [1,1],
+    #         [2],
+    #         [1,1]
+    #     ],
+    #     1
+    # ],
     [
         [
-            [1,2,2,1],
-            [3,1,2],
-            [1,3,2],
-            [2,4],
-            [3,1,2],
-            [1,3,1,1]
-        ],
-        2
-    ],
-    [
-        [
-            [1],
-            [1],
-            [1]
+            [100000000],
+            [100000000],
+            [100000000]
         ],
         3
-    ],
-    [
-        [
-            [1,1],
-            [2],
-            [1,1]
-        ],
-        1
     ]
+
+    
 
 ]
 
 s = Solution()
 for [arr1, expect] in inputs:
     res = s.leastBricks(arr1)
-    print(res==expect)
+    print(res==expect, res)
 
 
 '''
