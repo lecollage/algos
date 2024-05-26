@@ -11,23 +11,22 @@ class Solution:
         if len(nums) == 1:
             return 1 if nums[0] == target else 0
 
-        queue = []
-        currSum = 0
         count = 0
 
-        for i, el in enumerate(nums):
-            queue.append(el)
-            currSum = currSum + el
+        for i, el in enumerate(nums):        
+            currSum = 10**8
+            j = i
 
-            if currSum == target:
-                count = count + 1
+            while j < len(nums):
+                if currSum == 10**8:
+                    currSum = nums[j]
+                else: 
+                    currSum = currSum + nums[j]
 
-            while len(queue) > 0 and currSum >= target:
-                poppedEl = queue.pop(0)
-                currSum = currSum - poppedEl
+                if currSum == target:
+                    count = count+1
 
-                if  currSum == target:
-                    count = count + 1
+                j = j + 1
 
         # print(queue)
 
@@ -66,6 +65,11 @@ inputs = [
         [-1,-1,1],
         0,
         1
+    ],
+    [
+        [1,-1,0],
+        0,
+        3
     ],
 ]
 
