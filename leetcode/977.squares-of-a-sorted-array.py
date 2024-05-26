@@ -11,12 +11,22 @@ class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:
         i=0
 
-        while i < len(nums) and nums[i] < 0:
-            i+=1
+        left = 0
+        right = len(nums)
+
+        while left < right:
+            middle = int((left+right)/2) 
+
+            if nums[middle] <= 0:
+                left = middle + 1
+            else:
+                right = middle
+
+        # print(right)
+
+        i = right
 
         j=i-1
-
-        # print(i,j)
 
         arr = []
 
@@ -46,9 +56,9 @@ class Solution:
 # @lc code=end
 
 s = Solution()
-# print(s.sortedSquares([-7,-3,2,3,11]))
-# print(s.sortedSquares([0,2,3,11]))
-# print(s.sortedSquares([-4,-1,0,3,10]))
+print(s.sortedSquares([-7,-3,2,3,11]))
+print(s.sortedSquares([0,2,3,11]))
+print(s.sortedSquares([-4,-1,0,3,10]))
 print(s.sortedSquares([-4,-1]))
 print(s.sortedSquares([-1]))
 
