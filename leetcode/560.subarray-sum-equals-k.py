@@ -12,23 +12,19 @@ class Solution:
             return 1 if nums[0] == target else 0
 
         count = 0
+        prefixes = {
+            0: 1
+        }
+        prefixSum = 0
 
-        for i, el in enumerate(nums):        
-            currSum = 10**8
-            j = i
+        for el in nums:
+            prefixSum += el
+            diff = prefixSum - target
 
-            while j < len(nums):
-                if currSum == 10**8:
-                    currSum = nums[j]
-                else: 
-                    currSum = currSum + nums[j]
+            count += prefixes.get(diff, 0)
+            prefixes[prefixSum] = prefixes.get(prefixSum, 0) + 1
 
-                if currSum == target:
-                    count = count+1
-
-                j = j + 1
-
-        # print(queue)
+        # print(prefixes)
 
         return count
 # @lc code=end
