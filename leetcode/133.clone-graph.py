@@ -27,63 +27,80 @@ class Solution:
             return None
         
         stack=[head]
-
-        hashMap = {1: Node(head.val)}
+        graph = []
+        visited = set()
 
         while len(stack) > 0:
-            node = stack.pop()
+            node = stack.pop(0)
+            
+            if node in visited:
+                continue
+            
+            visited.add(node)
 
-            hashMap[node.val] = Node(node.val)
+            # print(node.val, [x.val for x in node.neighbors])
 
-            for neighbor in node.neighbors:
-                if neighbor.val not in hashMap:
-                    stack.append(neighbor)
-                    hashMap[neighbor.val] = Node(neighbor.val)
-                
-                # hashMap[neighbor.val].neighbors.append(hashMap[node.val])
-                hashMap[node.val].neighbors.append(hashMap[neighbor.val])
+            graph.append([x.val for x in node.neighbors])
 
+            for neighbour in node.neighbors:
+                stack.append(neighbour)
 
-        for key, node in hashMap.items():
-            print(key, [x.val for x in node.neighbors])
+        # print(graph)
+
+        hashMap = {
+            i+1: Node(i+1) for i in range(len(graph))
+        }
+
+        # print(hashMap)
+
+        for i, neighbours in enumerate(graph):
+            value = i + 1
+            hashMap[value].neighbors.extend(
+                [hashMap[x] for x in neighbours]
+            )
 
         return hashMap[1]
-
+        
 
 # @lc code=end
 
 adjLists = [
-    [
-        [2,4],
-        [1,3],
-        [2,4],
-        [1,3]
-    ],
-    [
-        [2,3],
-        [1,3],
-        [1,2],
-    ],
+    # [
+    #     [2,4],
+    #     [1,3],
+    #     [2,4],
+    #     [1,3]
+    # ],
     [
         [2,3],
         [1,3],
-        [1,2,4],
-        [3]
+        [1,2]
     ],
-    [
-        [2,3],
-        [1,3],
-        [1,2,4,5],
-        [3,5],
-        [3,4]
-    ],
-    [
-        [2,3,4,5],
-        [1,3,4,5],
-        [1,2,4,5],
-        [1,2,3,5],
-        [1,2,3,4],
-    ],
+    # [
+    #     [2,3],
+    #     [1,3],
+    #     [1,2],
+    # ],
+    # [
+    #     [2,3],
+    #     [1,3],
+    #     [1,2,4],
+    #     [3]
+    # ],
+    # [
+    #     [2,3],
+    #     [1,3],
+    #     [1,2,4,5],
+    #     [3,5],
+    #     [3,4]
+    # ],
+    # [
+    #     [2,3,4,5],
+    #     [1,3,4,5],
+    #     [1,2,4,5],
+    #     [1,2,3,5],
+    #     [1,2,3,4],
+    # ],
 ]
 
 for adjList in adjLists:
