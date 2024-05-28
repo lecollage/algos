@@ -8,28 +8,30 @@ from typing import List
 # @lc code=start
 class Solution:
     def subarraySum(self, nums: List[int], target: int) -> int:
-        if len(nums) == 1:
-            return 1 if nums[0] == target else 0
-
         count = 0
-        prefixes = {
-            0: 1
-        }
         prefixSum = 0
+        prefixes = {
+            0:1
+        }
 
         for el in nums:
             prefixSum += el
-            diff = prefixSum - target
+            diff = prefixSum-target
 
             count += prefixes.get(diff, 0)
             prefixes[prefixSum] = prefixes.get(prefixSum, 0) + 1
 
-        # print(prefixes)
-
         return count
+
 # @lc code=end
 
-
+'''
+{
+0:1
+1:1
+2:1
+}
+'''
 
 inputs = [
     [
