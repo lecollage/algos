@@ -5,18 +5,18 @@ from typing import List, Optional
 #
 # [994] Rotting Oranges
 #
-
+1
 # @lc code=start
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
-        start = [0, 0, 0]
+        queue = []
         hasRotting = False
         hasFresh = False
 
         for i in range(0, len(grid)):
             for j in range(0, len(grid[i])):
-                if not hasRotting and grid[i][j] == 2:
-                    start = [i, j, 0]
+                if grid[i][j] == 2:
+                    queue.append([i, j, 0])
                     hasRotting = True
                 
                 if grid[i][j] == 1:
@@ -28,14 +28,12 @@ class Solution:
         if not hasRotting and not hasFresh:
             return 0
 
-        queue = [start]
-
         maxMinutes = 0
 
         while len(queue) > 0:
             el = queue.pop(0)
 
-            # print(el)
+            print(el)
 
             i = el[0]
             j = el[1]
@@ -59,7 +57,7 @@ class Solution:
                 grid[i][j+1] = 2
                 queue.append([i,j+1,minute+1])
 
-        # print(grid)
+        print(grid)
 
         for i in range(0, len(grid)):
             for j in range(0, len(grid[i])):
