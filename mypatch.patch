@@ -1,0 +1,4249 @@
+diff --git a/leetcode/1454.active-users.py b/Optional[ListNode]
+similarity index 100%
+rename from leetcode/1454.active-users.py
+rename to Optional[ListNode]
+diff --git a/binary-search/aa-warmup/aa-warmup.go b/binary-search/aa-warmup/aa-warmup.go
+new file mode 100644
+index 0000000..f4b7888
+--- /dev/null
++++ b/binary-search/aa-warmup/aa-warmup.go
+@@ -0,0 +1,130 @@
++package main
++
++import (
++	"bufio"
++	"fmt"
++	"os"
++)
++
++var in = bufio.NewReader(os.Stdin)
++var out = bufio.NewWriter(os.Stdout)
++
++/*
++Left
++7 3
++1 2 2 3 3 3 4
++
++7 1
++1 2 2 3 3 3 4
++-> 0
++
++7 4
++1 2 2 3 3 3 4
++-> 6
++*/
++
++/*
++RIght
++7 3
++1 2 2 3 3 3 4
++-> 5
++
++7 1
++1 2 2 3 3 3 4
++-> 0
++
++7 4
++1 2 2 3 3 3 4
++-> 6
++*/
++
++/*
++Lower bound
++7 5
++10 20 20 30 30 30 40
++-> 0
++
++7 45
++10 20 20 30 30 30 40
++-> 7
++
++7 30
++10 20 20 30 30 30 40
++-> 3
++*/
++func readInput() ([]int, int) {
++	var arrayLength, searchValue int
++
++	fmt.Fscan(in, &arrayLength)
++	fmt.Fscanln(in, &searchValue)
++
++	array := make([]int, 0)
++
++	for arrayLength > 0 {
++		var el int
++		fmt.Fscan(in, &el)
++		array = append(array, el)
++		arrayLength--
++	}
++
++	return array, searchValue
++}
++
++func binSearchLowerBound(array []int, searchValue int) int {
++	left := -1          // MinInt
++	right := len(array) // MaxInt
++
++	for left+1 < right {
++		middle := int((left + right) / 2)
++
++		if searchValue > array[middle] {
++			left = middle
++		} else {
++			right = middle
++		}
++	}
++
++	return right
++}
++
++/*
++Upper bound
++7 5
++10 20 20 30 30 30 40
++-> 0
++
++7 45
++10 20 20 30 30 30 40
++-> 7
++
++7 30
++10 20 20 30 30 30 40
++-> 6
++*/
++func binSearchUpperBound(array []int, searchValue int) int {
++	left := -1
++	right := len(array)
++
++	for left+1 < right {
++		middle := int((left + right) / 2)
++
++		if searchValue >= array[middle] {
++			left = middle
++		} else {
++			right = middle
++		}
++	}
++
++	return right
++}
++func main() {
++	array, searchValue := readInput()
++
++	fmt.Println("input >> ", array, searchValue)
++
++	result := binSearchUpperBound(array, searchValue)
++
++	fmt.Println(result)
++
++	defer out.Flush()
++}
+diff --git a/binary-search/aa-warmup/aa-warmup_test.go b/binary-search/aa-warmup/aa-warmup_test.go
+new file mode 100644
+index 0000000..5736173
+--- /dev/null
++++ b/binary-search/aa-warmup/aa-warmup_test.go
+@@ -0,0 +1,30 @@
++// package main
++
++// import "testing"
++
++// func Test_binSearch(t *testing.T) {
++// 	type args struct {
++// 		array       []int
++// 		searchValue int
++// 	}
++// 	tests := []struct {
++// 		name string
++// 		args args
++// 		want int
++// 	}{
++// 		{name: '1',
++// 			args: {
++// 				array:       []int{1, 2, 3, 3, 3, 3, 4, 5},
++// 				searchValue: 3,
++// 			},
++// 			want: 2,
++// 		},
++// 	}
++// 	for _, tt := range tests {
++// 		t.Run(tt.name, func(t *testing.T) {
++// 			if got := binSearch(tt.args.array, tt.args.searchValue); got != tt.want {
++// 				t.Errorf("binSearch() = %v, want %v", got, tt.want)
++// 			}
++// 		})
++// 	}
++// }
+diff --git a/binary-search/aa-warmup/go.mod b/binary-search/aa-warmup/go.mod
+new file mode 100644
+index 0000000..92b50b4
+--- /dev/null
++++ b/binary-search/aa-warmup/go.mod
+@@ -0,0 +1,3 @@
++module a-rectangles
++
++go 1.20
+diff --git a/js/2620.js b/js/2620.js
+deleted file mode 100644
+index 7db2f8f..0000000
+--- a/js/2620.js
++++ /dev/null
+@@ -1,23 +0,0 @@
+-/**
+- * @param {number} n
+- * @return {Function} counter
+- */
+-var createCounter = function(n) {
+-    let count = n
+-    return function() {
+-        return count++
+-    };
+-};
+-
+-{
+-    const counter = createCounter(10)
+-    console.log(counter())
+-    console.log(counter())
+-    console.log(counter())
+-}
+-{
+-    const counter = createCounter(-2)
+-    console.log(counter())
+-    console.log(counter())
+-    console.log(counter())
+-}
+\ No newline at end of file
+diff --git a/js/2623.js b/js/2623.js
+deleted file mode 100644
+index baf3120..0000000
+--- a/js/2623.js
++++ /dev/null
+@@ -1,62 +0,0 @@
+-/**
+- * @param {Function} fn
+- * @return {Function}
+- */
+-function memoize(fn) {
+-    const cache = new Map()
+-
+-    return function(...args) {
+-        const key = JSON.stringify(args)
+-
+-        // console.log('key', key)
+-
+-        if(cache.has(key)) {
+-            // console.log('return from cache')
+-
+-            return cache.get(key);
+-        }
+-
+-        // console.log('execute a function')
+-
+-        const res = fn(...args);
+-
+-        cache.set(key, res);
+-
+-        return res;
+-    }
+-}
+-
+-
+-/** 
+- * let callCount = 0;
+- * const memoizedFn = memoize(function (a, b) {
+- *	 callCount += 1;
+- *   return a + b;
+- * })
+- * memoizedFn(2, 3) // 5
+- * memoizedFn(2, 3) // 5
+- * console.log(callCount) // 1 
+- */
+-
+-//  let callCount = 0;
+-
+-//  const memoizedFn = memoize(function (a, b) {
+-//   callCount += 1;
+-//    return a + b;
+-//  })
+-
+-//  console.log(memoizedFn(2, 3)) // 5
+-//  console.log(memoizedFn(2, 3)) // 5
+-//  console.log(memoizedFn(3, 2)) // 5
+-//  console.log(memoizedFn(2, 2)) // 4
+-//  console.log(memoizedFn(2, 2)) // 4
+-//  memoizedFn(2, 3) // 5
+-//  console.log(callCount) // 1 
+-
+-
+-
+-const factorial = (n) => (n <= 1) ? 1 : (n * factorial(n - 1));
+-const memoFactorial = memoize(factorial);
+-console.log(memoFactorial(2)); // "call" - returns 2.
+-console.log(memoFactorial(3)); // "call" - returns 6.
+-console.log(memoFactorial(2)); // "call" - returns 2. However factorial was not called because 2 was seen before.
+\ No newline at end of file
+diff --git a/js/2625.js b/js/2625.js
+deleted file mode 100644
+index 37dff20..0000000
+--- a/js/2625.js
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/**
+- * @param {integer} init
+- * @return { increment: Function, decrement: Function, reset: Function }
+- */
+-var createCounter = function(init) {
+-    let value = init
+-
+-    return {
+-        increment: function () {
+-            value++;
+-            return value;
+-        },
+-        decrement: function () {
+-            value--;
+-            return value;
+-        },
+-        reset: function () {
+-            value = init;
+-            return value;
+-        }
+-    }
+-};
+-
+-const counter = createCounter(5)
+-console.log(counter.increment()); // 6
+-console.log(counter.reset()); // 5
+-console.log(counter.decrement()); // 4
+-
+diff --git a/js/2627.Debounce.js b/js/2627.Debounce.js
+deleted file mode 100644
+index 5f53bf3..0000000
+--- a/js/2627.Debounce.js
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/**
+- * @param {Function} fn
+- * @param {number} t milliseconds
+- * @return {Function}
+- */
+-var debounce = function(fn, t) {
+-    id = undefined
+-    
+-
+-    return function(...args) {
+-        clearTimeout(id)
+-
+-        id = setTimeout(() => {
+-            fn(...args)
+-        }, t)
+-    }
+-};
+-
+-
+-const log = debounce(console.log, 100);
+-log('Hello1'); // cancelled
+-log('Hello2'); // cancelled
+-log('Hello3'); // Logged at t=100ms
+-
+diff --git a/js/2635.js b/js/2635.js
+deleted file mode 100644
+index ee6ef57..0000000
+--- a/js/2635.js
++++ /dev/null
+@@ -1,20 +0,0 @@
+-/**
+- * @param {number[]} arr
+- * @param {Function} fn
+- * @return {number[]}
+- */
+-var map = function(arr, fn) {
+-    const newArr = [...arr];
+-
+-    for (let i=0; i<newArr.length; i++) {
+-        newArr[i] = fn(newArr[i], i)
+-    }
+-
+-    return newArr;
+-};
+-
+-
+-console.log(map([1,2,3], (n) => n + 1))
+-console.log(map([1,2,3], (n, i) => n + i))
+-
+-
+diff --git a/js/2637.js b/js/2637.js
+deleted file mode 100644
+index 8d37bb6..0000000
+--- a/js/2637.js
++++ /dev/null
+@@ -1,37 +0,0 @@
+-//  Promise Time Limit
+-
+-/**
+- * @param {Function} fn
+- * @param {number} t
+- * @return {Function}
+- */
+-var timeLimit = function(fn, t) {
+-    return async function(...args) {
+-        return new Promise(
+-            (resolve, reject) => {
+-                const id = setTimeout(() => reject("Time Limit Exceeded"), t)
+-                fn(...args)
+-                    .then(res => resolve(res))
+-                    .catch(err => reject(err))
+-                    .finally(() => clearTimeout(id));
+-            }
+-
+-        )
+-    }
+-};
+-
+-/**
+- * const limited = timeLimit((t) => new Promise(res => setTimeout(res, t)), 100);
+- * limited(150).catch(console.log) // "Time Limit Exceeded" at t=100ms
+- */
+-const limited = timeLimit(
+-    (t) => new Promise(
+-        res => setTimeout(() => {
+-            console.log('From Promise')
+-            res()
+-        }, t)
+-    ),
+-    50
+-);
+-
+-limited(150).catch(console.log) // "Time Limit Exceeded" at t=100ms
+\ No newline at end of file
+diff --git a/leetcode/1.two-sum.py b/leetcode/1.two-sum.py
+new file mode 100644
+index 0000000..e5fdebf
+--- /dev/null
++++ b/leetcode/1.two-sum.py
+@@ -0,0 +1,47 @@
++from typing import List
++#
++# @lc app=leetcode id=1 lang=python3
++#
++# [1] Two Sum
++#
++
++# @lc code=start
++
++
++
++class Solution:
++    def twoSum(self, nums: List[int], target: int) -> List[int]:
++        hashMap = {}
++
++        for i, num in enumerate(nums):
++            substitution = target - num
++
++            if substitution in hashMap:
++                return [hashMap[substitution], i]
++            
++            hashMap[num] = i
++
++
++# inputs = [
++#     [
++#         [2,7,11,15],
++#         9
++#     ],
++#     [
++#         [3,2,4],
++#         6
++#     ],
++#     [
++#         [3,3],
++#         6
++#     ]
++# ]
++
++# s = Solution()
++# for [arr, target] in inputs:
++#     print(s.twoSum(arr, target))
++
++
++
++# @lc code=end
++
+diff --git a/leetcode/104.maximum-depth-of-binary-tree.py b/leetcode/104.maximum-depth-of-binary-tree.py
+deleted file mode 100644
+index 3e77b37..0000000
+--- a/leetcode/104.maximum-depth-of-binary-tree.py
++++ /dev/null
+@@ -1,97 +0,0 @@
+-from typing import List, Optional
+-
+-class TreeNode:
+-    def __init__(self, val=0, left=None, right=None):
+-        self.val = val
+-        self.left = left
+-        self.right = right
+-
+-    def insert(self, val):
+-        # Compare the new value with the parent node
+-      if self.val:
+-         if val < self.val:
+-            if self.left is None:
+-               self.left = TreeNode(val)
+-            else:
+-               self.left.insert(val)
+-         elif val > self.val:
+-               if self.right is None:
+-                  self.right = TreeNode(val)
+-               else:
+-                  self.right.insert(val)
+-      else:
+-         self.val = val
+-
+-    # Print the tree
+-    def PrintTree(self):
+-        if self.left:
+-            self.left.PrintTree()
+-
+-        print(self.val)
+-
+-        if self.right:
+-             self.right.PrintTree()
+-
+-#
+-# @lc app=leetcode id=104 lang=python3
+-#
+-# [104] Maximum Depth of Binary Tree
+-#
+-
+-# @lc code=start
+-# Definition for a binary tree node.
+-# class TreeNode:
+-#     def __init__(self, val=0, left=None, right=None):
+-#         self.val = val
+-#         self.left = left
+-#         self.right = right
+-class Solution:
+-    def maxDepth(self, root: Optional[TreeNode]) -> int:
+-        if root is None:
+-            return 0
+-
+-        stack = [[root, 1]]
+-
+-        maxDepth = 1
+-
+-        while len(stack) > 0:
+-            node, depth = stack.pop()
+-
+-            maxDepth = max(depth, maxDepth)
+-
+-            if node.left is not None:
+-                stack.append([node.left, depth+1])
+-
+-            if node.right is not None:
+-                stack.append([node.right, depth+1])
+-
+-        return maxDepth
+-# @lc code=end
+-
+-
+-
+-adjLists = [
+-    [
+-        [3,9,20,None,None,15,7],
+-        3
+-    ],
+-    [
+-        [1,None,2],
+-        2,
+-    ],
+-]
+-
+-for [adjList, expect] in adjLists:
+-    node = TreeNode(adjList[0])
+-
+-    for el in adjList:
+-        if el is not None:
+-            node.insert(el)
+-    
+-    node.PrintTree()
+-
+-    s = Solution()
+-    print(s.maxDepth(node) == expect)
+-    print('')
+-    print('')
+-    print('')
+diff --git a/leetcode/121.best-time-to-buy-and-sell-stock.py b/leetcode/121.best-time-to-buy-and-sell-stock.py
+deleted file mode 100644
+index ff73a53..0000000
+--- a/leetcode/121.best-time-to-buy-and-sell-stock.py
++++ /dev/null
+@@ -1,39 +0,0 @@
+-from typing import Optional, List
+-
+-#
+-# @lc app=leetcode id=121 lang=python3
+-#
+-# [121] Best Time to Buy and Sell Stock
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def maxProfit(self, prices: List[int]) -> int:
+-        profit = 0
+-        minPrice = prices[0]
+-
+-        for i in range(1, len(prices)):
+-            price = prices[i]
+-            minPrice = min(price, minPrice)
+-            profit = max(profit, price - minPrice)
+-
+-        return profit
+-
+-        
+-# @lc code=end
+-
+-
+-inputs = [
+-    [
+-        [7,1,5,3,6,4],
+-        5
+-    ],
+-    [
+-        [7,6,4,3,1],
+-        0
+-    ],
+-]
+-s = Solution()
+-for [arr, expected] in inputs:
+-    res = s.maxProfit(arr)
+-    print(res == expected, res, arr)
+\ No newline at end of file
+diff --git a/leetcode/122.best-time-to-buy-and-sell-stock-ii.py b/leetcode/122.best-time-to-buy-and-sell-stock-ii.py
+deleted file mode 100644
+index 572b7d2..0000000
+--- a/leetcode/122.best-time-to-buy-and-sell-stock-ii.py
++++ /dev/null
+@@ -1,50 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=122 lang=python3
+-#
+-# [122] Best Time to Buy and Sell Stock II
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def maxProfit(self, prices: List[int]) -> int:
+-        overallProfit = 0
+-        profit = 0
+-        minPrice = prices[0]
+-
+-        prices.append(-1)
+-
+-        for i in range(1, len(prices)):
+-            price = prices[i]
+-            minPrice = min(minPrice, price)
+-            newProfit = price-minPrice
+-
+-            if newProfit < profit:
+-                overallProfit = overallProfit + profit
+-                profit = 0
+-                minPrice = price
+-            else:
+-                profit = newProfit
+-
+-        return overallProfit
+-
+-# @lc code=end
+-inputs = [
+-    [
+-        [7,1,5,3,6,4],
+-        7
+-    ],
+-    [
+-        [1,2,3,4,5],
+-        4
+-    ],
+-    [
+-        [7,6,4,3,1],
+-        0
+-    ],
+-]
+-s = Solution()
+-for [arr, expected] in inputs:
+-    res = s.maxProfit(arr)
+-    print(res == expected, res, arr)
+diff --git a/leetcode/133.clone-graph.py b/leetcode/133.clone-graph.py
+index ce08fa6..ee225f3 100644
+--- a/leetcode/133.clone-graph.py
++++ b/leetcode/133.clone-graph.py
+@@ -1,4 +1,9 @@
+-from typing import List, Optional
++from typing import Optional
++
++class Node:
++    def __init__(self, val = 0, neighbors = None):
++        self.val = val
++        self.neighbors = neighbors if neighbors is not None else []
+ 
+ #
+ # @lc app=leetcode id=133 lang=python3
+@@ -6,11 +11,6 @@ from typing import List, Optional
+ # [133] Clone Graph
+ #
+ 
+-class Node:
+-    def __init__(self, val = 0, neighbors = None):
+-        self.val = val
+-        self.neighbors = neighbors if neighbors is not None else []
+-
+ # @lc code=start
+ """
+ # Definition for a Node.
+@@ -22,126 +22,37 @@ class Node:
+ 
+ from typing import Optional
+ class Solution:
+-    def cloneGraph(self, head: Optional['Node']) -> Optional['Node']:
+-        if head is None:
++    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
++        if not node:
+             return None
+         
+-        stack=[head]
+-        graph = []
++        stack = [node]
+         visited = set()
+ 
++        clonnedGraph = Node(node.val)
++        clonnedStack = [clonnedGraph]
++
+         while len(stack) > 0:
+-            node = stack.pop(0)
+-            
+-            if node in visited:
++            currNode = stack.pop()
++            clonnedNode = clonnedStack.pop()
++
++            if currNode.val in visited:
+                 continue
+-            
+-            visited.add(node)
+ 
+-            # print(node.val, [x.val for x in node.neighbors])
++            for neighbour in currNode.neighbors:
++                stack.append(neighbour)
+ 
+-            graph.append([x.val for x in node.neighbors])
++                clonnedNeighbour = Node(neighbour.val)
++                clonnedNode.neighbors.append(clonnedNeighbour)
++                clonnedStack.append(clonnedNeighbour)
+ 
+-            for neighbour in node.neighbors:
+-                stack.append(neighbour)
++            visited.add(node.val)
+ 
+-        # print(graph)
++        return clonnedGraph
+ 
+-        hashMap = {
+-            i+1: Node(i+1) for i in range(len(graph))
+-        }
+ 
+-        # print(hashMap)
+ 
+-        for i, neighbours in enumerate(graph):
+-            value = i + 1
+-            hashMap[value].neighbors.extend(
+-                [hashMap[x] for x in neighbours]
+-            )
+ 
+-        return hashMap[1]
+-        
+ 
++        
+ # @lc code=end
+-
+-adjLists = [
+-    # [
+-    #     [2,4],
+-    #     [1,3],
+-    #     [2,4],
+-    #     [1,3]
+-    # ],
+-    [
+-        [2,3],
+-        [1,3],
+-        [1,2]
+-    ],
+-    # [
+-    #     [2,3],
+-    #     [1,3],
+-    #     [1,2],
+-    # ],
+-    # [
+-    #     [2,3],
+-    #     [1,3],
+-    #     [1,2,4],
+-    #     [3]
+-    # ],
+-    # [
+-    #     [2,3],
+-    #     [1,3],
+-    #     [1,2,4,5],
+-    #     [3,5],
+-    #     [3,4]
+-    # ],
+-    # [
+-    #     [2,3,4,5],
+-    #     [1,3,4,5],
+-    #     [1,2,4,5],
+-    #     [1,2,3,5],
+-    #     [1,2,3,4],
+-    # ],
+-]
+-
+-for adjList in adjLists:
+-    hashMap = {i+1: Node(i+1) for i in range(len(adjList))}
+-
+-    for i, neigbours in enumerate(adjList):
+-        value = i + 1
+-
+-        hashMap[value].neighbors.extend(
+-            [hashMap[x] for x in neigbours]
+-        )
+-
+-    for key, node in hashMap.items():
+-        print(key, [x.val for x in node.neighbors])
+-
+-    print('')
+-
+-    s=Solution()
+-    s.cloneGraph(hashMap[1])
+-
+-    print('')
+-    print('')
+-    print('')
+-    print('')
+-    print('')
+-
+-
+-'''
+-{
+-    1: [2,4],
+-    2: [1,3],
+-    3: [2,4],
+-    4: [1,3]
+-}
+-
+-
+-original key
+-{
+-    1: ClonnedNode
+-    2: ClonnedNode
+-}
+-
+-
+-'''
+\ No newline at end of file
+diff --git a/leetcode/133.py b/leetcode/133.py
+deleted file mode 100644
+index eaba32e..0000000
+--- a/leetcode/133.py
++++ /dev/null
+@@ -1,47 +0,0 @@
+-from typing import List, Optional
+-
+-class Node:
+-    def __init__(self, val = 0, neighbors = None):
+-        self.val = val
+-        self.neighbors = neighbors if neighbors is not None else []
+-
+-
+-
+-class Solution:
+-    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+-        stack = [node]
+-        clonnedGraph = Node(node.val, node.neighbors)
+-        stackClone = [clonnedGraph]
+-
+-        while len(stack) > 0:
+-            currNode = stack.pop()
+-            clonnedNode = stackClone.pop()
+-
+-            # print(currNode.val)
+-            # print(currNode)
+-
+-            for i, neighbor in enumerate(currNode.neighbors):
+-                stack.append(neighbor)
+-                clonnedNode.neighbors.append(Node(neighbor.val))
+-                stackClone
+-                
+-
+-        return clonnedGraph
+-
+-
+-inputs = [
+-    [
+-        [
+-            [2,4],
+-            [1,3],
+-            [2,4],
+-            [1,3]
+-        ],
+-    ],
+-    
+-]
+-s = Solution()
+-for [grid] in inputs:
+-    grid
+-
+-    print(s.cloneGraph(grid))
+\ No newline at end of file
+diff --git a/leetcode/141.linked-list-cycle.py b/leetcode/141.linked-list-cycle.py
+deleted file mode 100644
+index 63548e1..0000000
+--- a/leetcode/141.linked-list-cycle.py
++++ /dev/null
+@@ -1,47 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, x):
+-        self.val = x
+-        self.next = None
+-
+-#
+-# @lc app=leetcode id=141 lang=python3
+-#
+-# [141] Linked List Cycle
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, x):
+-#         self.val = x
+-#         self.next = None
+-
+-class Solution:
+-    def hasCycle(self, head: Optional[ListNode]) -> bool:
+-        if head is None or head.next is None:
+-            return False
+-
+-        if head.next == head:
+-            return True
+-
+-        slow = head.next
+-        fast = head.next.next
+-
+-        while slow != fast and fast is not None:
+-            if fast.next is None:
+-                return False
+-
+-            slow = slow.next
+-            fast = fast.next.next
+-
+-            if slow == fast:
+-                return True
+-        
+-        return False
+-
+-        
+-        
+-# @lc code=end
+-
+diff --git a/leetcode/144.binary-tree-preorder-traversal.py b/leetcode/144.binary-tree-preorder-traversal.py
+deleted file mode 100644
+index 1076a70..0000000
+--- a/leetcode/144.binary-tree-preorder-traversal.py
++++ /dev/null
+@@ -1,96 +0,0 @@
+-from typing import List, Optional
+-
+-class TreeNode:
+-    def __init__(self, val=0, left=None, right=None):
+-        self.val = val
+-        self.left = left
+-        self.right = right
+-    
+-    def insert(self, val):
+-        # Compare the new value with the parent node
+-      if self.val:
+-         if val < self.val:
+-            if self.left is None:
+-               self.left = TreeNode(val)
+-            else:
+-               self.left.insert(val)
+-         elif val > self.val:
+-               if self.right is None:
+-                  self.right = TreeNode(val)
+-               else:
+-                  self.right.insert(val)
+-      else:
+-         self.val = val
+-
+-    # Print the tree
+-    def PrintTree(self):
+-        if self.left:
+-            self.left.PrintTree()
+-
+-        print(self.val)
+-
+-        if self.right:
+-             self.right.PrintTree()
+-
+-
+-
+-
+-#
+-# @lc app=leetcode id=144 lang=python3
+-#
+-# [144] Binary Tree Preorder Traversal
+-#
+-
+-# @lc code=start
+-# Definition for a binary tree node.
+-# class TreeNode:
+-#     def __init__(self, val=0, left=None, right=None):
+-#         self.val = val
+-#         self.left = left
+-#         self.right = right
+-class Solution:
+-    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+-        if root is None:
+-            return None
+-        
+-        stack = [root]
+-        arr = []
+-
+-        while len(stack) > 0:
+-            node = stack.pop()
+-
+-            arr.append(node.val)
+-
+-            if node.right is not None:
+-                stack.append(node.right)
+-
+-            if node.left is not None:
+-                stack.append(node.left)
+-
+-
+-        return arr
+-
+-
+-# @lc code=end
+-
+-
+-
+-adjLists = [
+-    # [1,None,2,3],
+-    [3,1,2]
+-]
+-
+-for adjList in adjLists:
+-    node = TreeNode(adjList[0])
+-
+-    for el in adjList:
+-        if el is not None:
+-            node.insert(el)
+-    
+-    # node.PrintTree()
+-
+-    s = Solution()
+-    print(s.preorderTraversal(node))
+-    print('')
+-    print('')
+-    print('')
+diff --git a/leetcode/145.binary-tree-postorder-traversal.py b/leetcode/145.binary-tree-postorder-traversal.py
+deleted file mode 100644
+index a3919df..0000000
+--- a/leetcode/145.binary-tree-postorder-traversal.py
++++ /dev/null
+@@ -1,96 +0,0 @@
+-from typing import List, Optional
+-
+-class TreeNode:
+-    def __init__(self, val=0, left=None, right=None):
+-        self.val = val
+-        self.left = left
+-        self.right = right
+-
+-    def insert(self, val):
+-        # Compare the new value with the parent node
+-      if self.val:
+-         if val < self.val:
+-            if self.left is None:
+-               self.left = TreeNode(val)
+-            else:
+-               self.left.insert(val)
+-         elif val > self.val:
+-               if self.right is None:
+-                  self.right = TreeNode(val)
+-               else:
+-                  self.right.insert(val)
+-      else:
+-         self.val = val
+-
+-    # Print the tree
+-    def PrintTree(self):
+-        if self.left:
+-            self.left.PrintTree()
+-
+-        print(self.val)
+-
+-        if self.right:
+-             self.right.PrintTree()
+-
+-
+-
+-#
+-# @lc app=leetcode id=145 lang=python3
+-#
+-# [145] Binary Tree Postorder Traversal
+-#
+-
+-# @lc code=start
+-# Definition for a binary tree node.
+-# class TreeNode:
+-#     def __init__(self, val=0, left=None, right=None):
+-#         self.val = val
+-#         self.left = left
+-#         self.right = right
+-class Solution:
+-    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+-        if root is None:
+-            return []
+-
+-        res = []
+-        stack = [root]
+-        visited = [False]
+-
+-        while len(stack) > 0:
+-            node, v = stack.pop(), visited.pop()
+-
+-            if node:
+-                if v:
+-                    res.append(node.val)
+-                else:
+-                    stack.append(node)
+-                    visited.append(True)
+-                    
+-                    stack.append(node.right)
+-                    visited.append(False)
+-
+-                    stack.append(node.left)
+-                    visited.append(False)
+-        return res
+-
+-# @lc code=end
+-
+-adjLists = [
+-    [1,None,2,3],
+-    [3,1,2]
+-]
+-
+-for adjList in adjLists:
+-    node = TreeNode(adjList[0])
+-
+-    for el in adjList:
+-        if el is not None:
+-            node.insert(el)
+-    
+-    # node.PrintTree()
+-
+-    s = Solution()
+-    print(s.postorderTraversal(node))
+-    print('')
+-    print('')
+-    print('')
+diff --git a/leetcode/160.intersection-of-two-linked-lists.py b/leetcode/160.intersection-of-two-linked-lists.py
+deleted file mode 100644
+index 3b3592d..0000000
+--- a/leetcode/160.intersection-of-two-linked-lists.py
++++ /dev/null
+@@ -1,44 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=160 lang=python3
+-#
+-# [160] Intersection of Two Linked Lists
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, x):
+-#         self.val = x
+-#         self.next = None
+-
+-class Solution:
+-    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+-        dictA = {}
+-        dictB = {}
+-
+-        currA = headA
+-
+-        while currA:
+-            dictA[currA] = currA.val
+-            currA = currA.next
+-
+-        currB = headB
+-
+-        while currB:
+-            if currB in dictA:
+-                return currB
+-
+-            dictB[currB] = currB.val
+-            currB = currB.next
+-
+-        return None
+-
+-# @lc code=end
+-
+diff --git a/leetcode/1905.count-sub-islands.py b/leetcode/1905.count-sub-islands.py
+deleted file mode 100644
+index f544602..0000000
+--- a/leetcode/1905.count-sub-islands.py
++++ /dev/null
+@@ -1,121 +0,0 @@
+-from typing import List, Optional
+-
+-#
+-# @lc app=leetcode id=1905 lang=python3
+-#
+-# [1905] Count Sub Islands
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def countSubIslands(self, grid1: List[List[int]], grid2: List[List[int]]) -> int:
+-        def explore(startI: int, startJ: int, grid1: List[List[int]], grid2: List[List[int]]) -> bool:
+-            stack = [[startI,startJ]]
+-
+-            res = True
+-
+-            while len(stack) > 0:
+-                i, j = stack.pop()
+-
+-                if grid1[i][j] != 1:
+-                    res = False
+-
+-                if i > 0 and grid2[i-1][j] == 1:
+-                    stack.append([i-1,j])
+-
+-                if i < len(grid2)-1 and grid2[i+1][j] == 1:
+-                    stack.append([i+1,j])
+-
+-                if j > 0 and grid2[i][j-1] == 1:
+-                    stack.append([i,j-1])
+-
+-                if j < len(grid2[i])-1 and grid2[i][j+1] == 1:
+-                    stack.append([i,j+1])
+-
+-                grid2[i][j] = 0
+-
+-            return res
+-
+-        count = 0
+-
+-        for i in range(0, len(grid2)):
+-            for j in range(0, len(grid2[i])):
+-                if grid2[i][j] == 1:
+-                    if explore(i,j,grid1, grid2):
+-                        count += 1
+-
+-        return count
+-
+-
+-# @lc code=end
+-
+-inputs = [
+-    [
+-        [
+-            [1,1,1,0,0],
+-            [0,1,1,1,1],
+-            [0,0,0,0,0],
+-            [1,0,0,0,0],
+-            [1,1,0,1,1]
+-        ],
+-        [
+-            [1,1,1,0,0],
+-            [0,0,1,1,1],
+-            [0,1,0,0,0],
+-            [1,0,1,1,0],
+-            [0,1,0,1,0]
+-        ],
+-        3,
+-    ],
+-    [
+-        [
+-            [1,0,1,0,1],
+-            [1,1,1,1,1],
+-            [0,0,0,0,0],
+-            [1,1,1,1,1],
+-            [1,0,1,0,1]
+-        ],
+-        [
+-            [0,0,0,0,0],
+-            [1,1,1,1,1],
+-            [0,1,0,1,0],
+-            [0,1,0,1,0],
+-            [1,0,0,0,1]
+-        ],
+-        2
+-    ],
+-    [
+-        [
+-            [1],
+-        ],
+-        [
+-            [1],
+-        ],
+-        1
+-    ],
+-    [
+-        [
+-            [0],
+-        ],
+-        [
+-            [1],
+-        ],
+-        0
+-    ],
+-    [
+-        [
+-            [1],
+-        ],
+-        [
+-            [0],
+-        ],
+-        0
+-    ]
+-]
+-
+-s = Solution()
+-for [grid1,grid2,expect] in inputs:
+-    res = s.countSubIslands(grid1,grid2)
+-    print(res==expect, res)
+-
+-
+diff --git a/leetcode/1986.minimum-number-of-work-sessions-to-finish-the-tasks.py b/leetcode/1986.minimum-number-of-work-sessions-to-finish-the-tasks.py
+new file mode 100644
+index 0000000..32d84ee
+--- /dev/null
++++ b/leetcode/1986.minimum-number-of-work-sessions-to-finish-the-tasks.py
+@@ -0,0 +1,12 @@
++#
++# @lc app=leetcode id=1986 lang=python3
++#
++# [1986] Minimum Number of Work Sessions to Finish the Tasks
++#
++
++# @lc code=start
++class Solution:
++    def minSessions(self, tasks: List[int], sessionTime: int) -> int:
++        
++# @lc code=end
++
+diff --git a/leetcode/2.add-two-numbers.py b/leetcode/2.add-two-numbers.py
+deleted file mode 100644
+index e086feb..0000000
+--- a/leetcode/2.add-two-numbers.py
++++ /dev/null
+@@ -1,17 +0,0 @@
+-#
+-# @lc app=leetcode id=2 lang=python3
+-#
+-# [2] Add Two Numbers
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+-        
+-# @lc code=end
+-
+diff --git a/leetcode/20.valid-parentheses.py b/leetcode/20.valid-parentheses.py
+deleted file mode 100644
+index 196aedb..0000000
+--- a/leetcode/20.valid-parentheses.py
++++ /dev/null
+@@ -1,56 +0,0 @@
+-#
+-# @lc app=leetcode id=20 lang=python3
+-#
+-# [20] Valid Parentheses
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def isValid(self, s: str) -> bool:
+-        stack = []
+-
+-        for el in s:
+-            if el in [')', ']', '}'] and len(stack) > 0:
+-                last = stack.pop()
+-
+-                if last == '(' and el == ')':
+-                    continue
+-                elif last == '{' and el == '}':
+-                    continue
+-                elif last == '[' and el == ']':
+-                    continue
+-                else: 
+-                    return False
+-            elif el in [')', ']', '}'] and len(stack) == 0: 
+-                return False
+-            else: 
+-                stack.append(el)
+-                    
+-        return len(stack) == 0
+-        
+-# @lc code=end
+-
+-inputs = [
+-    [
+-        "()",
+-        True,
+-    ],
+-    [
+-        "()[]{}",
+-        True,
+-    ],
+-    [
+-        "(]",
+-        False,
+-    ],
+-    [
+-        "]",
+-        False,
+-    ],
+-]
+-
+-s = Solution()
+-for [arr1, expect] in inputs:
+-    res = s.isValid(arr1)
+-    print(res==expect)
+-
+diff --git a/leetcode/200.py b/leetcode/200.py
+deleted file mode 100644
+index bd6947f..0000000
+--- a/leetcode/200.py
++++ /dev/null
+@@ -1,74 +0,0 @@
+-from typing import List
+-
+-class Solution:
+-    def explore(self, i: int, j: int, grid: List[List[str]]):
+-        stack = [[i,j]]
+-
+-        while len(stack) > 0:
+-            i, j = stack.pop()
+-            grid[i][j]="0"
+-
+-            if i > 0 and grid[i-1][j] == '1':
+-                stack.append([i-1,j])
+-            
+-            if i < len(grid)-1 and grid[i+1][j] == '1':
+-                stack.append([i+1,j])
+-
+-            if j > 0 and grid[i][j-1] == '1':
+-                stack.append([i,j-1])
+-
+-            if j < len(grid[i])-1 and grid[i][j+1] == '1':
+-                stack.append([i,j+1])
+-
+-    def numIslands(self, grid: List[List[str]]) -> int:
+-        self.visited = set()
+-        islands = 0
+-        
+-        for i in range(0, len(grid)):
+-            for j in range(0, len(grid[i])):
+-                if grid[i][j] == '1':
+-                    islands = islands + 1
+-                    # print('explore starts', i, j)
+-                    self.explore(i, j, grid)
+-                    
+-        return islands
+-
+-inputs = [
+-    [
+-        [
+-            ["1","1","1","1","0"],
+-            ["1","1","0","1","0"],
+-            ["1","1","0","0","0"],
+-            ["0","0","0","0","0"]
+-        ],
+-        1
+-    ],
+-    [
+-        [
+-            ["1","1","0","0","0"],
+-            ["1","1","0","0","0"],
+-            ["0","0","1","0","0"],
+-            ["0","0","0","1","1"]
+-        ],
+-        3
+-    ],
+-    [
+-        [
+-            ["0"],
+-        ],
+-        0
+-    ]
+-]
+-
+-
+-for _, input in enumerate(inputs):
+-    s = Solution()
+-    res = s.numIslands(input[0])
+-
+-    print(res, res == input[1])
+-
+-'''
+-  |
+-- i -
+-  |
+-'''
+\ No newline at end of file
+diff --git a/leetcode/203.remove-linked-list-elements.py b/leetcode/203.remove-linked-list-elements.py
+deleted file mode 100644
+index d08b78e..0000000
+--- a/leetcode/203.remove-linked-list-elements.py
++++ /dev/null
+@@ -1,40 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=203 lang=python3
+-#
+-# [203] Remove Linked List Elements
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+-        dummy = ListNode(-1, head)
+-
+-        prev = dummy
+-        curr: ListNode = dummy.next
+-
+-        while curr:
+-            next = curr.next
+-
+-            if curr.val == val:
+-                prev.next = next
+-            else: 
+-                prev = curr
+-
+-            curr = next
+-
+-        return dummy.next
+-
+-# @lc code=end
+-
+diff --git a/leetcode/206.py b/leetcode/206.py
+new file mode 100644
+index 0000000..4d7566d
+--- /dev/null
++++ b/leetcode/206.py
+@@ -0,0 +1,46 @@
++from typing import Optional
++
++# Definition for singly-linked list.
++class ListNode:
++    def __init__(self, val=0, next=None):
++        self.val = val
++        self.next = next
++class Solution:
++    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
++        if not head:
++            return None
++        
++        if not head.next:
++            return head
++        
++        prev = head
++        curr = head.next
++
++        prev.next = None
++
++        while curr:
++            next = curr.next
++            curr.next = prev
++
++            prev = curr
++            curr = next
++        
++        return curr
++
++'''
++O -> O -> O
++prev = head
++curr = head.next
++
++next = curr.next
++curr.next = prev
++
++prev = curr
++curr = next
++
++
++O <- O <- O
++
++
++O <- O
++'''
+\ No newline at end of file
+diff --git a/leetcode/21.merge-two-sorted-lists.py b/leetcode/21.merge-two-sorted-lists.py
+deleted file mode 100644
+index a8f3f4f..0000000
+--- a/leetcode/21.merge-two-sorted-lists.py
++++ /dev/null
+@@ -1,62 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=21 lang=python3
+-#
+-# [21] Merge Two Sorted Lists
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def mergeTwoLists(self, node1: Optional[ListNode], node2: Optional[ListNode]) -> Optional[ListNode]:
+-        if node1 is None:
+-            return node2
+-        
+-        if node2 is None:
+-            return node1
+-
+-        mergedHead: ListNode
+-
+-        if node1.val < node2.val:
+-            mergedHead = ListNode(node1.val)
+-            node1 = node1.next
+-        else:
+-            mergedHead = ListNode(node2.val)
+-            node2 = node2.next
+-
+-        mergedNode = mergedHead
+-
+-        while node1 is not None and node2 is not None:
+-            if node1.val < node2.val:
+-                mergedNode.next = ListNode(node1.val)
+-                node1 = node1.next
+-            else:
+-                mergedNode.next = ListNode(node2.val)
+-                node2 = node2.next
+-            
+-            mergedNode = mergedNode.next
+-
+-        while node1 is not None:
+-            mergedNode.next = ListNode(node1.val)
+-            node1 = node1.next
+-            mergedNode = mergedNode.next
+-
+-        while node2 is not None:
+-            mergedNode.next = ListNode(node2.val)
+-            node2 = node2.next
+-            mergedNode = mergedNode.next
+-
+-        return mergedHead
+-
+-# @lc code=end
+-
+diff --git a/leetcode/2215.find-the-difference-of-two-arrays.py b/leetcode/2215.find-the-difference-of-two-arrays.py
+deleted file mode 100644
+index 18dce6d..0000000
+--- a/leetcode/2215.find-the-difference-of-two-arrays.py
++++ /dev/null
+@@ -1,32 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=2215 lang=python3
+-#
+-# [2215] Find the Difference of Two Arrays
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def findDifference(self, nums1: List[int], nums2: List[int]) -> List[List[int]]:
+-        set1 = set(nums1)
+-        set2 = set(nums2)
+-
+-        # print(set1.difference(set2))
+-        # print(set2.difference(set1))
+-
+-        return [set1.difference(set2), set2.difference(set1)]
+-
+-# @lc code=end
+-
+-inputs = [
+-    [
+-        [1,2,3],
+-        [2,4,6]
+-    ],
+-]
+-
+-s = Solution()
+-for [arr1, arr2] in inputs:
+-    res = s.findDifference(arr1, arr2)
+-    print(res)
+diff --git a/leetcode/226.invert-binary-tree.py b/leetcode/226.invert-binary-tree.py
+new file mode 100644
+index 0000000..4b881f3
+--- /dev/null
++++ b/leetcode/226.invert-binary-tree.py
+@@ -0,0 +1,46 @@
++from typing import Optional
++
++class TreeNode:
++    def __init__(self, val=0, left=None, right=None):
++        self.val = val
++        self.left = left
++        self.right = right
++
++#
++# @lc app=leetcode id=226 lang=python3
++#
++# [226] Invert Binary Tree
++#
++
++# @lc code=start
++# Definition for a binary tree node.
++# class TreeNode:
++#     def __init__(self, val=0, left=None, right=None):
++#         self.val = val
++#         self.left = left
++#         self.right = right
++class Solution:
++    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
++        if root is None:
++            return []
++
++        queue = [root]
++
++        while len(queue) > 0:
++            node = queue.pop(0)
++
++            tmp = node.left
++            node.left = node.right
++            node.right = tmp
++
++            if node.right is not None:
++                queue.append(node.right)
++
++            if node.left is not None:
++                queue.append(node.left)
++
++        return root
++        
++# @lc code=end
++
++
+diff --git a/leetcode/234.palindrome-linked-list.py b/leetcode/234.palindrome-linked-list.py
+deleted file mode 100644
+index 551406b..0000000
+--- a/leetcode/234.palindrome-linked-list.py
++++ /dev/null
+@@ -1,61 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=234 lang=python3
+-#
+-# [234] Palindrome Linked List
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+-        curr = head
+-        nums = []
+-
+-        while curr:
+-            nums.append(curr.val)
+-            curr = curr.next
+-
+-        i = 0
+-        j = len(nums)-1
+-
+-        while i <= j:
+-            if nums[i] != nums[j]:
+-                return False
+-        
+-            i = i + 1
+-            j = j - 1
+-
+-        return True
+-
+-
+-# @lc code=end
+-
+-
+-
+-def f():
+-    nums = [1,2,2,1]
+-
+-    i = 0
+-    j = len(nums)-1
+-
+-    while i <= j:
+-        if nums[i] != nums[j]:
+-            return False
+-    
+-        i = i + 1
+-        j = j - 1
+-
+-    return True
+-
+-print(f())
+\ No newline at end of file
+diff --git a/leetcode/24.swap-nodes-in-pairs.py b/leetcode/24.swap-nodes-in-pairs.py
+deleted file mode 100644
+index 47200a5..0000000
+--- a/leetcode/24.swap-nodes-in-pairs.py
++++ /dev/null
+@@ -1,48 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=24 lang=python3
+-#
+-# [24] Swap Nodes in Pairs
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+-        if head is None:
+-            return None
+-        
+-        if head.next is None:
+-            return head
+-
+-        dummy = ListNode(None, head)
+-        prev = dummy
+-        curr = head
+-
+-        while curr and curr.next:
+-            nxt = curr.next
+-            prev.next = curr.next
+-
+-            if nxt is not None:
+-                curr.next = nxt.next
+-                nxt.next = curr
+-            else:
+-                curr.next = None
+-
+-            prev = curr
+-            curr = curr.next
+-
+-        return dummy.next
+-
+-# @lc code=end
+-
+diff --git a/leetcode/300-1.py b/leetcode/300-1.py
+deleted file mode 100644
+index fc5695a..0000000
+--- a/leetcode/300-1.py
++++ /dev/null
+@@ -1,161 +0,0 @@
+-
+-from typing import List
+-
+-class Solution:
+-   def lengthOfLIS(self, nums: List[int]) -> int:
+-        if len(nums) == 1:
+-            return 1
+-
+-        dp = [0 for _ in range(0, len(nums))]
+-        dp[0]=1
+-
+-        absoluteMax = 1
+-        for i in range(1, len(nums)):
+-            currMax = -10**4-1
+-
+-            for j in range(i-1, -1, -1):
+-                if nums[i] > nums[j] and dp[j] > currMax:
+-                    currMax = dp[j]
+-
+-            if currMax != -10**4-1:
+-                dp[i] = currMax+1
+-                absoluteMax = max([dp[i], absoluteMax])
+-            else:
+-                dp[i] = 1
+-
+-
+-            # print(dp)
+-
+-        return absoluteMax
+-
+-        
+-
+-
+-
+-inputs = [
+-    [
+-        [0,1,0,3,2,3],
+-        4
+-    ],
+-    [
+-        [1,3,6,7,9,4,10,5,6], # 1,3,6,7,9,10
+-        6,
+-    ],
+-    [
+-        [10,9,2,5,3,7,101,18], # 2,5,7,101 | 2,3,5,6
+-        4,
+-    ],
+-    [
+-        [5, 2,101,18,19],
+-        3,
+-    ],
+-    [
+-        [5,3,7,9,8], # 5,7,9
+-        3,
+-    ],
+-    [
+-        [1,3,2,3],
+-        3,
+-    ],
+-    [
+-        [1,8,9,2,6,3,4], # 1,2,3,4
+-        4,
+-    ],
+-    [
+-        [7,7,7,7,7,7,7],
+-        1,
+-    ],
+-    [
+-        [3,4,2,6],
+-        3,
+-    ],
+-    [
+-        [6,4,2],
+-        1,
+-    ],
+-    [
+-        [6],
+-        1,
+-    ],
+-    [
+-        [1, 2, 0],
+-        2,
+-    ],
+-    [
+-        [0,1,2],
+-        3,
+-    ],
+-    [
+-        [-1, 0,1,2],
+-        4,
+-    ],
+-    [
+-        [-1,-2],
+-        1,
+-    ],
+-    [
+-        [-2, -1],
+-        2,
+-    ],
+-    [
+-        [-10**4, -1],
+-        2,
+-    ],
+-    [
+-        [-10**4, -1, 0, 1, 10**4],
+-        5,
+-    ]
+-]
+-
+-
+-for _, input in enumerate(inputs):
+-    solution = Solution()
+-    print(solution.lengthOfLIS(input[0]) == input[1])
+-
+-'''
+-[10,9,2,5,3,7,101,18]
+-
+-10 9 2 5 3 7 101 18 1
+-0  1 2 3 4 5 6   7
+-1  1 1 2 2 3 
+-10 9 2 5 
+-
+-10 9 2 2 2 2 2   2
+-       5 3 3 3   3
+-           7 7   7
+-             101 18
+-
+-0 1 2 3 4 5 6 7 8 9 10
+-
+-0 1 2 3 4 5 6 7 4 5 6
+-
+-10^8
+-
+-10**4
+-1 + 10**4
+-
+-[-10**4..-1]..[0..10**4]
+-
+-0..10**4*2
+-
+-lengths
+-
+-
+-0 10
+-1 9
+-2 2
+-3 5
+-4 3
+-5 7
+-6 101
+-7 18
+-
+-[0,1,0,3,2,3]
+-
+-
+-   0 1 2 3 4 5
+-0  1 
+-1  
+-2
+-3
+-'''
+\ No newline at end of file
+diff --git a/leetcode/300.py b/leetcode/300.py
+index bd25b0f..98bd890 100644
+--- a/leetcode/300.py
++++ b/leetcode/300.py
+@@ -1,11 +1,5 @@
+ from typing import List
+ 
+-# dp[5] = 6 . . . . 6
+-# dp[6] = 4 . . . . 2 4
+-
+-
+-
+-
+ class Solution:
+     # def lengthOfLIS(self, nums: List[int]) -> int:
+     #     offset = 10**4
+@@ -203,12 +197,4 @@ lengths
+ 6 101
+ 7 18
+ 
+-[0,1,0,3,2,3]
+-
+-
+-   0 1 2 3 4 5
+-0  1 
+-1  
+-2
+-3
+ '''
+\ No newline at end of file
+diff --git a/leetcode/35.search-insert-position-1.py b/leetcode/35.search-insert-position-1.py
+deleted file mode 100644
+index 522e34d..0000000
+--- a/leetcode/35.search-insert-position-1.py
++++ /dev/null
+@@ -1,60 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=35 lang=python3
+-#
+-# [35] Search Insert Position
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def searchInsert(self, nums: List[int], target: int) -> int:
+-        left = 0
+-        right = len(nums)-1
+-
+-        while (right - left) > 1:
+-            middle = left + int((right - left)/2)
+-
+-            if target >= nums[middle]: 
+-                left = middle
+-            else: 
+-                right = middle
+-        
+-        if target > nums[right]:
+-            return right+1
+-        
+-        if target > nums[left]:
+-            return left + 1
+-        
+-        return left
+-
+-# @lc code=end
+-
+-
+-
+-inputs = [
+-    [
+-       [1,3,5,6],
+-       5,
+-       2
+-    ],
+-    [
+-       [1,3,5,6],
+-       2,
+-       1
+-    ],
+-    [
+-       [1,3,5,6],
+-       7,
+-       4
+-    ],
+-    [
+-       [1,3,5,6],
+-       0,
+-       0
+-    ],
+-]
+-s = Solution()
+-for [arr, target, expected] in inputs:
+-    res = s.searchInsert(arr, target)
+-    print(res == expected, res)
+\ No newline at end of file
+diff --git a/leetcode/35.search-insert-position.py b/leetcode/35.search-insert-position.py
+deleted file mode 100644
+index f8149d9..0000000
+--- a/leetcode/35.search-insert-position.py
++++ /dev/null
+@@ -1,62 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=35 lang=python3
+-#
+-# [35] Search Insert Position
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def searchInsert(self, nums: List[int], target: int) -> int:
+-        left = 0
+-        right = len(nums)-1
+-
+-        while right - left > 1:
+-            middle = left + int((right - left)/2)
+-
+-            if nums[middle] <= target:
+-                left = middle
+-            else:
+-                right = middle
+-
+-        # print(left, right)
+-
+-        if target > nums[right]:
+-            return right + 1
+-        
+-        if target > nums[left]:
+-            return left + 1
+-
+-        return left
+-# @lc code=end
+-
+-
+-
+-inputs = [
+-    [
+-       [1,3,5,6],
+-       5,
+-       2
+-    ],
+-    [
+-       [1,3,5,6],
+-       2,
+-       1
+-    ],
+-    [
+-       [1,3,5,6],
+-       7,
+-       4
+-    ],
+-    [
+-       [1,3,5,6],
+-       0,
+-       0
+-    ],
+-]
+-
+-s = Solution()
+-for [arr, target, expected] in inputs:
+-    res = s.searchInsert(arr, target)
+-    print(res == expected, res)
+\ No newline at end of file
+diff --git a/leetcode/374.guess-number-higher-or-lower.py b/leetcode/374.guess-number-higher-or-lower.py
+deleted file mode 100644
+index 5effd23..0000000
+--- a/leetcode/374.guess-number-higher-or-lower.py
++++ /dev/null
+@@ -1,63 +0,0 @@
+-#
+-# @lc app=leetcode id=374 lang=python3
+-#
+-# [374] Guess Number Higher or Lower
+-#
+-
+-# @lc code=start
+-# The guess API is already defined for you.
+-# @param num, your guess
+-# @return -1 if num is higher than the picked number
+-#          1 if num is lower than the picked number
+-#          otherwise return 0
+-# def guess(num: int) -> int:
+-
+-pick = 2
+-
+-def guess(num: int) -> int:
+-    if num > pick:
+-        return -1
+-    
+-    if num < pick:
+-        return 1
+-    
+-    if num == pick:
+-        return 0
+-
+-class Solution:
+-    def guessNumber(self, n: int) -> int:
+-        left = 1
+-        right = n
+-
+-        while right - left > 0:
+-            middle = int((left + right) / 2)
+-            res = guess(middle)
+-
+-            if res == 0:
+-                return middle
+-
+-            if res == 1 or res == 0:
+-                left = middle+1
+-            else:
+-                right = middle-1
+-
+-        return left
+-
+-
+-
+-# @lc code=end
+-
+-
+-
+-inputs = [
+-    [
+-       2,
+-       2,
+-       2
+-    ],
+-]
+-
+-s = Solution()
+-for [n, target, expected] in inputs:
+-    res = s.guessNumber(n)
+-    print(res == expected, res)
+\ No newline at end of file
+diff --git a/leetcode/441.arranging-coins.py b/leetcode/441.arranging-coins.py
+deleted file mode 100644
+index 9730bfa..0000000
+--- a/leetcode/441.arranging-coins.py
++++ /dev/null
+@@ -1,52 +0,0 @@
+-#
+-# @lc app=leetcode id=441 lang=python3
+-#
+-# [441] Arranging Coins
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def isGood(self, floors: int, maxCoins: int) -> int:
+-        return (1+floors)*floors/2 <= maxCoins
+-
+-    def arrangeCoins(self, n: int) -> int:
+-        left = 1
+-        right = n
+-
+-        while left < right-1:
+-            middle = int((left + right)/2)
+-
+-            if self.isGood(middle, n):
+-                left = middle
+-            else:
+-                right = middle
+-
+-        return left
+-
+-        
+-# @lc code=end
+-
+-inputs = [
+-    [
+-        5,
+-        2
+-    ],
+-    [
+-        8,
+-        3
+-    ],
+-    [
+-        1,
+-        1
+-    ],
+-    [
+-        10,
+-        4
+-    ],
+-
+-]
+-
+-for [arr, expect] in inputs:
+-    solution = Solution()
+-    res = solution.arrangeCoins(arr)
+-    print(res == expect, res)
+diff --git a/leetcode/463.py b/leetcode/463.py
+deleted file mode 100644
+index 7a3abe7..0000000
+--- a/leetcode/463.py
++++ /dev/null
+@@ -1,127 +0,0 @@
+-from typing import List
+-
+-class Solution:
+-    def getKey(self, i: int, j: int) -> str:
+-        return str(i)+":"+str(j)
+-    
+-    def getPerimeter(self, grid: List[List[int]], startI: int, startJ: int) -> int:
+-        visited = set()
+-        stack = [
+-            [startI,startJ]
+-        ]
+-        # graph = {}
+-        perimeter = 0
+-
+-        while len(stack) > 0:
+-            [i,j] = stack.pop()
+-            key = self.getKey(i,j)
+-
+-            if key in visited:
+-                continue
+-
+-            visited.add(key)
+-            # neighbours = set()
+-            perimeter = perimeter + 4
+-
+-            if i < len(grid)-1 and grid[i+1][j] == 1:
+-                # neighbours.add(self.getKey(i+1,j))
+-                perimeter = perimeter - 1
+-                if self.getKey(i+1,j) not in visited:
+-                    stack.append([i+1,j])
+-            
+-            if j < len(grid[i])-1 and grid[i][j+1] == 1:
+-                # neighbours.add(self.getKey(i,j+1))
+-                perimeter = perimeter - 1
+-                if self.getKey(i,j+1) not in visited:
+-                    stack.append([i,j+1])
+-
+-            if j > 0 and grid[i][j-1] == 1:
+-                # neighbours.add(self.getKey(i,j-1))
+-                perimeter = perimeter - 1
+-                if self.getKey(i,j-1) not in visited:
+-                    stack.append([i,j-1])
+-
+-            if i > 0 and grid[i-1][j] == 1:
+-                # neighbours.add(self.getKey(i-1,j))
+-                perimeter = perimeter - 1
+-                if self.getKey(i-1,j) not in visited:
+-                    stack.append([i-1,j])
+-
+-
+-            # graph[key] = neighbours
+-            # print(perimeter, [i,j], visited, stack)
+-            
+-        # print(graph)
+-        # print(perimeter)
+-
+-        return perimeter
+-
+-    def islandPerimeter(self, grid: List[List[int]]) -> int:
+-        for i, row in enumerate(grid):
+-            for j, el in enumerate(row):
+-                if el == 1:
+-                    perimeter = self.getPerimeter(grid, i, j)
+-                    return perimeter
+-        return 0
+-
+-inputs = [
+-    [
+-        [
+-            [0,1,0,0],
+-            [1,1,1,0],
+-            [0,1,0,0],
+-            [1,1,0,0]
+-        ],
+-        16
+-    ],
+-    [
+-        [
+-            [1]
+-        ],
+-        4
+-    ],
+-    [
+-        [
+-            [1,0]
+-        ],
+-        4
+-    ],
+-    [
+-        [
+-            [0,1,0,0],
+-            [1,1,1,1],
+-            [0,1,0,0],
+-            [1,1,0,0]
+-        ],
+-        18
+-    ],
+-    [
+-        [
+-            [0,0]
+-        ],
+-        0
+-    ],
+-    [
+-        [
+-            [1,1],
+-            [1,1]
+-        ],
+-        8
+-    ],
+-    [
+-        [
+-            [1,1],
+-        ],
+-        6
+-    ],
+-    [
+-        [
+-            [1,1],
+-            [1,0],
+-        ],
+-        8
+-    ]
+-]
+-s = Solution()
+-for [grid, res] in inputs:
+-    print(s.islandPerimeter(grid)==res)
+\ No newline at end of file
+diff --git a/leetcode/496-1.py b/leetcode/496-1.py
+deleted file mode 100644
+index 14c38bd..0000000
+--- a/leetcode/496-1.py
++++ /dev/null
+@@ -1,21 +0,0 @@
+-class Solution:
+-    def nextGreaterElement(self, nums1: List[int], nums2: List[int]) -> List[int]:
+-        ...
+-
+-
+-
+-'''
+- [4,1,2]
+- [1,3,4,2]
+-
+-
+-4 -
+-6 -
+-2
+-
+-1 -
+-3 
+-4
+-7
+-2
+-'''
+\ No newline at end of file
+diff --git a/leetcode/523.continuous-subarray-sum.py b/leetcode/523.continuous-subarray-sum.py
+deleted file mode 100644
+index e444a2f..0000000
+--- a/leetcode/523.continuous-subarray-sum.py
++++ /dev/null
+@@ -1,78 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=523 lang=python3
+-#
+-# [523] Continuous Subarray Sum
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+-        prefixes = {
+-            0: -1
+-        }
+-
+-        prefixSum = 0
+-
+-        for i, el in enumerate(nums):
+-            prefixSum += el
+-            mod = prefixSum % k
+-
+-            if mod in prefixes:
+-                if i - prefixes[mod] >= 2:
+-                    return True
+-            else: 
+-                prefixes[mod] = i
+-            
+-        return False
+-            
+-
+-# @lc code=end
+-
+-'''
+-{
+-0:1
+-1:1
+-2:1
+-}
+-'''
+-
+-inputs = [
+-    [
+-        [23,2,4,6,7],
+-        6,
+-        True
+-    ],
+-    [
+-        [23,2,6,4,7],
+-        6,
+-        True
+-    ],
+-    [
+-        [23,2,6,4,7],
+-        13,
+-        False
+-    ],
+-    [
+-        [6,0],
+-        6,
+-        True
+-    ],
+-    [
+-        [0,6,],
+-        6,
+-        True
+-    ],
+-    [
+-        [0],
+-        6,
+-        False
+-    ]
+-]
+-
+-s = Solution()
+-for [arr1, target, expect] in inputs:
+-    res = s.checkSubarraySum(arr1, target)
+-    print(res==expect, res)
+-
+diff --git a/leetcode/55.jump-game.py b/leetcode/55.jump-game.py
+deleted file mode 100644
+index f83ccbd..0000000
+--- a/leetcode/55.jump-game.py
++++ /dev/null
+@@ -1,53 +0,0 @@
+-from typing import Optional, List
+-
+-#
+-# @lc app=leetcode id=55 lang=python3
+-#
+-# [55] Jump Game
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def canJump(self, nums: List[int]) -> bool:
+-        dp = [False for i in range(0, len(nums))]
+-
+-        dp[-1] = True
+-
+-        for i in range(len(nums)-2, -1, -1):
+-            value = False
+-
+-            j = i
+-
+-            while not value and j < i + nums[i] + 1:
+-                value = value or dp[j]
+-                j = j + 1
+-
+-            dp[i] = value
+-
+-        return dp[0]
+-
+-# @lc code=end
+-
+-
+-inputs = [
+-    [
+-        [2,3,1,1,4],
+-        True
+-    ],
+-    [
+-        [3,2,1,0,4],
+-        False
+-    ],
+-    [
+-        [0,0],
+-        False
+-    ],
+-    [
+-        [1,0],
+-        False
+-    ],
+-]
+-s = Solution()
+-for [arr, expected] in inputs:
+-    res = s.canJump(arr)
+-    print(res == expected)
+\ No newline at end of file
+diff --git a/leetcode/554.brick-wall.py b/leetcode/554.brick-wall.py
+deleted file mode 100644
+index 116900b..0000000
+--- a/leetcode/554.brick-wall.py
++++ /dev/null
+@@ -1,154 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=554 lang=python3
+-#
+-# [554] Brick Wall
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def leastBricks(self, wall: List[List[int]]) -> int:
+-        # joints = []
+-        jointCounts = {}
+-        maxCount = 0
+-
+-        for row in wall:
+-            jointRow = []
+-
+-            for i in range(0, len(row)-1):
+-                el = row[i]
+-
+-                if i == 0:
+-                    jointRow.append(el)
+-                else:
+-                    jointRow.append(el + jointRow[-1])
+-
+-                if jointRow[-1] in jointCounts:
+-                    jointCounts[jointRow[-1]] = jointCounts[jointRow[-1]] + 1
+-                else:
+-                    jointCounts[jointRow[-1]] = 1
+-
+-                maxCount = max(jointCounts[jointRow[-1]], maxCount)
+-
+-            # joints.append(jointRow)
+-
+-        # print(joints)
+-        # print(jointCounts)
+-        # print(maxCount)
+-
+-        return len(wall) - maxCount
+-# @lc code=end
+-
+-
+-inputs = [
+-    # [
+-    #     [
+-    #         [1,2,2,1],
+-    #         [3,1,2],
+-    #         [1,3,2],
+-    #         [2,4],
+-    #         [3,1,2],
+-    #         [1,3,1,1]
+-    #     ],
+-    #     2
+-    # ],
+-    # [
+-    #     [
+-    #         [1],
+-    #         [1],
+-    #         [1]
+-    #     ],
+-    #     3
+-    # ],
+-    # [
+-    #     [
+-    #         [1,1],
+-    #         [2],
+-    #         [1,1]
+-    #     ],
+-    #     1
+-    # ],
+-    [
+-        [
+-            [100000000],
+-            [100000000],
+-            [100000000]
+-        ],
+-        3
+-    ]
+-
+-    
+-
+-]
+-
+-s = Solution()
+-for [arr1, expect] in inputs:
+-    res = s.leastBricks(arr1)
+-    print(res==expect, res)
+-
+-
+-'''
+-[1,2,2,1],
+-[3,1,2],
+-[1,3,2],
+-[2,4],
+-[3,1,2],
+-[1,3,1,1]
+-
+-010101
+-
+-
+--++--+
+- 01010
+-122334
+-
+- 010102,2
+- 11001
+- 01101
+- 10111
+- 11001
+- 01100
+-
+-[1,2,2,1] -> 01010
+-[3,1,2]   -> 11001
+-[1,3,2],  -> 01101
+-
+-i == i -> +1
+-
+-[
+-    [0, 1, 0, 1, 0, 0],
+-    [1, 1, 0, 0, 1, 0],
+-    [0, 1, 1, 0, 1, 0],
+-    [1, 0, 1, 1, 1, 0],
+-    [1, 1, 0, 0, 1, 0],
+-    [0, 1, 1, 0, 0, 0]
+-]
+-
+-'''
+-
+-
+-'''
+-[1,2,2,1],
+-[3,1,2],
+-[1,3,2],
+-[2,4],
+-[3,1,2],
+-[1,3,1,1]
+-
+-
+-[1,2,2,1]
+-
+-i == 1
+-1,1*el-1
+-
+-1010101
+-1110011
+-
+-            [1,1],
+-            [2],
+-            [1,1]
+-
+-1
+-
+-'''
+\ No newline at end of file
+diff --git a/leetcode/560.subarray-sum-equals-k.py b/leetcode/560.subarray-sum-equals-k.py
+deleted file mode 100644
+index 64c96bb..0000000
+--- a/leetcode/560.subarray-sum-equals-k.py
++++ /dev/null
+@@ -1,82 +0,0 @@
+-from typing import List
+-#
+-# @lc app=leetcode id=560 lang=python3
+-#
+-# [560] Subarray Sum Equals K
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def subarraySum(self, nums: List[int], target: int) -> int:
+-        count = 0
+-        prefixSum = 0
+-        prefixes = {
+-            0:1
+-        }
+-
+-        for el in nums:
+-            prefixSum += el
+-            diff = prefixSum-target
+-
+-            count += prefixes.get(diff, 0)
+-            prefixes[prefixSum] = prefixes.get(prefixSum, 0) + 1
+-
+-        return count
+-
+-# @lc code=end
+-
+-'''
+-{
+-0:1
+-1:1
+-2:1
+-}
+-'''
+-
+-inputs = [
+-    [
+-        [1,1,1],
+-        2,
+-        2
+-    ],
+-    [
+-        [1,2,3],
+-        3,
+-        2
+-    ],
+-    [
+-        [1,2,3,1,2,3],
+-        6,
+-        4
+-    ],
+-    [
+-        [1,2,3,7,1,2,3],
+-        6,
+-        2
+-    ],
+-    [
+-        [1],
+-        0,
+-        0
+-    ],
+-    [
+-        [-1,-1,1],
+-        0,
+-        1
+-    ],
+-    [
+-        [1,-1,0],
+-        0,
+-        3
+-    ],
+-]
+-
+-s = Solution()
+-for [arr1, target, expect] in inputs:
+-    res = s.subarraySum(arr1, target)
+-    print(res==expect, res)
+-
+-
+-
+-# nums = [7,2,3]
+-# print(nums.pop(0))
+\ No newline at end of file
+diff --git a/leetcode/673.py b/leetcode/673.py
+deleted file mode 100644
+index 607afcc..0000000
+--- a/leetcode/673.py
++++ /dev/null
+@@ -1,123 +0,0 @@
+-
+-from typing import List
+-
+-class Solution:
+-
+-    def findNumberOfLIS(self, nums: List[int]) -> int:
+-        if len(nums) == 1:
+-            return 1
+-
+-        lenghts = [0 for _ in range(0, len(nums))]
+-        counts = [1 for _ in range(0, len(nums))]
+-
+-        lenghts[-1]=1
+-
+-        for i in range(len(nums)-2, -1, -1):
+-            currMaxLenIndx = 0
+-            # currMaxLenIndxes = []
+-            currCount = 1
+-
+-            for j in range(i+1, len(nums), 1): 
+-                if nums[j] >= nums[i]:
+-                    if nums[j] > nums[i] and lenghts[j] > lenghts[currMaxLenIndx]:
+-                        currMaxLenIndx = j
+-                        # currMaxLenIndxes = [j]
+-                        currCount = counts[j]
+-                    elif lenghts[j] == lenghts[currMaxLenIndx] or nums[j] == nums[i]:
+-                        # currMaxLenIndxes.append(j)
+-                        currCount = currCount + 1
+-
+-            lenghts[i] = lenghts[currMaxLenIndx] + 1
+-            counts[i] = currCount
+-            # print('currMaxLenIndxes', currMaxLenIndxes, currCount)
+-
+-
+-        # print(lenghts)
+-        # print(counts)
+-
+-        return counts[0]
+-
+-inputs = [
+-    [
+-        [1,3,5,4,7], # [1, 3, 4, 7] and [1, 3, 5, 7]
+-        2
+-    ],
+-    [
+-        [2,2,2,2,2],
+-        5
+-    ],
+-    [
+-        [2],
+-        1
+-    ],
+-    [
+-        [2,2],
+-        1
+-    ],
+-    # [
+-    #     [2],
+-    #     1
+-    # ],
+-    # [
+-    #     [-2,2,2],
+-    #     2
+-    # ],
+-    # [
+-    #     [1,2,4,3,5,4,7,2], # 1,2,3,4,7 | 1,2,4,5,7 | 1,2,3,5,7
+-    #     3
+-    # ]
+-]
+-
+-
+-for _, input in enumerate(inputs):
+-    solution = Solution()
+-    res = solution.findNumberOfLIS(input[0])
+-    print(res, res == input[1])
+-
+-'''
+-[10,9,2,5,3,7,101,18]
+-
+-10 9 2 5 3 7 101 18 1
+-0  1 2 3 4 5 6   7
+-1  1 1 2 2 3 
+-10 9 2 5 
+-
+-10 9 2 2 2 2 2   2
+-       5 3 3 3   3
+-           7 7   7
+-             101 18
+-
+-0 1 2 3 4 5 6 7 8 9 10
+-
+-0 1 2 3 4 5 6 7 4 5 6
+-
+-10^8
+-
+-10**4
+-1 + 10**4
+-
+-[-10**4..-1]..[0..10**4]
+-
+-0..10**4*2
+-
+-lengths
+-
+-
+-0 10
+-1 9
+-2 2
+-3 5
+-4 3
+-5 7
+-6 101
+-7 18
+-
+-[0,1,0,3,2,3]
+-
+-
+-   0 1 2 3 4 5
+-0  1 
+-1  
+-2
+-3
+-'''
+\ No newline at end of file
+diff --git a/leetcode/682.baseball-game.py b/leetcode/682.baseball-game.py
+deleted file mode 100644
+index a56d87b..0000000
+--- a/leetcode/682.baseball-game.py
++++ /dev/null
+@@ -1,44 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=682 lang=python3
+-#
+-# [682] Baseball Game
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def calPoints(self, operations: List[str]) -> int:
+-        stack = []
+-
+-        for op in operations:
+-            if op == "C":
+-                stack.pop()
+-            elif op == "D":
+-                stack.append(stack[-1] * 2)
+-            elif op == "+":
+-                stack.append(stack[-1] + stack[-2])
+-            else:
+-                stack.append(int(op))
+-        
+-        res = 0
+-
+-        while len(stack) > 0:
+-            res += stack.pop()
+-
+-        return res
+-
+-        
+-# @lc code=end
+-
+-inputs = [
+-    [
+-        ["5","-2","4","C","D","9","+","+"],
+-        27
+-    ],
+-  
+-]
+-
+-for [arr, expect] in inputs:
+-    solution = Solution()
+-    print(solution.calPoints(arr) == expect)
+diff --git a/leetcode/695.py b/leetcode/695.py
+deleted file mode 100644
+index 94446f9..0000000
+--- a/leetcode/695.py
++++ /dev/null
+@@ -1,92 +0,0 @@
+-from typing import List
+-
+-class Solution:
+-    def explore(self, grid: List[List[int]], i: int, j: int) -> int:
+-        stack = [[i, j]]
+-        count = 0
+-
+-        while len(stack) > 0:
+-            i, j = stack.pop()
+-
+-            if grid[i][j] == 1:
+-                count = count + 1
+-
+-            grid[i][j] = 0
+-            
+-
+-            if i > 0 and grid[i-1][j] == 1:
+-                stack.append([i-1,j])
+-
+-            if i < len(grid)-1 and grid[i+1][j] == 1:
+-                stack.append([i+1,j])
+-
+-            if j > 0 and grid[i][j-1] == 1:
+-                stack.append([i,j-1])
+-
+-            if j < len(grid[i])-1 and grid[i][j+1] == 1:
+-                stack.append([i,j+1])
+-
+-            '''
+-                |
+-               -i-
+-                |
+-            '''
+-
+-        return count
+-
+-    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+-        maxIsland = 0
+-
+-        for i in range(0, len(grid)):
+-            for j in range(0, len(grid[i])):
+-                if grid[i][j] == 1:
+-                    res = self.explore(grid, i, j)
+-
+-                    if res > maxIsland:
+-                        maxIsland = res
+-                
+-        return maxIsland
+-
+-inputs = [
+-    [
+-       [
+-           [0,0,1,0,0,0,0,1,0,0,0,0,0],
+-           [0,0,0,0,0,0,0,1,1,1,0,0,0],
+-           [0,1,1,0,1,0,0,0,0,0,0,0,0],
+-           [0,1,0,0,1,1,0,0,1,0,1,0,0],
+-           [0,1,0,0,1,1,0,0,1,1,1,0,0],
+-           [0,0,0,0,0,0,0,0,0,0,1,0,0],
+-           [0,0,0,0,0,0,0,1,1,1,0,0,0],
+-           [0,0,0,0,0,0,0,1,1,0,0,0,0]
+-        ],
+-       6
+-    ],
+-    [
+-        [
+-            [0,0,0,0,0,0,0,0]
+-        ],
+-        0
+-    ],
+-    [
+-        [
+-            [1,1,0,0,0],
+-            [1,1,0,0,0],
+-            [0,0,0,1,1],
+-            [0,0,0,1,1]
+-        ],
+-        4
+-    ]
+-]
+-
+-
+-for _, input in enumerate(inputs):
+-    s = Solution()
+-    res = s.maxAreaOfIsland(input[0])
+-
+-    print(res, res == input[1])
+-
+-'''
+-  |
+-- i -
+-  |
+-'''
+\ No newline at end of file
+diff --git a/leetcode/705.py b/leetcode/705.py
+deleted file mode 100644
+index ae0fef0..0000000
+--- a/leetcode/705.py
++++ /dev/null
+@@ -1,56 +0,0 @@
+-class Node:
+-    def __init__(self, key):
+-        self.key = key
+-        self.next = None
+-
+-class MyHashSet:
+-    def __init__(self):
+-        self.s = [Node(0) for i in range(0, 10**4)]
+-
+-    def add(self, key: int) -> None:
+-        curr = self.s[key % 10**4]
+-        
+-        while curr.next:
+-            if curr.next.key == key:
+-                return
+-            curr = curr.next
+-
+-        curr.next = Node(key)
+-
+-    def remove(self, key: int) -> None:
+-        curr = self.s[key % 10**4]
+-        
+-        while curr.next:
+-            if curr.next.key == key:
+-                curr.next = curr.next.next
+-                return
+-
+-            curr = curr.next
+-
+-    def contains(self, key: int) -> bool:
+-        curr = self.s[key % 10**4]
+-        
+-        while curr.next:
+-            if curr.next.key == key:
+-                return True
+-
+-            curr = curr.next
+-
+-        return False
+-        
+-
+-
+-# Your MyHashSet object will be instantiated and called as such:
+-
+-inputs = [
+-    1
+-]
+-
+-for key in inputs:
+-    obj = MyHashSet()
+-    obj.add(key)
+-    print(obj.contains(key))
+-    obj.add(key)
+-    print(obj.contains(key))
+-    obj.remove(key)
+-    print(obj.contains(key))
+\ No newline at end of file
+diff --git a/leetcode/80.remove-duplicates-from-sorted-array-ii.py b/leetcode/80.remove-duplicates-from-sorted-array-ii.py
+deleted file mode 100644
+index d12ebff..0000000
+--- a/leetcode/80.remove-duplicates-from-sorted-array-ii.py
++++ /dev/null
+@@ -1,80 +0,0 @@
+-from typing import Optional, List
+-
+-#
+-# @lc app=leetcode id=80 lang=python3
+-#
+-# [80] Remove Duplicates from Sorted Array II
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def removeDuplicates(self, nums: List[int]) -> int:
+-        countOfRemovedElements = 0
+-        i = 0
+-
+-        while i < len(nums)-countOfRemovedElements-2:
+-            if nums[i] == nums[i+1] and nums[i+1] == nums[i+2]:
+-                j = i + 1
+-
+-                while j < len(nums)-max(1, countOfRemovedElements) and nums[j] == nums[j+1]:
+-                    j = j + 1
+-                    countOfRemovedElements = countOfRemovedElements + 1
+-
+-                j = j + 1
+-                k = i + 2
+-
+-                while k < len(nums) and j < len(nums):
+-                    nums[k] = nums[j]
+-                    k = k + 1
+-                    j = j + 1
+-                    
+-                
+-                print(i, countOfRemovedElements)
+-
+-            i = i + 1
+-
+-        return len(nums) - countOfRemovedElements
+-
+-
+-# @lc code=end
+-
+-
+-
+-inputs = [
+-    [
+-        [0,0,0, 1,1,1,1,1,1,1,1, 2,3,3, 5], # [0,0, 1,1, 2,3,3, 5],
+-        8
+-    ],
+-    # [
+-    #     [1,1,1,2,2,3],
+-    #     5
+-    # ],
+-    # [
+-    #     [0,0,1,1,1,1,2,3,3],
+-    #     7
+-    # ],
+-    # [
+-    #     [0,0],
+-    #     2
+-    # ],
+-    # [
+-    #     [0],
+-    #     1
+-    # ],
+-    # [
+-    #     [0,0,0],
+-    #     2
+-    # ],
+-    [
+-        [0,1,2,2,2,2,2,3,4,4,4], #[0,1,2,2,3,4,4]
+-        7
+-    ],
+-    [
+-        [0,0,0,0,0], #[0,0]
+-        2
+-    ],
+-]
+-s = Solution()
+-for [arr, expected] in inputs:
+-    res = s.removeDuplicates(arr)
+-    print(res == expected, res, arr)
+\ No newline at end of file
+diff --git a/leetcode/83.remove-duplicates-from-sorted-list.py b/leetcode/83.remove-duplicates-from-sorted-list.py
+index 8a99e32..dca0543 100644
+--- a/leetcode/83.remove-duplicates-from-sorted-list.py
++++ b/leetcode/83.remove-duplicates-from-sorted-list.py
+@@ -1,4 +1,4 @@
+-from typing import Optional, List
++from typing import Optional
+ 
+ class ListNode:
+     def __init__(self, val=0, next=None):
+@@ -17,31 +17,28 @@ class ListNode:
+ #     def __init__(self, val=0, next=None):
+ #         self.val = val
+ #         self.next = next
+-
+ class Solution:
+     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+-        dummy = ListNode(None, head)
++        if head is None:
++            return None 
++        
++        if head.next is None:
++            return head
+ 
+-        '''
+-        prev
+-        curr
+-        next
+-        '''
++        node = head
++        next = node.next
+ 
+-        prev = dummy
+-        curr = head
++        while next is not None:
++            while next is not None and node.val == next.val:
++                next = next.next
+ 
+-        while curr:
+-            next = curr.next
++            node.next = next
++            node = next
+ 
+-            if prev.val == curr.val:
+-                prev.next = next
+-            else:
+-                prev = curr
++            if node is not None:
++                next = node.next
+ 
+-            curr = next
+-        
+-        return dummy.next
++        return head
+ 
+ 
+ # @lc code=end
+diff --git a/leetcode/876.middle-of-the-linked-list.py b/leetcode/876.middle-of-the-linked-list.py
+deleted file mode 100644
+index 9882067..0000000
+--- a/leetcode/876.middle-of-the-linked-list.py
++++ /dev/null
+@@ -1,37 +0,0 @@
+-from typing import Optional, List
+-
+-class ListNode:
+-    def __init__(self, val=0, next=None):
+-        self.val = val
+-        self.next = next
+-
+-#
+-# @lc app=leetcode id=876 lang=python3
+-#
+-# [876] Middle of the Linked List
+-#
+-
+-# @lc code=start
+-# Definition for singly-linked list.
+-# class ListNode:
+-#     def __init__(self, val=0, next=None):
+-#         self.val = val
+-#         self.next = next
+-class Solution:
+-    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+-        curr = head
+-
+-        elements = []
+-
+-        while curr:
+-            elements.append(curr)
+-            curr = curr.next
+-
+-        return elements[int(len(elements)/2)]
+-
+-# @lc code=end
+-
+-
+-
+-# print(int(6/2))
+-# print(int(5/2))
+\ No newline at end of file
+diff --git a/leetcode/912.sort-an-array.py b/leetcode/912.sort-an-array.py
+deleted file mode 100644
+index 0f53de4..0000000
+--- a/leetcode/912.sort-an-array.py
++++ /dev/null
+@@ -1,75 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=912 lang=python3
+-#
+-# [912] Sort an Array
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def merge(self, left: List[int], right: List[int]) -> List[int]:
+-        sorted = []
+-
+-        i=0
+-        j=0
+-
+-        while i < len(left) or j < len(right):
+-            if i >= len(left):
+-                sorted.append(right[j])
+-                j = j + 1
+-                continue
+-
+-            if j >= len(right):
+-                sorted.append(left[i])
+-                i = i + 1
+-                continue
+-
+-            if left[i] <= right[j]:
+-                sorted.append(left[i])
+-                i = i + 1
+-            else:
+-                sorted.append(right[j])
+-                j = j + 1
+-
+-        return sorted
+-
+-    def sortArray(self, nums: List[int]) -> List[int]:
+-        if len(nums) == 0:
+-            return []
+-        
+-        if len(nums) == 1:
+-            return nums
+-
+-        middle = int(len(nums)/2)
+-
+-        return self.merge(self.sortArray(nums[0:middle]), self.sortArray(nums[middle:len(nums)]))
+-        
+-# @lc code=end
+-
+-# inputs = [
+-#     [
+-#         [1],
+-#         [0]
+-#     ],
+-# ]
+-
+-# s = Solution()
+-# for [arr1, arr2] in inputs:
+-#     res = s.merge(arr1, arr2)
+-#     print(res)
+-
+-
+-inputs = [
+-    [
+-        [5,2,3,1]
+-    ],
+-    [
+-        [5,1,1,2,0,0]
+-    ]
+-]
+-
+-s = Solution()
+-for [arr1] in inputs:
+-    res = s.sortArray(arr1)
+-    print(res)
+diff --git a/leetcode/94.binary-tree-inorder-traversal.py b/leetcode/94.binary-tree-inorder-traversal.py
+deleted file mode 100644
+index c4d00bb..0000000
+--- a/leetcode/94.binary-tree-inorder-traversal.py
++++ /dev/null
+@@ -1,49 +0,0 @@
+-from typing import Optional, List
+-
+-class TreeNode:
+-    def __init__(self, val=0, left=None, right=None):
+-        self.val = val
+-        self.left = left
+-        self.right = right
+-
+-#
+-# @lc app=leetcode id=94 lang=python3
+-#
+-# [94] Binary Tree Inorder Traversal
+-#
+-
+-# @lc code=start
+-# Definition for a binary tree node.
+-# class TreeNode:
+-#     def __init__(self, val=0, left=None, right=None):
+-#         self.val = val
+-#         self.left = left
+-#         self.right = right
+-class Solution:
+-    arr = []
+-
+-    def execInorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+-        if root is None:
+-            return
+-        
+-        
+-        self.execInorderTraversal(root.left)
+-        self.arr.append(root.val)
+-        self.execInorderTraversal(root.right)
+-
+-    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+-        self.arr = []
+-        self.execInorderTraversal(root)
+-        return self.arr
+-        
+-        
+-# @lc code=end
+-
+-
+-'''
+-1
+-3
+-2
+-
+-'''
+-
+diff --git a/leetcode/953.py b/leetcode/953.py
+deleted file mode 100644
+index 73ffab3..0000000
+--- a/leetcode/953.py
++++ /dev/null
+@@ -1,167 +0,0 @@
+-from typing import List
+-
+-class Solution:
+-    def isAlienSorted(self, words: List[str], order: str) -> bool:
+-        hashOrder = {}
+-
+-        for i, el in enumerate(order):
+-            hashOrder[el] = i
+-
+-        # print(hashOrder)
+-
+-        for i in range(0, 20):
+-            max = -1
+-            onlyIncrease = True
+-            for word in words:
+-                el = -1
+-
+-                if i < len(word):
+-                    el = hashOrder[word[i]]
+-
+-                if el > max:
+-                    max = el
+-                elif el == max:
+-                    onlyIncrease = False
+-                elif el < max:
+-                    return False
+-                
+-            if onlyIncrease:
+-                return True
+-
+-        return True
+-
+-
+-inputs = [
+-    [
+-        ["hello","leetcode"], 
+-        "hlabcdefgijkmnopqrstuvwxyz",
+-        True,
+-    ],
+-    [
+-        ["word","world","row"],
+-        "worldabcefghijkmnpqstuvxyz",
+-        False,
+-    ],
+-    [
+-        ["apple","app"], 
+-        "abcdefghijklmnopqrstuvwxyz",
+-        False,
+-    ],
+-    [
+-        ["a"], 
+-        "abcdefghijklmnopqrstuvwxyz",
+-        True,
+-    ],
+-    [
+-        ["a", "b"], 
+-        "abcdefghijklmnopqrstuvwxyz",
+-        True,
+-    ],
+-    [
+-        ["b", "a"], 
+-        "abcdefghijklmnopqrstuvwxyz",
+-        False,
+-    ],
+-]
+-
+-
+-for _, input in enumerate(inputs):
+-    solution = Solution()
+-    res = solution.isAlienSorted(input[0], input[1])
+-    print(res == input[2])
+-
+-'''
+-["hello","leetcode"], 
+-
+-0: 0,1
+-1: 6,6
+-2: 1,6
+-3: 1,19
+-4: 14,4
+-
+-h l
+-e e
+-l e
+-l t
+-o c
+-
+-leetcode
+-
+-
+-h 0
+-l 1
+-a 2
+-b 3
+-c 4
+-d 5
+-e 6
+-f 7
+-g 8
+-i 9
+-j 10
+-k 11
+-m 12
+-n 13
+-o 14
+-pqrstuvwxyz
+-
+-
+-
+-
+-
+-
+-["word","world","row"],
+-[0,0,2],
+-
+-w 0
+-o 1
+-r 2
+-l 3
+-d 4
+-
+-0: 0, 0, 2
+-1: 1, 1, 1
+-2: 2, 2, 0
+-
+-j >= j+n
+-
+-
+-
+-abcefghijkmnpqstuvxyz
+--------------------------------
+-
+-
+-
+-["hello","leetcode"],
+-
+-0: 0, 1
+-1: 6, 6
+-2: 1, 6
+-3: 1, 13
+-
+-
+-
+-h 0
+-l 1
+-a 2
+-b 3
+-c 4
+-d 5
+-e 6
+-fgijkmnopqrstuvwxyz
+-
+-
+-'''
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+diff --git a/leetcode/977.squares-of-a-sorted-array.py b/leetcode/977.squares-of-a-sorted-array.py
+deleted file mode 100644
+index 82a44f2..0000000
+--- a/leetcode/977.squares-of-a-sorted-array.py
++++ /dev/null
+@@ -1,81 +0,0 @@
+-from typing import List
+-
+-#
+-# @lc app=leetcode id=977 lang=python3
+-#
+-# [977] Squares of a Sorted Array
+-#
+-
+-# @lc code=start
+-class Solution:
+-    def sortedSquares(self, nums: List[int]) -> List[int]:
+-        i=0
+-
+-        left = 0
+-        right = len(nums)
+-
+-        while left < right:
+-            middle = int((left+right)/2) 
+-
+-            if nums[middle] <= 0:
+-                left = middle + 1
+-            else:
+-                right = middle
+-
+-        # print(right)
+-
+-        i = right
+-
+-        j=i-1
+-
+-        arr = []
+-
+-        while j >= 0 and i < len(nums):
+-            if nums[i] < (-1*nums[j]):
+-                arr.append(nums[i]**2)
+-                i+=1
+-            else:
+-                arr.append((-1*nums[j])**2)
+-                j-=1
+-
+-            # print(arr)
+-
+-        while i < len(nums):
+-            arr.append(nums[i]**2)
+-            i+=1
+-
+-        while j >= 0:
+-            arr.append((-1*nums[j])**2)
+-            j-=1
+-
+-        # print(arr)
+-
+-        return arr
+-       
+-        
+-# @lc code=end
+-
+-s = Solution()
+-print(s.sortedSquares([-7,-3,2,3,11]))
+-print(s.sortedSquares([0,2,3,11]))
+-print(s.sortedSquares([-4,-1,0,3,10]))
+-print(s.sortedSquares([-4,-1]))
+-print(s.sortedSquares([-1]))
+-
+-
+-
+-'''
+-     j i
+-[-7,-3,2,3,11]
+-
+-
+-
+-while j!=0 or i < len(nums):
+-    if i < len(nums) and nums[i] > (-1*nums[j]):
+-        arr.append(nums[i])
+-        i+=1
+-    elif j>-1:
+-        arr.append(nums[j])
+-        j-=1
+-
+-'''
+\ No newline at end of file
+diff --git a/leetcode/994.rotting-oranges.py b/leetcode/994.rotting-oranges.py
+deleted file mode 100644
+index 8ac233d..0000000
+--- a/leetcode/994.rotting-oranges.py
++++ /dev/null
+@@ -1,112 +0,0 @@
+-from typing import List, Optional
+-
+-#
+-# @lc app=leetcode id=994 lang=python3
+-#
+-# [994] Rotting Oranges
+-#
+-1
+-# @lc code=start
+-class Solution:
+-    def orangesRotting(self, grid: List[List[int]]) -> int:
+-        queue = []
+-        hasRotting = False
+-        hasFresh = False
+-
+-        for i in range(0, len(grid)):
+-            for j in range(0, len(grid[i])):
+-                if grid[i][j] == 2:
+-                    queue.append([i, j, 0])
+-                    hasRotting = True
+-                
+-                if grid[i][j] == 1:
+-                    hasFresh = True
+-
+-        if not hasRotting and hasFresh:
+-            return -1
+-        
+-        if not hasRotting and not hasFresh:
+-            return 0
+-
+-        maxMinutes = 0
+-
+-        while len(queue) > 0:
+-            el = queue.pop(0)
+-
+-            print(el)
+-
+-            i = el[0]
+-            j = el[1]
+-            minute = el[2]
+-
+-            maxMinutes = max(maxMinutes, minute)
+-
+-            if i-1>-1 and grid[i-1][j] == 1:
+-                grid[i-1][j] = 2
+-                queue.append([i-1,j,minute+1])
+-            
+-            if i+1<len(grid) and grid[i+1][j] == 1:
+-                grid[i+1][j] = 2
+-                queue.append([i+1,j,minute+1])
+-
+-            if j-1>-1 and grid[i][j-1] == 1:
+-                grid[i][j-1] = 2
+-                queue.append([i,j-1,minute+1])
+-
+-            if j+1<len(grid[0]) and grid[i][j+1] == 1:
+-                grid[i][j+1] = 2
+-                queue.append([i,j+1,minute+1])
+-
+-        print(grid)
+-
+-        for i in range(0, len(grid)):
+-            for j in range(0, len(grid[i])):
+-                if grid[i][j] == 1:
+-                    return -1
+-            
+-        return maxMinutes
+-
+- 
+-
+-# @lc code=end
+-
+-
+-inputs = [
+-    [
+-        [
+-            [2,1,1],
+-            [1,1,0],
+-            [0,1,1]
+-        ],
+-        4,
+-    ],
+-    [
+-        [
+-            [2,1,1],
+-            [0,1,1],
+-            [1,0,1]
+-        ],
+-        -1
+-    ],
+-    [
+-        [
+-            [0,2]
+-        ],
+-        0,
+-    ],
+-    [
+-        [
+-            [2,1,1],
+-            [1,1,1],
+-            [0,1,2]
+-        ],
+-        2,
+-    ],
+-    
+-]
+-
+-s = Solution()
+-for [arr1, expect] in inputs:
+-    res = s.orangesRotting(arr1)
+-    print(res==expect, res)
+-
+diff --git a/sliding-window/2-4.js b/sliding-window/2-4.js
+new file mode 100644
+index 0000000..16fc143
+--- /dev/null
++++ b/sliding-window/2-4.js
+@@ -0,0 +1,66 @@
++process.stdin.resume();
++process.stdin.setEncoding("utf-8");
++
++let inputArray = [];
++let inputString = "";
++let currentLine = 0;
++
++process.stdin.on("data", (inputStdin) => {
++    inputArray.push(inputStdin)
++});
++
++process.stdin.on("end", (_) => {
++    inputString = inputArray.join('')
++    inputString = inputString
++        .trim()
++        .split("\n")
++        .map((string) => {
++            return string.trim();
++        });
++
++    main();
++});
++
++function readline() {
++    return inputString[currentLine++];
++}
++
++function main() {
++    const [n, s] = readline().split(' ').map(Number)
++    const arr = readline().split(' ').map(Number)
++    let x = 0
++    let L = 0
++    let count = 0
++
++    for(let R = 0; R < n; R++) {
++        x += arr[R];
++
++        while (x >= s) {
++            x -= arr[L]
++            L++
++        }
++
++
++        console.log(L, R, x)
++
++        count += L
++    }
++    
++    console.log(count)
++}
++/*
++7 20
++2 6 4 3 6 8 9
++
++26436
++264368
++2643689
++
++64368
++643689
++
++4368
++43689
++3689
++689
++*/
+\ No newline at end of file
+diff --git a/sliding-window/2-4.txt b/sliding-window/2-4.txt
+new file mode 100644
+index 0000000..930f534
+--- /dev/null
++++ b/sliding-window/2-4.txt
+@@ -0,0 +1,2 @@
++7 20
++2 6 4 3 6 8 9
+diff --git a/ya/graphs/A.py b/ya/graphs/A.py
+deleted file mode 100644
+index 19ce9e2..0000000
+--- a/ya/graphs/A.py
++++ /dev/null
+@@ -1,66 +0,0 @@
+-from typing import List
+-
+-def getMatrix(v: int, e: int, edges: List[List[int]]):
+-    matrix = [
+-        [0 for _ in range(0, v)] for _ in range(0, v)
+-    ]
+-
+-    for _, [v, u] in enumerate(edges):
+-        matrix[v-1][u-1] = 1 # Oriented
+-        # matrix[u-1][v-1] = 1 # Non-oriented
+-
+-    return matrix
+-
+-edges = []
+-v, e = map(int, input().split())    
+-for _ in range(0, e):
+-    n1, n2 = map(int, input().split())
+-    edges.append([n1, n2])
+-
+-# print(v,e, vertixes)
+-
+-print(*getMatrix(v,e, edges), sep='\n')
+-
+-
+-# arr = list(map(int, input().strip().split()))
+-# print(calc(N, arr))
+-
+-# inputs = [
+-#     # [
+-#     #     [1, 2, 3, 4, 5, 5, 7, 7, 8, 10, 12, 19, 25],
+-#     #     True
+-#     # ],
+-#     # [
+-#     #     [1, 2, 3, 4, 5, 6, 7],
+-#     #     True
+-#     # ],
+-#     # [
+-#     #     [12, 13, 14, 15, 23],
+-#     #     True
+-#     # ],
+-#     # [
+-#     #     [12],
+-#     #     False
+-#     # ],
+-#     # [
+-#     #     [12, 18],
+-#     #     False
+-#     # ],
+-#     # [
+-#     #     [3, 3, 4],
+-#     #     False
+-#     # ],
+-#     [
+-#         [3, 3, 3],
+-#         True
+-#     ]
+-# ]
+-
+-# for i, input in enumerate(inputs):
+-#     weights = input[0]
+-#     print(calc(weights) == input[1])
+-
+-
+-'''
+-
+-'''
+\ No newline at end of file
+diff --git a/ya/graphs/B.py b/ya/graphs/B.py
+deleted file mode 100644
+index 0785ccb..0000000
+--- a/ya/graphs/B.py
++++ /dev/null
+@@ -1,28 +0,0 @@
+-from typing import List
+-
+-def getMatrix(v: int, e: int, edges: List[List[int]]):
+-    matrix = [
+-        0 for _ in range(0, v)
+-    ]
+-
+-    for _, [v, u] in enumerate(edges):
+-        ...
+-
+-
+-    
+-
+-    return matrix
+-
+-edges = []
+-v, e = map(int, input().split())
+-for _ in range(0, e):
+-    n1, n2 = map(int, input().split())
+-    edges.append([n1, n2])
+-
+-print(*getMatrix(v,e, edges), sep='\n')
+-
+-
+-
+-'''
+-
+-'''
+\ No newline at end of file
+diff --git a/ya/graphs/C.py b/ya/graphs/C.py
+deleted file mode 100644
+index 58c4718..0000000
+--- a/ya/graphs/C.py
++++ /dev/null
+@@ -1,90 +0,0 @@
+-from typing import List
+-
+-def isTree(v: int, e: int, edges: List[List[int]]) -> bool:
+-    if v-1 != e:
+-        return False
+-
+-    graph = [[] for _ in range(0, v)]
+-
+-    for _, [A,B] in enumerate(edges):
+-        graph[A].append(B)
+-        graph[B].append(A)
+-    
+-    visited = [False for _ in range(0, v)]
+-
+-    def dfs(vertex: int):
+-        for el in graph[vertex]:
+-            if visited[el]:
+-                continue
+-
+-            visited[el] = True
+-            dfs(el)
+-
+-    dfs(0)
+-            
+-    return sum(visited) == len(visited)
+-
+-
+-edges = []
+-v, e = map(int, input().split())
+-for _ in range(0, e):
+-    n1, n2 = map(int, input().split())
+-    edges.append([n1-1, n2-1])
+-
+-print(isTree(v,e, edges))
+-
+-
+-
+-'''
+-node {
+-    1: [2,3]
+-}
+-
+-3
+-
+-        [
+-0        [1,2]
+-1        [0]
+-2        [0]
+-3        []
+-4        []
+-5        [7,8]
+-6        []
+-7        [5]
+-8        [5]
+-        ]
+-
+-DFS
+-0: 1,2
+-1: 0
+-2: 0
+-
+-visited: [True,True,True]
+-
+------------------------
+-
+-4 3
+-1 2
+-1 3
+-2 3
+-
+-        [
+-0        [1,2]
+-1        [2]
+-2        [1]
+-3        []
+-        ]
+-
+-
+-{
+-    1: [2,3],
+-    2: [3],
+-
+-}
+-
+-6 3
+-
+-800 2
+-1 3
+-2 3
+-'''
+\ No newline at end of file
