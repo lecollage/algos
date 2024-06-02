@@ -46,28 +46,39 @@ def buildTree(nodes: list) -> Optional[TreeNode]:
 #         self.val = val
 #         self.left = left
 #         self.right = right
+
 class Solution:
-    def getHeightAndBalance(self, root: Optional[TreeNode]) -> Tuple[int, bool]:
-        if root is None:
-            return 0, True
-
-        leftHeight, leftBalanced = self.getHeightAndBalance(root.left)
-        rightHeight, rightBalanced = self.getHeightAndBalance(root.right)
-
-        diff = leftHeight - rightHeight
-
-        if diff < 0:
-            diff *= -1
-
-        # print(diff)
-
-        return max(leftHeight, rightHeight) + 1, diff <= 1 and leftBalanced and rightBalanced
-
-
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        _, isBalanced = self.getHeightAndBalance(root)
+        stack = [root]
+        heights = {None: 0}
 
-        return isBalanced
+        while len(stack) > 0:
+            node = stack.pop()
+
+            if node is None:
+                continue
+
+            leftHeight = heights.get(node.left, None)
+            rightHeight = heights.get(node.right, None)
+
+            if leftHeight is None or rightHeight is None:
+                stack.append(node)
+                stack.append(node.left)
+                stack.append(node.right)
+                continue
+
+            heights[node] = max(leftHeight, rightHeight) + 1
+
+            diff = leftHeight - rightHeight
+
+            if diff < 0:
+                diff *= -1
+
+            if diff > 1: 
+                return False
+
+        return True
+
 
 
 # @lc code=end
