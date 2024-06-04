@@ -21,7 +21,6 @@ class Solution:
                 stack.append([i,j+1])
 
     def numIslands(self, grid: List[List[str]]) -> int:
-        self.visited = set()
         islands = 0
         
         for i in range(0, len(grid)):
