@@ -9,58 +9,57 @@ from typing import List
 # @lc code=start
 class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:
-        i=0
-
         left = 0
         right = len(nums)
 
-        while left < right:
-            middle = int((left+right)/2) 
+        while left+1 < right:
+            middle = left + (right-left)//2
 
-            if nums[middle] <= 0:
-                left = middle + 1
-            else:
+            if nums[middle] < 0:
+                left = middle
+            
+            if nums[middle] >= 0:
                 right = middle
 
-        # print(right)
+        partOne = nums[:left+1]
+        partTwo = nums[left+1:]
 
-        i = right
+        i = len(partOne)-1
+        j = 0
+        res = []
 
-        j=i-1
+        while i > -1 or j < len(partTwo):
+            one = partOne[i]**2 if i>-1 else -1
+            two = partTwo[j]**2 if j<len(partTwo) else -1
 
-        arr = []
+            if one == -1:
+                res.append(two)
+                j+=1
+                continue
+                
+            if two == -1:
+                res.append(one)
+                i-=1
+                continue
 
-        while j >= 0 and i < len(nums):
-            if nums[i] < (-1*nums[j]):
-                arr.append(nums[i]**2)
-                i+=1
-            else:
-                arr.append((-1*nums[j])**2)
-                j-=1
+            if one < two:
+                res.append(one)
+                i-=1
+            else: 
+                res.append(two)
+                j+=1
 
-            # print(arr)
+        return res
 
-        while i < len(nums):
-            arr.append(nums[i]**2)
-            i+=1
-
-        while j >= 0:
-            arr.append((-1*nums[j])**2)
-            j-=1
-
-        # print(arr)
-
-        return arr
-       
-        
 # @lc code=end
 
 s = Solution()
 print(s.sortedSquares([-7,-3,2,3,11]))
 print(s.sortedSquares([0,2,3,11]))
-print(s.sortedSquares([-4,-1,0,3,10]))
-print(s.sortedSquares([-4,-1]))
+print(s.sortedSquares([-4,-1,-1,0,3,10]))
+print(s.sortedSquares([-8,-4,-1]))
 print(s.sortedSquares([-1]))
+print(s.sortedSquares([]))
 
 
 
