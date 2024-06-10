@@ -9,6 +9,9 @@ from typing import List
 # @lc code=start
 class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:
+        if len(nums) == 0:
+            return []
+
         left = 0
         right = len(nums)
 
@@ -21,16 +24,13 @@ class Solution:
             if nums[middle] >= 0:
                 right = middle
 
-        partOne = nums[:left+1]
-        partTwo = nums[left+1:]
-
-        i = len(partOne)-1
-        j = 0
+        i = left
+        j = left+1
         res = []
 
-        while i > -1 or j < len(partTwo):
-            one = partOne[i]**2 if i>-1 else -1
-            two = partTwo[j]**2 if j<len(partTwo) else -1
+        while i > -1 or j < len(nums):
+            one = nums[i]**2 if i>-1 else -1
+            two = nums[j]**2 if j<len(nums) else -1
 
             if one == -1:
                 res.append(two)
