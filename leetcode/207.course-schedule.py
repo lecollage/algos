@@ -27,7 +27,7 @@ class Solution:
             queue = [course]
 
             while len(queue) > 0:
-                node = queue.pop(0)
+                node = queue.pop(0) 
 
                 if node in visited:
                     continue
