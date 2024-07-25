@@ -1030,3 +1030,28 @@ insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('2', '20', '20
 insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('3', '10', '30', '20', '20');
 insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('4', '10', '40', '40', '40');
 
+
+select sum(i1.tiv_2016)
+  from Insurance i1 join Insurance i2 on i1.tiv_2015 = i1.tiv_2016 and i1.lat <> i2.lat and i1.lon <> i2.lon 
+ where 1=1
+   and i1.tiv_2015 
+   
+   
+   
+   
+------------------------------------------------------------------------
+-- 1667. Fix Names in a Table
+   
+drop table Users;
+Create table If Not Exists Users (user_id int, name varchar(40));
+
+insert into Users (user_id, name) values ('1', 'aLice');
+insert into Users (user_id, name) values ('2', 'bOB');
+
+
+select u.user_id
+     , upper(substring(u.name from 1 for 1)) || lower(substring(u.name from 2 for length(u.name))) as name
+  from Users u
+order by user_id
+  
+  
