@@ -944,3 +944,46 @@ select name
 	 order by 3 desc, m.title asc
 	 limit 1
  )
+ 
+ 
+ 
+ 
+ 
+ ------------------------------------------------------------------------
+-- 1321. Restaurant Growth
+ 
+drop table Customer;
+Create table If Not Exists Customer (customer_id int, name varchar(20), visited_on date, amount int);
+
+insert into Customer (customer_id, name, visited_on, amount) values ('1', 'Jhon', '2019-01-01', '100');
+insert into Customer (customer_id, name, visited_on, amount) values ('2', 'Daniel', '2019-01-02', '110');
+insert into Customer (customer_id, name, visited_on, amount) values ('3', 'Jade', '2019-01-03', '120');
+insert into Customer (customer_id, name, visited_on, amount) values ('4', 'Khaled', '2019-01-04', '130');
+insert into Customer (customer_id, name, visited_on, amount) values ('5', 'Winston', '2019-01-05', '110');
+insert into Customer (customer_id, name, visited_on, amount) values ('6', 'Elvis', '2019-01-06', '140');
+insert into Customer (customer_id, name, visited_on, amount) values ('7', 'Anna', '2019-01-07', '150');
+insert into Customer (customer_id, name, visited_on, amount) values ('8', 'Maria', '2019-01-08', '80');
+insert into Customer (customer_id, name, visited_on, amount) values ('9', 'Jaze', '2019-01-09', '110');
+insert into Customer (customer_id, name, visited_on, amount) values ('1', 'Jhon', '2019-01-10', '130');
+insert into Customer (customer_id, name, visited_on, amount) values ('3', 'Jade', '2019-01-10', '150');
+
+
+with a as (
+	select min(c.visited_on)+6 as start_date
+	  from Customer c
+), t as (
+	select distinct c.visited_on
+	  from Customer c
+	     , a
+	 where c.visited_on >= a.start_date
+)
+select t.visited_on
+     , round(sum(c.amount), 2) as amount
+     , round(sum(c.amount)/7::numeric, 2) as average_amount
+  from t
+     , Customer c
+ where 1=1
+   and c.visited_on between t.visited_on-6 and t.visited_on
+  group by t.visited_on
+  order by t.visited_on
+  
