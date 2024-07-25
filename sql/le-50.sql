@@ -949,7 +949,7 @@ select name
  
  
  
- ------------------------------------------------------------------------
+------------------------------------------------------------------------
 -- 1321. Restaurant Growth
  
 drop table Customer;
@@ -987,3 +987,46 @@ select t.visited_on
   group by t.visited_on
   order by t.visited_on
   
+
+  
+  
+------------------------------------------------------------------------
+-- 602. Friend Requests II: Who Has the Most Friends
+  
+Create table If Not Exists RequestAccepted (requester_id int not null, accepter_id int null, accept_date date null);
+
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('1', '2', '2016/06/03');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('1', '3', '2016/06/08');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('2', '3', '2016/06/08');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('3', '4', '2016/06/09');
+
+
+
+select id
+     , sum(num) as num
+  from (
+	select ra1.requester_id as id 
+	     , count(ra1.accepter_id) as num
+	  from RequestAccepted ra1  
+	group by ra1.requester_id
+	union all
+	select ra1.accepter_id
+	     , count(ra1.requester_id)
+	  from RequestAccepted ra1  
+	group by ra1.accepter_id
+)
+group by 1
+order by 2 desc
+limit 1
+
+
+------------------------------------------------------------------------
+-- 585. Investments in 2016
+
+Create Table If Not Exists Insurance (pid int, tiv_2015 float, tiv_2016 float, lat float, lon float);
+
+insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('1', '10', '5', '10', '10');
+insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('2', '20', '20', '20', '20');
+insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('3', '10', '30', '20', '20');
+insert into Insurance (pid, tiv_2015, tiv_2016, lat, lon) values ('4', '10', '40', '40', '40');
+
