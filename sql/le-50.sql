@@ -943,6 +943,4 @@ select name
 	        , m.title
 	 order by 3 desc, m.title asc
 	 limit 1
- );
-
- 
+ )
