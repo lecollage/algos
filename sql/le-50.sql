@@ -1055,3 +1055,37 @@ select u.user_id
 order by user_id
   
   
+
+------------------------------------------------------------------------
+-- 176. Second Highest Salary
+	
+drop table Employee;
+Create table If Not Exists Employee (id int, salary int);
+
+insert into Employee (id, salary) values ('1', '100');
+
+insert into Employee (id, salary) values ('1', '100');
+insert into Employee (id, salary) values ('2', '200');
+
+insert into Employee (id, salary) values ('1', '100');
+insert into Employee (id, salary) values ('2', '200');
+insert into Employee (id, salary) values ('3', '300');
+
+insert into Employee (id, salary) values ('1', '100');
+insert into Employee (id, salary) values ('2', '100');
+
+
+with t as (
+	select count(e.id) as cnt
+	     , row_number() over(order by salary) as num
+	     , e.salary
+	  from Employee e
+  group by salary
+  order by salary
+     limit 2
+), t1 as (
+	select 2    as num
+	     , null as salary 
+)
+select case when t.salary is null then null else t.salary end  as "SecondHighestSalary"
+  from t1 left join t on t.num = t1.num and t.cnt = 1
