@@ -1088,3 +1088,24 @@ with t as (
 )
 select case when t.salary is null then null else t.salary end  as "SecondHighestSalary"
   from t1 left join t on t.num = t1.num and (t.cnt = 1 or (t.cnt != 1 and t.num > 1))
+
+
+------------------------------------------------------------------------
+-- 176. Second Highest Salary
+	
+Create table If Not Exists Activities (sell_date date, product varchar(20));
+
+insert into Activities (sell_date, product) values ('2020-05-30', 'Headphone');
+insert into Activities (sell_date, product) values ('2020-06-01', 'Pencil');
+insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product) values ('2020-05-30', 'Basketball');
+insert into Activities (sell_date, product) values ('2020-06-01', 'Bible');
+insert into Activities (sell_date, product) values ('2020-06-02', 'Mask');
+insert into Activities (sell_date, product) values ('2020-05-30', 'T-Shirt');
+
+select a.sell_date
+     , count(distinct a.product) as num_sold
+     , string_agg(distinct a.product, ',') AS products
+  from Activities a 
+group by a.sell_date
+order by a.sell_date
