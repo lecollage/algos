@@ -1091,7 +1091,7 @@ select case when t.salary is null then null else t.salary end  as "SecondHighest
 
 
 ------------------------------------------------------------------------
--- 176. Second Highest Salary
+-- 1484. Group Sold Products By The Date
 	
 Create table If Not Exists Activities (sell_date date, product varchar(20));
 
@@ -1109,3 +1109,43 @@ select a.sell_date
   from Activities a 
 group by a.sell_date
 order by a.sell_date
+
+
+------------------------------------------------------------------------
+-- 1517. Find Users With Valid E-Mails
+
+
+Create table If Not Exists Users (user_id int, name varchar(30), mail varchar(50));
+
+insert into Users (user_id, name, mail) values ('1', 'Winston', 'winston@leetcode.com');
+insert into Users (user_id, name, mail) values ('2', 'Jonathan', 'jonathanisgreat');
+insert into Users (user_id, name, mail) values ('3', 'Annabelle', 'bella-@leetcode.com');
+insert into Users (user_id, name, mail) values ('4', 'Sally', 'sally.come@leetcode.com');
+insert into Users (user_id, name, mail) values ('5', 'Marwan', 'quarz#2020@leetcode.com');
+insert into Users (user_id, name, mail) values ('6', 'David', 'david69@gmail.com');
+insert into Users (user_id, name, mail) values ('7', 'Shapiro', '.shapo@leetcode.com');
+
+with t as (
+	select u.user_id
+	     , u.mail
+	     , u.name
+	     , lower(split_part(u.mail, '@', 1)) as prefix
+	     , lower(split_part(u.mail, '@', 2)) as domain
+	  from Users u
+), t1 as (
+	select array[
+	      t.prefix ~ '^[a-z]'
+	     , not (t.prefix ~ '[^a-z0-9.\-_]')
+	     , length(t.domain) > 0
+	     , t.domain = 'leetcode.com'
+	     ] @> array[false] as invalid
+	     , t.*
+	  from t
+)
+select t1.user_id
+     , t1.name
+     , t1.mail
+  from t1
+ where t1.invalid = false
+  
+  
