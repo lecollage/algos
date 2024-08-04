@@ -1149,3 +1149,93 @@ select t1.user_id
  where t1.invalid = false
   
   
+
+ 
+------------------------------------------------------------------------
+-- 1327. List the Products Ordered in a Period
+ 
+drop table If exists Products;
+drop table If exists Orders;
+Create table If Not Exists Products (product_id int, product_name varchar(40), product_category varchar(40));
+Create table If Not Exists Orders (product_id int, order_date date, unit int);
+
+insert into Products (product_id, product_name, product_category) values ('1', 'Leetcode Solutions', 'Book');
+insert into Products (product_id, product_name, product_category) values ('2', 'Jewels of Stringology', 'Book');
+insert into Products (product_id, product_name, product_category) values ('3', 'HP', 'Laptop');
+insert into Products (product_id, product_name, product_category) values ('4', 'Lenovo', 'Laptop');
+insert into Products (product_id, product_name, product_category) values ('5', 'Leetcode Kit', 'T-shirt');
+
+insert into Orders (product_id, order_date, unit) values ('1', '2020-02-05', '60');
+insert into Orders (product_id, order_date, unit) values ('1', '2020-02-10', '70');
+insert into Orders (product_id, order_date, unit) values ('2', '2020-01-18', '30');
+insert into Orders (product_id, order_date, unit) values ('2', '2020-02-11', '80');
+insert into Orders (product_id, order_date, unit) values ('3', '2020-02-17', '2');
+insert into Orders (product_id, order_date, unit) values ('3', '2020-02-24', '3');
+insert into Orders (product_id, order_date, unit) values ('4', '2020-03-01', '20');
+insert into Orders (product_id, order_date, unit) values ('4', '2020-03-04', '30');
+insert into Orders (product_id, order_date, unit) values ('4', '2020-03-04', '60');
+insert into Orders (product_id, order_date, unit) values ('5', '2020-02-25', '50');
+insert into Orders (product_id, order_date, unit) values ('5', '2020-02-27', '50');
+insert into Orders (product_id, order_date, unit) values ('5', '2020-03-01', '50');
+
+select p.product_name
+     , sum(o.unit) as "unit"
+  from Orders o join Products p on o.product_id = p.product_id 
+ where 1=1
+   and o.order_date between to_date('2020-02-01', 'YYYY-MM-DD') and to_date('2020-03-01', 'YYYY-MM-DD')-1
+group by p.product_name
+having sum(o.unit) >= 100
+  
+
+
+------------------------------------------------------------------------
+-- 185. Department Top Three Salaries
+
+drop table If exists Employee;
+drop table If exists Department;
+
+Create table If Not Exists Employee (id int, name varchar(255), salary int, departmentId int);
+Create table If Not Exists Department (id int, name varchar(255));
+
+insert into Employee (id, name, salary, departmentId) values ('1', 'Joe', '85000', '1');
+insert into Employee (id, name, salary, departmentId) values ('2', 'Henry', '80000', '2');
+insert into Employee (id, name, salary, departmentId) values ('3', 'Sam', '60000', '2');
+insert into Employee (id, name, salary, departmentId) values ('4', 'Max', '90000', '1');
+insert into Employee (id, name, salary, departmentId) values ('5', 'Janet', '69000', '1');
+insert into Employee (id, name, salary, departmentId) values ('6', 'Randy', '85000', '1');
+insert into Employee (id, name, salary, departmentId) values ('7', 'Will', '70000', '1');
+
+insert into Department (id, name) values ('1', 'IT');
+insert into Department (id, name) values ('2', 'Sales');
+
+with t as (
+    select e.departmentId
+	     , e.salary
+      from (
+			select e.departmentId
+			     , e.salary
+		         , row_number() over(partition by e.departmentId order by e.departmentId, e.salary desc) as num
+			  from (
+				select distinct on (e.departmentId, e.salary) e.departmentId, e.salary
+				  from Employee e
+		        order by e.departmentId
+		               , e.salary desc
+			) as e
+	) as e
+	where e.num <= 3
+    order by 1, 2 desc
+)
+select d.name as "Department"
+     , e.name as "Employee"
+     , e.salary as "Salary"
+  from t join Employee e on t.salary = e.salary and t.departmentId = e.departmentId
+         join Department d on d.id = e.departmentId
+order by 1, 3 desc
+  
+  
+  
+  
+  
+  
+  
+  
