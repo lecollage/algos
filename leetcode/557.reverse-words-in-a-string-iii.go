@@ -4,7 +4,7 @@
  * [557] Reverse Words in a String III
  */
 
- package main
+package main
 
 import (
 	"fmt"
