@@ -15,27 +15,19 @@ func search(nums []int, target int) int {
 	l := 0
 	r := len(nums)-1
 
-	for ; l+1<r; {
+	for ; l<=r; {
 		m := int((l+r)/2)
 
-		if(nums[m] <= target) {
-			l = m
+		if(nums[m] == target) {
+			return m
+		} else if(nums[m] < target) {
+			l = m+1
 		} else {
-			r = m
+			r = m-1
 		}
-
-		// fmt.Println(l,m,r)
 	}
 
-	if(nums[l] != target && nums[r] != target) {
-		return -1
-	}
-
-	if(nums[r]==target) {
-		return r
-	}
-
-	return l
+	return -1
 }
 // @lc code=end
 
