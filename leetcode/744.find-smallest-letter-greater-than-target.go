@@ -1,7 +1,7 @@
 /*
- * @lc app=leetcode id=35 lang=golang
+ * @lc app=leetcode id=744 lang=golang
  *
- * [35] Search Insert Position
+ * [744] Find Smallest Letter Greater Than Target
  */
 
  package main
@@ -11,32 +11,28 @@
  )
  
  // @lc code=start
-func nextGreatestLetter(nums []byte, target byte) byte {
-	if(nums[0]>target) {
-		return nums[0]
-	}
+ func nextGreatestLetter(letters []byte, target byte) byte {
+    l := 0
+    r := len(letters)-1
 
-	if(nums[len(nums)-1]<=target) {
-		return nums[0]
-	}
+    for l<r {
+        m := (l+r)/2
 
-	l:=0
-	r:=len(nums)-1
-
-	for l<r {
-		m := (l+r)/2
-
-		if(nums[m] <= target) {
-			l = m+1
-		} else {
-			r = m
-		}
-	}
-
+        if letters[m] > target {
+            r = m
+        } else {
+            l = m+1
+        }
+    }
 	// fmt.Println(l,r)
 
-	return nums[l]
+    if letters[r] <= target {
+        return letters[0]
+    }
+
+    return letters[l]
 }
+
  // @lc code=end
  
  
