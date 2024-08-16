@@ -99,10 +99,8 @@ func search(nums []int, target int) int {
 
 
 
-
 func main1() {
-	// MAX 
-
+	// MAX INDEX
 	tests := []struct {
 		arr     []int
 		out     int
@@ -119,24 +117,6 @@ func main1() {
 	}
 }
 
-func main2() {
-	// MIN 
-
-	tests := []struct {
-		arr     []int
-		out     int
-	}{
-		{[]int{4,5,6,7,0,1,2}, 4},
-		{[]int{2,4,5,6,7,0,1}, 5},
-		{[]int{1,2,4,5,6,7,0}, 6},
-		{[]int{0,1,2,4,5,6,7}, 0},
-	}
-
-	for _, test := range tests {
-		res := findIndexOfMin(test.arr)
-		fmt.Println(res == test.out, res)
-	}
-}
 
 
 func main() {
