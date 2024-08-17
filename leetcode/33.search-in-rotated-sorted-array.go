@@ -22,8 +22,6 @@ func findIndexOfMax(nums []int) int {
 	for l+1<r {
 		m := int((l+r)/2)
 
-		// fmt.Println(l,m,r,max)
-
 		if nums[m] < max {
 			r = m
 		} else {
@@ -32,11 +30,8 @@ func findIndexOfMax(nums []int) int {
 
 		if nums[m] > max {
 			max = nums[m]
-			// fmt.Println("max changed to m", nums[m])
 		}
 	}
-
-	// fmt.Println(l,r, max)
 
 	if nums[r] > nums[l] {
 		return r
