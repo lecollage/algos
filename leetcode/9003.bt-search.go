@@ -13,15 +13,37 @@ type TreeNode struct {
 }
 
 // @lc code=start
-type BSTIterator struct {
-	arr []int
+func getArr(root *TreeNode) []int {
+	stack := []*TreeNode{}
+	arr := []int{}
+
+	if root == nil {
+		return []int{}
+	}
+
+	stack = append(stack, root)
+
+	for len(stack) > 0 {
+		current := stack[len(stack) - 1]
+		arr = append(arr, current.Val)
+
+		stack = stack[:len(stack) - 1]
+
+		if current.Right != nil {
+			stack = append(stack, current.Right)
+		}
+
+		if current.Left != nil {
+			stack = append(stack, current.Left)
+		}
+	}
+
+	return arr
 }
 
-
-func Constructor(root *TreeNode) BSTIterator {
+func searchBST(root *TreeNode, val int) *TreeNode {
 	stack := []*TreeNode{}
 	current := root
-	arr := []int{}
 
 	for current != nil || len(stack) > 0 {
 		if current != nil  {
@@ -29,28 +51,17 @@ func Constructor(root *TreeNode) BSTIterator {
 			current = current.Left
 		} else {
 			current = stack[len(stack)-1]
-			arr = append(arr, current.Val)
+
+			if current.Val == val {
+				return current
+			}
+
 			stack = stack[:len(stack)-1]
 			current = current.Right
 		}
 	}
 
-    return BSTIterator{
-		arr: arr,
-	}
-}
-
-
-func (this *BSTIterator) Next() int {
-	ret := this.arr[0]
-	this.arr = this.arr[1:]
-
-	return ret
-}
-
-
-func (this *BSTIterator) HasNext() bool {
-    return len(this.arr) > 0
+	return nil
 }
 // @lc code=end
 
@@ -71,8 +82,16 @@ func main1() {
 			Val: 3,
 			Left: &TreeNode{
 				Val: 5,
-				Left: nil,
-				Right: nil,
+				Left: &TreeNode{
+					Val: 7,
+					Left: nil,
+					Right: nil,
+				},
+				Right: &TreeNode{
+					Val: 7,
+					Left: nil,
+					Right: nil,
+				},
 			},
 			Right: &TreeNode{
 				Val: 6,
@@ -82,9 +101,7 @@ func main1() {
 		},
 	}
 
-	obj := Constructor(tree);
-
-	fmt.Println(obj.Next(), obj.Next(), obj.Next(), obj.Next(), obj.Next(), obj.HasNext(), obj.Next(), obj.HasNext())
+	fmt.Println(searchBST(tree, 3))
 }
 
 
