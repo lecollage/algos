@@ -9,19 +9,15 @@ var areAllResolved = function(dict) {
 }
 
 var prepareValidResponse = function(dict) {
-  const response =  {"t": 0, "resolved": []}
+  const resolved = []
 
   for(let i = 0; i < Object.keys(dict).length; i++) {
     const item = dict[i]
 
-    if (item.diff > response["t"]) {
-      response["t"] = item.diff
-    }
-
-    response["resolved"].push(item.val)
+    resolved.push(item.val)
   }
 
-  return response
+  return resolved
 }
 
 var prepareInvalidResponse = function(item, val) {
@@ -43,21 +39,14 @@ var promiseAll = function(functions) {
     for(let i = 0; i < Object.keys(dict).length; i++) {
       const item = dict[i]
 
-      item.startDate = performance.now()
-
       item.fn().then(value => {
         item.val = value
-        item.finishDate = performance.now()
-        item.diff = Math.round(item.finishDate - item.startDate)
 
         if (areAllResolved(dict)) {
           resolve(prepareValidResponse(dict))
         }
       }).catch(val => {
-        item.finishDate = performance.now()
-        item.diff = Math.round(item.finishDate - item.startDate)
-
-        resolve(prepareInvalidResponse(item, val))
+        reject(val)
       })
     }
   })
@@ -77,11 +66,11 @@ var promiseAll = function(functions) {
 {
   const functions = [
     () => new Promise(resolve => setTimeout(() => resolve(1), 200)), 
-    () => new Promise((resolve, reject) => setTimeout(() => reject("Error"), 100))
+    () => new Promise((resolve, reject) => setTimeout(() => reject("Error 1"), 100))
   ]
   const promise = promiseAll(functions)
 
-  promise.then(console.log);
+  promise.then(console.log).catch(console.error);
 }
 
 {
