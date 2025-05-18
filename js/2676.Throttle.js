@@ -4,39 +4,37 @@
  * @return {Function}
  */
 var throttle = function(fn, t) {
+    let currArgs
+    let timeoutId
     let counter = 0
-    let latestArgs
-    let firstTime = true
 
-    const repeat = () => {
-        const iteration = counter
+    const execute = () => {
+        const currentIteration = counter
 
-        setTimeout(() => {
-            // console.log("inside repeat >> ", latestArgs, iteration , counter)
+        if (currArgs) {
+            fn(...currArgs)
+        }
 
-            if(latestArgs) {
-                fn(...latestArgs)
-                repeat()
+        timeoutId = setTimeout(() => {
+            if(currentIteration === counter) {
+                currArgs = undefined
+            } else {
+                execute()
             }
-
-            if(iteration == counter) {
-                latestArgs = undefined
-            }
-        }, firstTime ? 0 : t)
+        }, t)
     }
     
     return function(...args) {
-        latestArgs = args
+        currArgs = args
         counter++
 
-        if(firstTime) {
-            repeat()
+        if (!timeoutId) {
+            execute()
         }
-
-        firstTime = false
     }
 };
 
 
 const throttled = throttle(console.log, 1000);
-throttled("log"); // logged immediately.
+throttled("log"); 
+throttled("log"); 
