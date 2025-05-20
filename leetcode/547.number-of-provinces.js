@@ -5,57 +5,6 @@
  */
 
 // @lc code=start
-const explore = (startI, startJ, matrix) => {
-    const stack = []
-
-    stack.push([startI, startJ])
-
-    while(stack.length) {
-        const [i, j] = stack.pop()
-
-        if (matrix[i-1] && matrix[i-1][j] === 1) {
-            matrix[i-1][j] = 0
-            stack.push([i-1, j])
-        }
-
-        if (matrix[i+1] && matrix[i+1][j]) {
-            matrix[i+1][j] = 0
-            stack.push([i+1, j])
-        }
-
-        if (matrix[i][j-1]) {
-            matrix[i][j-1] = 0
-            stack.push([i, j-1])
-        }
-
-        if (matrix[i][j+1]) {
-            matrix[i][j+1] = 0
-            stack.push([i, j+1])
-        }
-    }
-}
-
-const isConnected = (i, j, matrix) => {
-        if (matrix[i-1] && matrix[i-1][j]) {
-            return true
-        }
-
-        if (matrix[i+1] && matrix[i+1][j]) {
-            return true
-        }
-
-        if (matrix[i][j-1]) {
-            return true
-        }
-
-        if (matrix[i][j+1]) {
-            return true
-        }
-
-        return false
-}
-
-
 /**
  * @param {number[][]} isConnected
  * @return {number}
@@ -66,17 +15,37 @@ var findCircleNum = function(matrix) {
     }
 
     let provinces = 0
+    const visited = new Array(matrix.length)
+    
+    visited.fill(false)
 
     for (let i = 0; i < matrix[0].length; i++) {
-        for (let j = 0; j < matrix[i].length; j++) {
-            if (matrix[i][j] === 1) {
-                if (isConnected(i, j, matrix)) {
-                    explore(i, j, matrix)
-                    provinces++
-                } else {
-                    matrix[i][j] = 0
+        const stack = []
+
+        stack.push(i)
+
+        let isNewProvince = false
+
+        while (stack.length) {
+            const node = stack.pop()
+
+            if (!visited[node]) {
+                console.log(`Visited: ${node}`);
+                visited[node] = true
+
+                isNewProvince = true
+
+                for (let neighbour = 0; neighbour < matrix[node].length; neighbour++) {
+                    if (!visited[neighbour] && matrix[node][neighbour] === 1) {
+                        stack.push(neighbour)
+                    }
                 }
             }
+        }
+
+        if (isNewProvince) {
+            provinces++
+            isNewProvince = false
         }
     }
 
@@ -132,23 +101,5 @@ var findCircleNum = function(matrix) {
         [1,1,0],
         [0,0,1]
     ]
-}
-
-
-i j == 1 -> neighbour
-
-0: [0, 1]
-1: [0, 1]
-2: [2]
-
-
-
-
-0: Set(0,1)
-
-const set = new Set()
-
-if (set.has(matrix[i][j])) {
-    set.add()
 }
 
