@@ -15,37 +15,28 @@ var findCircleNum = function(matrix) {
     }
 
     let provinces = 0
-    const visited = new Array(matrix.length)
-    
-    visited.fill(false)
-
-    for (let i = 0; i < matrix[0].length; i++) {
-        const stack = []
-
-        stack.push(i)
-
-        let isNewProvince = false
+    const visited = new Array(matrix.length).fill(false)
+    const dfs = start => {
+        const stack = [start]
 
         while (stack.length) {
             const node = stack.pop()
+            // console.log(`Visited: ${node}`);
 
-            if (!visited[node]) {
-                console.log(`Visited: ${node}`);
-                visited[node] = true
-
-                isNewProvince = true
-
-                for (let neighbour = 0; neighbour < matrix[node].length; neighbour++) {
-                    if (!visited[neighbour] && matrix[node][neighbour] === 1) {
-                        stack.push(neighbour)
-                    }
+            for (let neighbour = 0; neighbour < matrix[node].length; neighbour++) {
+                if (!visited[neighbour] && matrix[node][neighbour] === 1) {
+                    stack.push(neighbour)
+                    visited[neighbour] = true
                 }
             }
         }
+    }
 
-        if (isNewProvince) {
+    for (let i = 0; i < matrix[0].length; i++) {
+        if(!visited[i]) {
             provinces++
-            isNewProvince = false
+            visited[i] = true
+            dfs(i)
         }
     }
 
