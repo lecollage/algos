@@ -11,54 +11,70 @@
  * @return {number}
  */
 var minReorder = function(n, connections) {
-    const directedGraph = []
-    const undirectedGraph = []
+    const directedGraph = new Map()
+    const undirectedGraph = new Map()
 
-    for (let i = 0; i < n; i++) {
-        directedGraph.push(new Array(n).fill(0))
-        undirectedGraph.push(new Array(n).fill(0))
-    } 
+    for(let i = 0; i < n; i++) {
+        directedGraph.set(i, [])
+        undirectedGraph.set(i, [])
+    }
 
-    for (let i = 0; i < connections.length; i++) {
-        let [from, to] = connections[i]
+    for(let i = 0; i < connections.length; i++) {
+        const [from, to] = connections[i]
 
-        directedGraph[from][to] = 1
-
-        undirectedGraph[from][to] = 1
-        undirectedGraph[to][from] = 1
+        directedGraph.set(from, [...directedGraph.get(from), to])
+        undirectedGraph.set(from, [...undirectedGraph.get(from), to])
+        undirectedGraph.set(to, [...undirectedGraph.get(to), from])
     }
 
     console.log(directedGraph)
     console.log(undirectedGraph)
 
     const visited = new Set()
-    const stack = [{el: 0, to: 0}]
     let swapCount = 0
+    const dfs = (node) => {
+        const neighbours = undirectedGraph.get(node)
 
-    while(stack.length) {
-        const {el, to} = stack.pop()
+        console.log()
+        console.log(node, neighbours)
 
-        if(!visited.has(el)) {
-            for(let i = 0; i < n; i++) {
-                if(undirectedGraph[el][i] === 1) {
-                    stack.push({el: i, to: el})
+        for(let i = 0; i < neighbours.length; i++) {
+            const neighbour = neighbours[i]
+            console.log(node, neighbour, directedGraph.get(neighbour))
+            
+            if(!directedGraph.get(neighbour).includes(node)) {
+                swapCount++
+                console.log(`swap`, swapCount)
+            }
 
-                    if(directedGraph[el][to] === 1) {
-                        console.log(el, to)
-                        swapCount++
-                    }
-                }
+            if(!visited.has(node)) {
+                visited.add(node)
+                dfs(neighbour)
             }
         }
-
-        visited.add(el)
     }
 
-    console.log(visited)
+    dfs(0)
+
 
     return swapCount
 };
 // @lc code=end
+
+{
+    const n = 3
+    const matrix = [
+        [1,0],
+        [2,0]
+    ]
+
+    const answer = minReorder(n, matrix)
+    const expected = 0
+
+    console.log(answer === expected, answer)
+}
+
+return;
 
 {
     const n = 6
@@ -194,3 +210,33 @@ swap
 3  0 0 1 0 0 
 4  0 0 0 1 0
 */
+
+{
+    const n = 5
+    const matrix = [
+        [1,0],
+        [1,2],
+        [3,2],
+        [3,4]
+    ]
+
+    const answer = minReorder(n, matrix)
+    const expected = 2
+
+    console.log(answer === expected, answer)
+}
+
+
+
+{
+    const n = 3
+    const matrix = [
+        [1,0],
+        [2,0]
+    ]
+
+    const answer = minReorder(n, matrix)
+    const expected = 0
+
+    console.log(answer === expected, answer)
+}
