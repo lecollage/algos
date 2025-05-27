@@ -39,7 +39,12 @@ var minReorder = function(n, connections) {
 
     let swapsCount = 0
     const visited = new Set()
-    const dfs = node => {
+    const stack = [0]
+
+    visited.add(0)
+
+    while(stack.length) {
+        const node = stack.pop()
         const neighbours = undirectedGraph.get(node)
 
         for(let i = 0; i < neighbours.length; i++) {
@@ -53,17 +58,10 @@ var minReorder = function(n, connections) {
                 }
 
                 visited.add(neighbour)
-                dfs(neighbour)
+                stack.push(neighbour)
             }
         }
-    } 
-
-
-    visited.add(0)
-
-    dfs(0)
-
-    // console.log(visited)
+    }
 
     return swapsCount
 };
