@@ -38,10 +38,10 @@ var minReorder = function(n, connections) {
     console.log(undirectedGraph)
 
     let swapsCount = 0
-    const visited = new Set()
+    const visited = new Array(n).fill(false)
     const stack = [0]
 
-    visited.add(0)
+    visited[0] = true
 
     while(stack.length) {
         const node = stack.pop()
@@ -51,13 +51,13 @@ var minReorder = function(n, connections) {
             const neighbour = neighbours[i]
             const hashedRoad = getHash(neighbour, node)
 
-            if(!visited.has(neighbour)) {
+            if(!visited[neighbour]) {
                 if(!roads.has(hashedRoad)) {
                     // console.log(`swap >> `, hashedRoad)
                     swapsCount++
                 }
 
-                visited.add(neighbour)
+                visited[neighbour] = true
                 stack.push(neighbour)
             }
         }
