@@ -11,54 +11,61 @@
  * @return {number}
  */
 var minReorder = function(n, connections) {
-    const undirectedGraph = new Map()
+    const roads  = new Set()
 
-    for (let i = 0; i < n; i++) {
-        undirectedGraph.set(i, [])
+    const getHash = (from, to) => `${from}:${to}`
+
+    for (let i = 0; i < connections.length; i++) {
+        const [from, to] = connections[i]
+        const hashedRoad = getHash(from, to)
+
+        roads.add(hashedRoad)
     }
 
-    const roads = new Set()
-    const getHash = (from, to) => `${from},${to}`
+    const undirectedGraph = new Map()
+
+    for(let i = 0; i < n; i++) {
+        undirectedGraph.set(i, [])
+    }
 
     for (let i = 0; i < connections.length; i++) {
         const [from, to] = connections[i]
 
         undirectedGraph.set(from, [...undirectedGraph.get(from), to])
         undirectedGraph.set(to, [...undirectedGraph.get(to), from])
-        roads.add(getHash(from, to))
     }
 
-    // console.log(undirectedGraph)
+    console.log(undirectedGraph)
 
-    const visited = new Array(n).fill(false)
-
-    visited[0] = true
-
-    const dfs = (node) => {
+    let swapsCount = 0
+    const visited = new Set()
+    const dfs = node => {
         const neighbours = undirectedGraph.get(node)
-        let swapCount = 0
 
-        for (let i = 0; i < neighbours.length; i++) {
+        for(let i = 0; i < neighbours.length; i++) {
             const neighbour = neighbours[i]
+            const hashedRoad = getHash(neighbour, node)
 
-            if(!visited[neighbour]) {
-                visited[neighbour] = true
-
-                const wrongDirection = getHash(node, neighbour)
-
-                if(roads.has(wrongDirection)) {
-                    swapCount++
-                    // console.log(`swap`, wrongDirection, node, neighbour, swapCount)
+            if(!visited.has(neighbour)) {
+                if(!roads.has(hashedRoad)) {
+                    // console.log(`swap >> `, hashedRoad)
+                    swapsCount++
                 }
 
-                swapCount += dfs(neighbour)
+                visited.add(neighbour)
+                dfs(neighbour)
             }
         }
+    } 
 
-        return swapCount
-    }
 
-    return dfs(0)
+    visited.add(0)
+
+    dfs(0)
+
+    // console.log(visited)
+
+    return swapsCount
 };
 // @lc code=end
 
@@ -81,7 +88,6 @@ var minReorder = function(n, connections) {
 0<-1->2<-3->4
 
 */
-
 
 {
     const n = 6
