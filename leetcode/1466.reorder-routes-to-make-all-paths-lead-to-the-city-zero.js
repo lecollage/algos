@@ -30,13 +30,13 @@ var minReorder = function(n, connections) {
 
     // console.log(undirectedGraph)
 
-    let swapCount = 0
     const visited = new Array(n).fill(false)
 
     visited[0] = true
 
     const dfs = (node) => {
         const neighbours = undirectedGraph.get(node)
+        let swapCount = 0
 
         for (let i = 0; i < neighbours.length; i++) {
             const neighbour = neighbours[i]
@@ -48,18 +48,17 @@ var minReorder = function(n, connections) {
 
                 if(roads.has(wrongDirection)) {
                     swapCount++
-
                     // console.log(`swap`, wrongDirection, node, neighbour, swapCount)
                 }
 
-                dfs(neighbour)
+                swapCount += dfs(neighbour)
             }
         }
+
+        return swapCount
     }
 
-    dfs(0)
-
-    return swapCount
+    return dfs(0)
 };
 // @lc code=end
 
