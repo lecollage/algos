@@ -1,4 +1,3 @@
-
 /*
  * @lc app=leetcode id=547 lang=javascript
  *
@@ -6,7 +5,6 @@
  */
 
 // @lc code=start
-
 /**
  * @param {number[][]} isConnected
  * @return {number}
@@ -17,35 +15,28 @@ var findCircleNum = function(matrix) {
     }
 
     let provinces = 0
-    const visited = new Set()
-
-    for (let i = 0; i < matrix[0].length; i++) {
-        const stack = []
-
-        stack.push(i)
-
-        let isNewProvince = false
+    const visited = new Array(matrix.length).fill(false)
+    const dfs = start => {
+        const stack = [start]
 
         while (stack.length) {
             const node = stack.pop()
+            // console.log(`Visited: ${node}`);
 
-            if (!visited.has(node)) {
-                console.log(`Visited: ${node}`);
-                visited.add(node)
-
-                isNewProvince = true
-
-                for (let neighbour = 0; neighbour < matrix[node].length; neighbour++) {
-                    if (!visited.has(neighbour) && matrix[node][neighbour] === 1) {
-                        stack.push(neighbour)
-                    }
+            for (let neighbour = 0; neighbour < matrix[node].length; neighbour++) {
+                if (!visited[neighbour] && matrix[node][neighbour] === 1) {
+                    stack.push(neighbour)
+                    visited[neighbour] = true
                 }
             }
         }
+    }
 
-        if (isNewProvince) {
+    for (let i = 0; i < matrix[0].length; i++) {
+        if(!visited[i]) {
             provinces++
-            isNewProvince = false
+            visited[i] = true
+            dfs(i)
         }
     }
 
@@ -96,11 +87,10 @@ var findCircleNum = function(matrix) {
 }
 
 {
-    const matrix =     [
+    [
         [1,1,0],
         [1,1,0],
         [0,0,1]
     ]
-
-    console.log(findCircleNum(matrix))
 }
+
