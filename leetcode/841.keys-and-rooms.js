@@ -10,14 +10,6 @@
  * @return {boolean}
  */
 var canVisitAllRooms = function (rooms) {
-    const graph = new Map()
-
-    for (let i = 0; i < rooms.length; i++) {
-        graph.set(i, rooms[i])
-    }
-
-    // console.log(graph)
-
     const stack = [0]
     const visited = new Set()
 
@@ -25,7 +17,7 @@ var canVisitAllRooms = function (rooms) {
 
     while (stack.length) {
         const node = stack.pop()
-        const neighbours = graph.get(node)
+        const neighbours = rooms[node]
 
         for (let i = 0; i < neighbours.length; i++) {
             const neighbour = neighbours[i]
@@ -36,8 +28,6 @@ var canVisitAllRooms = function (rooms) {
             }
         }
     }
-
-    // console.log(visited)
 
     return visited.size === rooms.length
 };
