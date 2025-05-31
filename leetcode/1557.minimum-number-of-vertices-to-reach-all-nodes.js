@@ -11,112 +11,86 @@
  * @return {number[]}
  */
 var findSmallestSetOfVertices = function (n, edges) {
-    const directedGraph = new Map()
-
-    for (let i = 0; i < n; i++) {
-        directedGraph.set(i, [])
-    }
+    const vertices = new Array(n).fill(false)
 
     for (let i = 0; i < edges.length; i++) {
-        const [from, to] = edges[i]
-        directedGraph.set(from, [...directedGraph.get(from), to])
+        const [_, to] = edges[i]
+
+        vertices[to] = true
     }
 
-    console.log(directedGraph)
-
-    const visited = new Set()
-    const dfs = (root) => {
-        const stack = [root]
-
-        while (stack.length) {
-            const node = stack.pop()
-            const neighbours = directedGraph.get(node)
-
-            for (let i = 0; i < neighbours.length; i++) {
-                const neighbour = neighbours[i]
-
-                if (!visited.has(neighbour)) {
-                    stack.push(neighbour)
-                    visited.add(neighbour)
-                }
-            }
-        }
-    }
-
-
-    const vertices = []
-
+    const minVerticesSet = []
+    
     for (let i = 0; i < n; i++) {
-        if (!visited.has(i)) {
-            visited.add(i)
-            vertices.push(i)
-            dfs(i)
+        if(!vertices[i]) {
+            minVerticesSet.push(i)
         }
     }
-
+    
     // console.log(vertices)
+    // console.log(minVerticesSet)
 
-    return vertices
+    return minVerticesSet
 };
 // @lc code=end
 
 
-// {
-//     const n = 6
-//     const edges = [
-//         [0, 1],
-//         [0, 2],
-//         [2, 5],
-//         [3, 4],
-//         [4, 2]
-//     ]
-//     const expected = [0, 3]
-//     const result = findSmallestSetOfVertices(n, edges)
-//     let isEqual = true
+{
+    const n = 6
+    const edges = [
+        [0, 1],
+        [0, 2],
+        [2, 5],
+        [3, 4],
+        [4, 2]
+    ]
+    const expected = [0, 3]
+    const result = findSmallestSetOfVertices(n, edges)
+    let isEqual = true
 
-//     for (let i = 0; i < expected.length; i++) {
-//         const node = expected[i]
+    for (let i = 0; i < expected.length; i++) {
+        const node = expected[i]
 
-//         if (!result.includes(node)) {
-//             isEqual = false
-//         }
-//     }
+        if (!result.includes(node)) {
+            isEqual = false
+        }
+    }
 
-//     if (expected.length !== result.length) {
-//         isEqual = false
-//     }
+    if (expected.length !== result.length) {
+        isEqual = false
+    }
 
-//     console.log(isEqual)
-// }
+    console.log(isEqual)
+}
 
 
-// {
-//     const n = 5
-//     const edges = [
-//         [0, 1],
-//         [2, 1],
-//         [3, 1],
-//         [1, 4],
-//         [2, 4]
-//     ]
-//     const expected = [0, 2, 3]
-//     const result = findSmallestSetOfVertices(n, edges)
-//     let isEqual = true
+{
+    const n = 5
+    const edges = [
+        [0, 1],
+        [2, 1],
+        [3, 1],
+        [1, 4],
+        [2, 4]
+    ]
+    const expected = [0, 2, 3]
+    const result = findSmallestSetOfVertices(n, edges)
+    let isEqual = true
 
-//     for (let i = 0; i < expected.length; i++) {
-//         const node = expected[i]
+    for (let i = 0; i < expected.length; i++) {
+        const node = expected[i]
 
-//         if (!result.includes(node)) {
-//             isEqual = false
-//         }
-//     }
+        if (!result.includes(node)) {
+            isEqual = false
+        }
+    }
 
-//     if (expected.length !== result.length) {
-//         isEqual = false
-//     }
+    if (expected.length !== result.length) {
+        isEqual = false
+    }
 
-//     console.log(isEqual)
-// }
+    console.log(isEqual)
+}
 
 
 {
@@ -144,3 +118,5 @@ var findSmallestSetOfVertices = function (n, edges) {
 
     console.log(isEqual)
 }
+
+return
