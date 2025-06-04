@@ -3,16 +3,6 @@
  * @return {number}
  */
 var maxAreaOfIsland = function (grid) {
-    const visited = []
-
-    for (let i = 0; i < grid.length; i++) {
-        visited.push([])
-
-        for (let j = 0; j < grid[i].length; j++) {
-            visited[i].push(false)
-        }
-    }
-
     const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
     const m = grid.length
     const n = grid[0].length
@@ -32,8 +22,8 @@ var maxAreaOfIsland = function (grid) {
                 const nextRow = row + dy
                 const nextCol = col + dx
 
-                if (valid(nextRow, nextCol) && !visited[nextRow][nextCol]) {
-                    visited[nextRow][nextCol] = true
+                if (valid(nextRow, nextCol)) {
+                    grid[nextRow][nextCol] = 0
                     stack.push([nextRow, nextCol])
                 }
             }
@@ -46,8 +36,8 @@ var maxAreaOfIsland = function (grid) {
 
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
-            if (grid[i][j] === 1 && !visited[i][j]) {
-                visited[i][j] = true
+            if (grid[i][j] === 1) {
+                grid[i][j] = 0
 
                 const area = dfs(i, j)
 
