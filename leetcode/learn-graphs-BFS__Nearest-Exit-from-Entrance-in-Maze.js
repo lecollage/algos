@@ -64,7 +64,11 @@ var nearestExit = function (maze, entrance) {
 
     const queue = new MyQueue()
 
-    queue.push(entrance)
+    queue.push({
+        i: entrance[0],
+        j: entrance[1],
+        distance: 0
+    })
 
     const directions = [
         [-1, 0],
@@ -92,22 +96,52 @@ var nearestExit = function (maze, entrance) {
         return true
     }
 
-    while (queue.length) {
-        const [i,j] = queue.pop()
+    const isExit = (i, j) => {
+        if (i === 0) {
+            return true
+        }
 
-        for(const direction of directions) {
+        if (i === maze.length - 1) {
+            return true
+        }
+
+        if (j === 0) {
+            return true
+        }
+
+        if (j === maze[i].length - 1) {
+            return true
+        }
+
+        return false
+    }
+
+    while (queue.length) {
+        const { i, j, distance } = queue.pop()
+
+        for (const direction of directions) {
             const [di, dj] = direction
             const newI = i + di
             const newJ = j + dj
 
-            if(isValid(newI, newJ) && maze[newI][newJ] !== '+') {
-                queue.push([newI, newJ])
+            if (isValid(newI, newJ) && maze[newI][newJ] !== '+') {
+                if (isExit(newI, newJ)) {
+                    return distance + 1
+                }
+
+                queue.push({
+                    i: newI,
+                    j: newJ,
+                    distance: distance + 1
+                })
                 maze[newI][newJ] = '+'
             }
         }
     }
 
-    console.log(maze)
+    // console.log(maze)
+
+    return -1
 };
 
 {
@@ -120,7 +154,7 @@ var nearestExit = function (maze, entrance) {
     const expected = 1
     const result = nearestExit(maze, entrance)
 
-    console.log(expected === result)
+    console.log(expected === result, result)
     console.log('------------------')
 }
 
@@ -134,7 +168,7 @@ var nearestExit = function (maze, entrance) {
     const expected = 2
     const result = nearestExit(maze, entrance)
 
-    console.log(expected === result)
+    console.log(expected === result, result)
     console.log('------------------')
 }
 
@@ -146,7 +180,42 @@ var nearestExit = function (maze, entrance) {
     const expected = -1
     const result = nearestExit(maze, entrance)
 
-    console.log(expected === result)
+    console.log(expected === result, result)
     console.log('------------------')
 }
+
+{
+    const maze = [
+        ["+", "+", "+", "+", "+"],
+        [".", ".", ".", "+", "+"],
+        ["+", "+", ".", ".", "+"],
+        ["+", "+", "+", ".", "+"],
+        ["+", "+", "+", ".", "+"],
+        ["+", "+", "+", "+", "+"],
+    ]
+    const entrance = [1, 0]
+    const expected = -1
+    const result = nearestExit(maze, entrance)
+
+    console.log(expected === result, result)
+    console.log('------------------')
+}
+
+{
+    const maze = [
+        ["+", "+", "+", "+", "+"],
+        [".", ".", ".", "+", "+"],
+        ["+", "+", ".", ".", "+"],
+        ["+", "+", "+", ".", "+"],
+        ["+", "+", "+", ".", "+"],
+        ["+", "+", "+", ".", "+"],
+    ]
+    const entrance = [1, 0]
+    const expected = 7
+    const result = nearestExit(maze, entrance)
+
+    console.log(expected === result, result)
+    console.log('------------------')
+}
+
 
