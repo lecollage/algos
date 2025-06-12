@@ -20,7 +20,7 @@ class MyQueue {
 
   length = 0;
 
-  constructor() {}
+  constructor() { }
 
   push(value) {
     const node = new Node(value);
@@ -82,16 +82,16 @@ var distanceK = function (root, target, k) {
   while (queue.length) {
     const node = queue.pop();
 
-    if (node.val === target) {
+    if (node && node.val === target.val) {
       targetNode = node;
     }
 
-    if (node.left) {
+    if (node && node.left) {
       node.left.parent = node;
       queue.push(node.left);
     }
 
-    if (node.right) {
+    if (node && node.right) {
       node.right.parent = node;
       queue.push(node.right);
     }
@@ -101,33 +101,39 @@ var distanceK = function (root, target, k) {
     return [];
   }
 
-  console.log(root);
+  // console.log(root);
 
   // BFS to parents and childs
-
   const queueBFS = new MyQueue();
   const result = [];
+  const visited = new Set();
 
+  visited.add(targetNode)
   queueBFS.push({ node: targetNode, distance: 0 });
 
   while (queueBFS.length) {
     const { node, distance } = queueBFS.pop();
 
-    console.log(node.val, distance, k, node.left, node.right, node.parent);
+    // console.log(node.val, distance, k, node.left, node.right, node.parent);
+    // console.log(node.val, distance, k);
 
     if (distance === k) {
       result.push(node.val);
+      // console.log(result);
     } else {
-      if (node.parent) {
-        queue.push({ node: node.parent, distance: distance + 1 });
+      if (node.parent && !visited.has(node.parent)) {
+        queueBFS.push({ node: node.parent, distance: distance + 1 });
+        visited.add(node.parent)
       }
 
-      if (node.left) {
-        queue.push({ node: node.left, distance: distance + 1 });
+      if (node.left && !visited.has(node.left)) {
+        queueBFS.push({ node: node.left, distance: distance + 1 });
+        visited.add(node.left)
       }
 
-      if (node.right) {
-        queue.push({ node: node.right, distance: distance + 1 });
+      if (node.right && !visited.has(node.right)) {
+        queueBFS.push({ node: node.right, distance: distance + 1 });
+        visited.add(node.right)
       }
     }
   }
@@ -154,41 +160,53 @@ parent
 
 */
 
+// {
+//   // const root = [3,5,1,6,2,0,8,null,null,7,4]
+//   const target = 5;
+//   const k = 2;
+//   const root = {
+//     val: 3,
+//     left: {
+//       val: 5,
+//       left: { val: 6 },
+//       right: { val: 2, left: { val: 7 }, right: { val: 4 } },
+//     },
+//     right: { val: 1, left: { val: 0 }, right: { val: 8 } },
+//   };
+
+//   const expected = [7, 4, 1];
+//   const result = distanceK(root, target, k);
+
+//   console.log(expected === result, result);
+//   console.log("------------------");
+// }
+
+// {
+//   const target = 999;
+//   const k = 2;
+//   const root = {
+//     val: 3,
+//     left: {
+//       val: 5,
+//       left: { val: 6 },
+//       right: { val: 2, left: { val: 7 }, right: { val: 4 } },
+//     },
+//     right: { val: 1, left: { val: 0 }, right: { val: 8 } },
+//   };
+
+//   const expected = [];
+//   const result = distanceK(root, target, k);
+
+//   console.log(expected === result, result);
+//   console.log("------------------");
+// }
+
+
 {
-  // const root = [3,5,1,6,2,0,8,null,null,7,4]
+  const root = [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4]
   const target = 5;
   const k = 2;
-  const root = {
-    val: 3,
-    left: {
-      val: 5,
-      left: { val: 6 },
-      right: { val: 2, left: { val: 7 }, right: { val: 4 } },
-    },
-    right: { val: 1, left: { val: 0 }, right: { val: 8 } },
-  };
-
   const expected = [7, 4, 1];
-  const result = distanceK(root, target, k);
-
-  console.log(expected === result, result);
-  console.log("------------------");
-}
-
-{
-  const target = 999;
-  const k = 2;
-  const root = {
-    val: 3,
-    left: {
-      val: 5,
-      left: { val: 6 },
-      right: { val: 2, left: { val: 7 }, right: { val: 4 } },
-    },
-    right: { val: 1, left: { val: 0 }, right: { val: 8 } },
-  };
-
-  const expected = [];
   const result = distanceK(root, target, k);
 
   console.log(expected === result, result);
