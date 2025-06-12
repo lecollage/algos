@@ -64,10 +64,31 @@ class MyQueue {
  * @return {number[][]}
  */
 var updateMatrix = function (mat) {
-  const explore = (startI, startJ) => {
+  const visited = []
+
+  for (let i = 0; i < mat.length; i++) {
+    visited.push(new Array(mat[i].length).fill(false))
+  }
+
+  const zeros = []
+
+  for (let i = 0; i < mat.length; i++) {
+    for (let j = 0; j < mat[i].length; j++) {
+      if (mat[i][j] === 0) {
+        zeros.push([i, j])
+        visited[i][j] = true
+      }
+    }
+  }
+
+  const explore = (zeros) => {
     const queue = new MyQueue();
 
-    queue.push({ i: startI, j: startJ, distance: 0 });
+    for (let k = 0; k < zeros.length; k++) {
+      const [i,j] = zeros[k];
+
+      queue.push({ i, j, distance: 0 });
+    }
 
     const directions = [
       [-1, 0],
@@ -98,26 +119,20 @@ var updateMatrix = function (mat) {
         const newI = i + di;
         const newJ = j + dj;
 
-        if (isValid(newI, newJ)) {
-          if (mat[newI][newJ] === 0) {
-            return distance + 1;
+        if (isValid(newI, newJ) && !visited[newI][newJ]) {
+          if (mat[newI][newJ] === 1) {
+            mat[newI][newJ] = distance + 1;
           }
 
           queue.push({ i: newI, j: newJ, distance: distance + 1 });
+          visited[newI][newJ] = true
         }
       }
     }
   };
 
-  for (let i = 0; i < mat.length; i++) {
-    for (let j = 0; j < mat[i].length; j++) {
-      if (mat[i][j] === 1) {
-        const distance = explore(i, j);
-
-        mat[i][j] = distance;
-      }
-    }
-  }
+  
+  explore(zeros)
 
   return mat;
 };
@@ -188,10 +203,10 @@ var updateMatrix = function (mat) {
   ];
 
   const expected = [
-    [0, 1, 2, 1],
-    [1, 2, 3, 1],
-    [2, 3, 4, 2],
-    [2, 3, 2, 3],
+    [0, 1, 2, 3],
+    [1, 2, 3, 4],
+    [2, 3, 4, 5],
+    [3, 4, 5, 6],
   ];
 
   const answer = updateMatrix(matrix);
