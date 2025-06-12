@@ -92,18 +92,20 @@ var updateMatrix = function (mat) {
 
       //   console.log(i, j);
 
-      if (mat[i][j] === 0) {
-        return distance;
-      }
+      for (let k = 0; k < directions.length; k++) {
+        const [di, dj] = directions[k];
 
-      directions.forEach(([di, dj]) => {
         const newI = i + di;
         const newJ = j + dj;
 
         if (isValid(newI, newJ)) {
+          if (mat[newI][newJ] === 0) {
+            return distance + 1;
+          }
+
           queue.push({ i: newI, j: newJ, distance: distance + 1 });
         }
-      });
+      }
     }
   };
 
