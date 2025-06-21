@@ -6,6 +6,7 @@ def dijkstra(start, end, graph):
     distances = [float("inf")] * n
     distances[start] = 0
     visited = [False] * n
+    prev = [-1] * n
 
     for _ in range(n):
         # get next min vertice
@@ -26,10 +27,21 @@ def dijkstra(start, end, graph):
         for neighbour, weight in neighbours:
             if distances[neighbour] > distances[minNode] + weight:
                 distances[neighbour] = distances[minNode] + weight
+                prev[neighbour] = minNode
 
         visited[minNode] = True
 
-    return distances[end]
+    if distances[end] == float("inf"):
+        return []
+
+    node = end
+    path = [end+1]
+
+    while node != start:
+        node = prev[node]
+        path.append(node+1)
+
+    return path[::-1] # reverced
 
 
 '''
@@ -65,5 +77,10 @@ for _ in range(m):
 
 end = n-1
 
-print(dijkstra(0, end, graph))
+result = dijkstra(0, end, graph)
+
+if result:
+    print(*result)
+else:
+    print(-1)
     
