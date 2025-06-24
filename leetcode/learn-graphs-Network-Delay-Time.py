@@ -1,4 +1,5 @@
 from typing import List
+import math
 
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, start: int) -> int:
@@ -17,12 +18,19 @@ class Solution:
             graph[u].append((v, w))
             # graph[v].append((u, w))
 
-        # print(graph)
+        print(graph)
+
+        edgeVertices = []
+
+        for i in range(n):
+            if len(graph[i]) == 0:
+                edgeVertices.append(i)
+
+        print(edgeVertices)
 
         distances = [float("inf")] * n
         distances[start] = 0
         visited = [False] * n
-        maxDistance = -1
 
         for _ in range(n):
             # get min node
@@ -39,48 +47,51 @@ class Solution:
 
                 if distances[neighbour] > newDistance:
                     distances[neighbour] = newDistance
-                    
-                    if maxDistance < newDistance:
-                        maxDistance = newDistance
             
             visited[minNode] = True
 
         print(distances)
 
+        maxDistance = -1
+
+        for node in edgeVertices:
+            if not math.isinf(distances[node]) and distances[node] > 0 and maxDistance < distances[node]:
+                maxDistance = distances[node]
+
         return maxDistance
 
 testCases = [
-    # {
-    #     "times": [
-    #         [2,1,1],
-    #         [2,3,1],
-    #         [3,4,1]
-    #     ],
-    #     "n": 4,
-    #     "k": 2,
-    #     "expected": 2
-    # },
-    # {
-    #     "times": [[1,2,1]],
-    #     "n": 2,
-    #     "k": 1,
-    #     "expected": 1
-    # },
-    # {
-    #     "times": [[1,2,1]],
-    #     "n": 2,
-    #     "k": 2,
-    #     "expected": -1
-    # },
-    # {
-    #     "times": [
-    #         [1,2,1],
-    #         [2,1,3]
-    #     ],
-    #     "n": 2,
-    #     "k": 2,
-    #     "expected": 3
-    # },
+    {
+        "times": [
+            [2,1,1],
+            [2,3,1],
+            [3,4,1]
+        ],
+        "n": 4,
+        "k": 2,
+        "expected": 2
+    },
+    {
+        "times": [[1,2,1]],
+        "n": 2,
+        "k": 1,
+        "expected": 1
+    },
+    {
+        "times": [[1,2,1]],
+        "n": 2,
+        "k": 2,
+        "expected": -1
+    },
+    {
+        "times": [
+            [1,2,1],
+            [2,1,3]
+        ],
+        "n": 2,
+        "k": 2,
+        "expected": 3
+    },
     {
         "times": [
             [1,2,1],
@@ -95,6 +106,8 @@ testCases = [
 ]
 
 for testCase in testCases:
+    print('')
+
     times = testCase["times"]
     n = testCase["n"]
     k = testCase["k"]
