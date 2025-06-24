@@ -18,7 +18,7 @@ class Solution:
             graph[u].append((v, w))
             # graph[v].append((u, w))
 
-        print(graph)
+        # print(graph)
 
         edgeVertices = []
 
@@ -26,7 +26,7 @@ class Solution:
             if len(graph[i]) == 0:
                 edgeVertices.append(i)
 
-        print(edgeVertices)
+        # print(edgeVertices)
 
         distances = [float("inf")] * n
         distances[start] = 0
@@ -50,13 +50,16 @@ class Solution:
             
             visited[minNode] = True
 
-        print(distances)
+        # print(distances)
 
         maxDistance = -1
 
-        for node in edgeVertices:
-            if not math.isinf(distances[node]) and distances[node] > 0 and maxDistance < distances[node]:
-                maxDistance = distances[node]
+        for node in range(n):
+            if math.isinf(distances[node]):
+                return -1
+
+            if distances[node] > 0 :
+                maxDistance = max(distances[node], maxDistance)
 
         return maxDistance
 
@@ -86,6 +89,16 @@ testCases = [
     {
         "times": [
             [1,2,1],
+            [2,3,2],
+            [1,3,4]
+        ],
+        "n": 3,
+        "k": 1,
+        "expected": 3
+    },
+    {
+        "times": [
+            [1,2,1],
             [2,1,3]
         ],
         "n": 2,
@@ -96,14 +109,21 @@ testCases = [
         "times": [
             [1,2,1],
             [2,3,2],
-            [1,3,4]
+            [1,3,1]
         ],
         "n": 3,
-        "k": 1,
-        "expected": 3
+        "k": 2,
+        "expected": -1
     },
     
 ]
+
+'''
+0-1 1
+1-2 2
+0-2 1
+'''
+
 
 for testCase in testCases:
     print('')
