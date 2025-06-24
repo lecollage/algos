@@ -25,8 +25,10 @@ def dijkstra(start, end, graph):
         neighbours = graph[minNode]
         
         for neighbour, weight in neighbours:
-            if distances[neighbour] > distances[minNode] + weight:
-                distances[neighbour] = distances[minNode] + weight
+            newDistance  = distances[minNode] + weight
+
+            if distances[neighbour] > newDistance:
+                distances[neighbour] = newDistance
                 prev[neighbour] = minNode
 
         visited[minNode] = True
