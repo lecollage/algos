@@ -1,5 +1,6 @@
 from typing import List
 import math
+import heapq
 
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, start: int) -> int:
@@ -28,27 +29,26 @@ class Solution:
 
         # print(edgeVertices)
 
+        heap = []
+        heapq.heappush(heap, (0, start))
+
         distances = [float("inf")] * n
         distances[start] = 0
-        visited = [False] * n
 
-        for _ in range(n):
-            # get min node
-            minNode = -1
+        while heap:
+            current_distance, current_node = heapq.heappop(heap)
 
-            for node, distance in enumerate(distances):
-                if not visited[node] and (minNode == -1 or distance < distances[minNode]):
-                    minNode = node
+            if current_distance > distances[current_node]:
+                continue
             
-            neighbours = graph[minNode]
+            neighbours = graph[current_node]
 
             for neighbour, weight in neighbours:
-                newDistance  = distances[minNode] + weight
+                newDistance  = distances[current_node] + weight
 
                 if distances[neighbour] > newDistance:
                     distances[neighbour] = newDistance
-            
-            visited[minNode] = True
+                    heapq.heappush(heap, (newDistance, neighbour))
 
         # print(distances)
 
