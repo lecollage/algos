@@ -1,37 +1,35 @@
+import heapq
+
 def dijkstra(start, end, graph):
     n = len(graph)
 
-    # start -> [Infinity, Infinity, Infinity, Infinity, Infinity, Infinity]
-
     distances = [float("inf")] * n
     distances[start] = 0
-    visited = [False] * n
     prev = [-1] * n
+    heap = [(0, start)]  
 
-    for _ in range(n):
+    while heap:
         # get next min vertice
-        minNode = -1
+        current_distance, current_node = heapq.heappop(heap)
 
-        for i, d in enumerate(distances):
-            if not visited[i] and (minNode == -1 or d < distances[minNode]):
-                minNode = i
+        if current_distance > distances[current_node]:
+            continue
 
-        if distances[minNode] == float("inf"):
+        if distances[current_node] == float("inf"):
             break
 
-        if minNode == end:
+        if current_node == end:
             break
 
-        neighbours = graph[minNode]
+        neighbours = graph[current_node]
         
         for neighbour, weight in neighbours:
-            newDistance  = distances[minNode] + weight
+            newDistance = distances[current_node] + weight
 
             if distances[neighbour] > newDistance:
                 distances[neighbour] = newDistance
-                prev[neighbour] = minNode
-
-        visited[minNode] = True
+                prev[neighbour] = current_node
+                heapq.heappush(heap, (newDistance, neighbour))
 
     if distances[end] == float("inf"):
         return []
