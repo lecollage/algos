@@ -4,21 +4,32 @@ from queue import Queue
 class Solution:
     def shortestAlternatingPaths(self, n: int, redEdges: List[List[int]], blueEdges: List[List[int]]) -> List[int]:
         graph = [[] for _ in range(n)]
+        graphRed = [[] for _ in range(n)]
+        graphBlue = [[] for _ in range(n)]
 
         for u, v in redEdges:
-            graph[u].append((v, 'R'))
+            graphRed[u].append(v)
+
+            if not v in graph[u]:
+                graph[u].append(v)
+            
 
         for u, v in blueEdges:
-            graph[u].append((v, 'B'))
+            graphBlue[u].append(v)
+
+            if not v in graph[u]:
+                graph[u].append(v)
 
         distances = [-1] * n
-
         distances[0] = 0
-
         colors = [{'R': 0, 'B': 0} for _ in range(n)] # R, B
+
         visited = [False] * n
+        visited[0] = True
 
         # print(graph)
+        # print(graphRed)
+        # print(graphBlue)
         # print(distances)
         # print(colors)
         # print(visited)
@@ -33,21 +44,25 @@ class Solution:
 
             # print(f"neighbour: {neighbour}; newDistance: {newDistance}; color: {color}")
 
-            for neighbour, color in neighbours:
+            for neighbour in neighbours:
                 if not visited[neighbour]:
                     newDistance = distance + 1
                     queue.put((neighbour, newDistance))
                     visited[neighbour] = True
+
                     distances[neighbour] = newDistance
 
-                    if color == 'R':
-                        colors[neighbour]['R'] = colors[node]['R'] + 1
-                        colors[neighbour]['B'] = colors[node]['B']
-                    elif color == 'B':
-                        colors[neighbour]['R'] = colors[node]['R']
-                        colors[neighbour]['B'] = colors[node]['B'] + 1
+                    colors[neighbour]['B'] = colors[node]['B']
+                    colors[neighbour]['R'] = colors[node]['R']
 
+                    # take the Blue edge for node and neighbour
+                    if neighbour in graphBlue[node]:
+                        colors[neighbour]['B'] += 1
+
+                    if neighbour in graphRed[node]:
+                        colors[neighbour]['R'] += 1
                     
+
         # print(distances)
         # print(colors)
 
@@ -84,6 +99,12 @@ testCases = [
         "blueEdges": [[1,0]],
         "n": 3,
         "expected": [0,1,1]
+    },
+    {
+        "redEdges": [[0,1],[1,2],[2,3],[3,4]],
+        "blueEdges": [[1,2],[2,3],[3,1]],
+        "n": 5,
+        "expected": [0,1,2,3,7]
     },
 ]
 
