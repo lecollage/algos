@@ -3,77 +3,75 @@ from queue import Queue
 
 class Solution:
     def shortestAlternatingPaths(self, n: int, redEdges: List[List[int]], blueEdges: List[List[int]]) -> List[int]:
-        graph = [[] for _ in range(n)]
         graphRed = [[] for _ in range(n)]
         graphBlue = [[] for _ in range(n)]
 
         for u, v in redEdges:
             graphRed[u].append(v)
-
-            if not v in graph[u]:
-                graph[u].append(v)
             
-
         for u, v in blueEdges:
             graphBlue[u].append(v)
 
-            if not v in graph[u]:
-                graph[u].append(v)
-
-        distances = [-1] * n
-        distances[0] = 0
-        colors = [{'R': 0, 'B': 0} for _ in range(n)] # R, B
-
-        visited = [False] * n
-        visited[0] = True
-
-        # print(graph)
         # print(graphRed)
         # print(graphBlue)
+
+        graph = (
+            graphBlue,
+            graphRed
+        )
+
+        # B - 0
+        # R - 1
+
+        distances = (
+            [-1] * n, # B
+            [-1] * n  # R
+        )
+
+        distances[0][0] = 0
+        distances[1][0] = 0
+
         # print(distances)
-        # print(colors)
-        # print(visited)
 
         queue = Queue()
 
-        queue.put((0, 0)) # node, distance
-        
+        queue.put((0, 0)) # node, color
+        queue.put((0, 1)) # node, color
+
+        # [0, 1, 0, 0, 0, -1]
+
         while not queue.empty():
-            node, distance = queue.get()
-            neighbours = graph[node]
+            node, color = queue.get()
+            parentDistance = distances[color][node]
 
-            # print(f"neighbour: {neighbour}; newDistance: {newDistance}; color: {color}")
+            nextColor = (color + 1) % 2
+            neighbors = graph[nextColor][node]
 
-            for neighbour in neighbours:
-                if not visited[neighbour]:
-                    newDistance = distance + 1
-                    queue.put((neighbour, newDistance))
-                    visited[neighbour] = True
+            for neighbor in neighbors:
+                distance = distances[nextColor][neighbor]
+                
+                # if not visited
+                if distance != -1:
+                    continue
 
-                    distances[neighbour] = newDistance
+                distances[nextColor][neighbor] = parentDistance + 1
+                queue.put((neighbor, nextColor))
 
-                    colors[neighbour]['B'] = colors[node]['B']
-                    colors[neighbour]['R'] = colors[node]['R']
-
-                    # take the Blue edge for node and neighbour
-                    if neighbour in graphBlue[node]:
-                        colors[neighbour]['B'] += 1
-
-                    if neighbour in graphRed[node]:
-                        colors[neighbour]['R'] += 1
-                    
-
-        # print(distances)
-        # print(colors)
+        resultDistances = [-1] * n
+        resultDistances[0] = 0
 
         for i in range(n):
-            color = colors[i]
+            blueDistance = distances[0][i]
+            redDistance = distances[1][i]
 
-            if distances[i] > 1 and (color['R'] == 0 or color['B'] == 0):
-                distances[i] = -1
+            if blueDistance == -1 and redDistance != -1:
+                resultDistances[i] = redDistance
+            elif blueDistance != -1 and redDistance == -1:
+                resultDistances[i] = blueDistance
+            elif blueDistance != -1 and redDistance != -1:
+                resultDistances[i] = min(redDistance, blueDistance)
 
-        return distances
-
+        return resultDistances
 
 testCases = [
     {
@@ -107,6 +105,13 @@ testCases = [
         "expected": [0,1,2,3,7]
     },
 ]
+
+'''
+
+
+
+
+'''
 
 for testCase in testCases:
     print('')
