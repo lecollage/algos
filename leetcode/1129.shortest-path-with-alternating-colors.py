@@ -42,19 +42,16 @@ class Solution:
 
         while not queue.empty():
             node, color = queue.get()
-            parentDistance = distances[color][node]
-
             nextColor = (color + 1) % 2
-            neighbors = graph[nextColor][node]
 
-            for neighbor in neighbors:
+            for neighbor in graph[nextColor][node]:
                 distance = distances[nextColor][neighbor]
                 
                 # if not visited
                 if distance != -1:
                     continue
 
-                distances[nextColor][neighbor] = parentDistance + 1
+                distances[nextColor][neighbor] = distances[color][node] + 1
                 queue.put((neighbor, nextColor))
 
         resultDistances = [-1] * n
