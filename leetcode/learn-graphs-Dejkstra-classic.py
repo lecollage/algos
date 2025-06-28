@@ -1,4 +1,4 @@
-import heapq
+import heapq # import priorQueue from queue
 
 def dijkstra(start, end, graph):
     n = len(graph)
