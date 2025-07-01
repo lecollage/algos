@@ -2,6 +2,7 @@ from typing import List
 from queue import PriorityQueue
 
 
+
 '''
 787. Cheapest Flights Within K Stops
 
@@ -20,23 +21,23 @@ class Solution:
         for u, v, price in flights:
             graph[u].append((v, price))
 
-        print(graph)
+        # print(graph)
 
         queue = PriorityQueue()
 
-        queue.put((0, src, 0, ''))
+        queue.put((0, src, 0))
 
         while not queue.empty():
-            current_distance, current_node, current_stops, current_path = queue.get()
+            current_distance, current_node, current_stops = queue.get()
 
-            print(current_distance, current_node, current_stops, current_path)
+            # print(current_distance, current_node, current_stops, current_path)
 
             if current_node == dst:
                 return current_distance
 
             if current_stops <= k:
                 for neighbour, weight in graph[current_node]:
-                    queue.put((current_distance + weight, neighbour, current_stops + 1, current_path + f"{current_node}."))
+                    queue.put((current_distance + weight, neighbour, current_stops + 1))                 
 
         return -1
 
