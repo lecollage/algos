@@ -18,28 +18,27 @@ class Solution:
         graph = [[] for _ in range(n)]
 
         for u, v, price in flights:
-            graph[u] = (v, price)
+            graph[u].append((v, price))
 
         print(graph)
 
-        visited = [False] * n
         queue = PriorityQueue()
 
-        k += 1
-        queue.put((0, src, 0))
+        queue.put((0, src, 0, ''))
 
         while not queue.empty():
-            distance, node, edgeCount = queue.get()
+            current_distance, current_node, current_stops, current_path = queue.get()
 
-            if node == dst:
-                return distance
+            print(current_distance, current_node, current_stops, current_path)
 
-            for neighbour, weight in graph[node]:
-                if not visited[neighbour] and edgeCount < k:
-                    queue.put((distance + weight, neighbour, edgeCount + 1))
+            if current_node == dst:
+                return current_distance
+
+            if current_stops <= k:
+                for neighbour, weight in graph[current_node]:
+                    queue.put((current_distance + weight, neighbour, current_stops + 1, current_path + f"{current_node}."))
 
         return -1
-    
 
 testCases = [
     {
@@ -51,10 +50,72 @@ testCases = [
             [2,3,200]
         ],
         "n": 4,
-        "src": 2,
-        "dst": 2,
-        "k": 2,
+        "src": 0,
+        "dst": 3,
+        "k": 1,
         "expected": 700
+    },
+    {
+        "flights": [
+            [0,1,1],
+            [0,2,5],
+            [1,2,1],
+            [2,3,1]
+        ],
+        "n": 4,
+        "src": 0,
+        "dst": 3,
+        "k": 1,
+        "expected": 6
+    },
+    {
+        "flights": [
+            [0,1,1],
+            [0,2,5],
+            [1,2,1],
+            [2,3,1],
+            [1,3,4],
+        ],
+        "n": 4,
+        "src": 0,
+        "dst": 3,
+        "k": 1,
+        "expected": 5
+    },
+    {
+        "flights": [
+            [0,1,100],
+            [1,2,100],
+            [0,2,500]
+        ],
+        "n": 3,
+        "src": 0,
+        "dst": 2,
+        "k": 1,
+        "expected": 200
+    },
+    {
+        "flights": [
+            [0,3,3],
+            [3,4,3],
+            [4,1,3],
+            [0,5,1],
+            [5,1,100],
+            [0,6,2],
+            [6,1,100],
+            [0,7,1],
+            [7,8,1],
+            [8,9,1],
+            [9,1,1],
+            [1,10,1],
+            [10,2,1],
+            [1,2,100]
+        ],
+        "n": 11,
+        "src": 0,
+        "dst": 2,
+        "k": 4,
+        "expected": 11
     },
 ]
 
