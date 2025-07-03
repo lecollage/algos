@@ -54,13 +54,15 @@ class Solution:
                 nextI = i + dirI
                 nextJ = j + dirJ
 
-                if isValid(nextI, nextJ, grid) and (not visited[nextI][nextJ] or currentHealth > gridHealth[nextI][nextJ]):
+                if isValid(nextI, nextJ, grid) and not visited[nextI][nextJ]:
                     healthDiff = 0
 
                     if grid[nextI][nextJ] == 1:
                         healthDiff = 1
-                        
-                    queue.append((nextI, nextJ, currentHealth-healthDiff))
+                        queue.append((nextI, nextJ, currentHealth-healthDiff))
+                    else:
+                        queue.appendleft((nextI, nextJ, currentHealth))
+                    
                     gridHealth[nextI][nextJ] = currentHealth-healthDiff
                     visited[nextI][nextJ] = True
 
