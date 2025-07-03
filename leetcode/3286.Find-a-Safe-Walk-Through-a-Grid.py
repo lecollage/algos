@@ -15,10 +15,8 @@ class Solution:
 
         queue = deque()
 
-
         n = len(grid)
         m = len(grid[0])
-        gridHealth = [[0]*m for _ in range(n)]
         visited = [[False]*m for _ in range(n)]
         directions = [
             [-1,0],
@@ -30,8 +28,10 @@ class Solution:
         if grid[0][0] == 1:
             health -= 1
 
-        gridHealth[0][0] = health
         queue.append((0, 0, health))
+
+        def isEnd(i, j) -> bool:
+            return i == len(grid)-1 and j == len(grid[i])-1
 
         def isValid(i: int, j: int, grid: List[List[int]]) -> bool:
             if i < 0 or i >= len(grid):
@@ -50,25 +50,24 @@ class Solution:
             if currentHealth <= 0:
                 continue
 
+            if isEnd(i, j):
+                return True
+
             for dirI, dirJ in directions:
                 nextI = i + dirI
                 nextJ = j + dirJ
 
                 if isValid(nextI, nextJ, grid) and not visited[nextI][nextJ]:
-                    healthDiff = 0
-
                     if grid[nextI][nextJ] == 1:
-                        healthDiff = 1
-                        queue.append((nextI, nextJ, currentHealth-healthDiff))
+                        queue.append((nextI, nextJ, currentHealth-1))
                     else:
                         queue.appendleft((nextI, nextJ, currentHealth))
                     
-                    gridHealth[nextI][nextJ] = currentHealth-healthDiff
                     visited[nextI][nextJ] = True
 
         # print(gridHealth)
 
-        return gridHealth[len(grid)-1][len(grid[0])-1] > 0
+        return False
 # @lc code=end
 
 
