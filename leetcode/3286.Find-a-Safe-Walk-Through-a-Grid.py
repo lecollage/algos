@@ -15,16 +15,11 @@ class Solution:
 
         queue = deque()
 
-        if grid[0][0] == 1:     
-            health -= 1       
-
-        queue.append((0, 0, health))
-
-        grid[0][0] = -1
 
         n = len(grid)
         m = len(grid[0])
         gridHealth = [[0]*m for _ in range(n)]
+        visited = [[False]*m for _ in range(n)]
         directions = [
             [-1,0],
             [0,-1],
@@ -32,7 +27,11 @@ class Solution:
             [0,1],
         ]
 
+        if grid[0][0] == 1:
+            health -= 1
+
         gridHealth[0][0] = health
+        queue.append((0, 0, health))
 
         def isValid(i: int, j: int, grid: List[List[int]]) -> bool:
             if i < 0 or i >= len(grid):
@@ -42,46 +41,20 @@ class Solution:
                 return False
             
             return True
-        
-        def isEnd(i: int, j: int, grid: List[List[int]]) -> bool:
-            if i != len(grid)-1:
-                return False
-            
-            if j != len(grid[i])-1:
-                return False
-            
-            return True
-
-        def getCurrentHealth(i: int, j: int) -> int:
-            maxHealth = -1
-
-            for dirI, dirJ in directions:
-                nextI = i + dirI
-                nextJ = j + dirJ
-
-                if isValid(nextI, nextJ, gridHealth):
-                    maxHealth = max(gridHealth[nextI][nextJ], maxHealth)
-                
-            return maxHealth
 
         while len(queue):
             i, j, currentHealth = queue.popleft()
 
-            print(i, j, currentHealth, gridHealth)
+            # print(i, j, currentHealth, gridHealth)
 
-            # if isEnd(i, j, grid) and currentHealth > 0:
-            #     return True
-            
             if currentHealth <= 0:
                 continue
-
-            currentHealth = getCurrentHealth(i, j)
 
             for dirI, dirJ in directions:
                 nextI = i + dirI
                 nextJ = j + dirJ
 
-                if isValid(nextI, nextJ, grid) and (grid[nextI][nextJ] != -1):
+                if isValid(nextI, nextJ, grid) and (not visited[nextI][nextJ] or currentHealth > gridHealth[nextI][nextJ]):
                     healthDiff = 0
 
                     if grid[nextI][nextJ] == 1:
@@ -89,9 +62,9 @@ class Solution:
                         
                     queue.append((nextI, nextJ, currentHealth-healthDiff))
                     gridHealth[nextI][nextJ] = currentHealth-healthDiff
-                    grid[nextI][nextJ] = -1
+                    visited[nextI][nextJ] = True
 
-        print(gridHealth)
+        # print(gridHealth)
 
         return gridHealth[len(grid)-1][len(grid[0])-1] > 0
 # @lc code=end
