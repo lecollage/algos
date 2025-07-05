@@ -1,5 +1,6 @@
 from typing import List
-from queue import PriorityQueue
+from queue import PriorityQueue, Queue
+import math
 
 
 
@@ -23,23 +24,32 @@ class Solution:
 
         # print(graph)
 
-        queue = PriorityQueue()
+        k += 1
+
+        queue = Queue()
 
         queue.put((0, src, 0))
 
+        dstMinWeght = float("inf")
+
         while not queue.empty():
-            current_distance, current_node, current_stops = queue.get()
+            current_distance, current_node, current_edges = queue.get()
 
             # print(current_distance, current_node, current_stops, current_path)
 
             if current_node == dst:
-                return current_distance
+                dstMinWeght = min(dstMinWeght, current_distance)
 
-            if current_stops <= k:
-                for neighbour, weight in graph[current_node]:
-                    queue.put((current_distance + weight, neighbour, current_stops + 1))                 
+            if current_edges >= k:
+                 continue
 
-        return -1
+            for neighbour, weight in graph[current_node]:
+                queue.put((current_distance + weight, neighbour, current_edges + 1))
+
+        if math.isinf(dstMinWeght):
+            return -1
+
+        return dstMinWeght
 
 testCases = [
     {
