@@ -30,15 +30,17 @@ class Solution:
 
         queue.put((0, src, 0))
 
-        dstMinWeght = float("inf")
+        distances = [float("inf")] * n
 
         while not queue.empty():
             current_distance, current_node, current_edges = queue.get()
 
             # print(current_distance, current_node, current_stops, current_path)
 
-            if current_node == dst:
-                dstMinWeght = min(dstMinWeght, current_distance)
+            if current_distance > distances[current_node]:
+                continue
+
+            distances[current_node] = current_distance
 
             if current_edges >= k:
                  continue
@@ -46,10 +48,10 @@ class Solution:
             for neighbour, weight in graph[current_node]:
                 queue.put((current_distance + weight, neighbour, current_edges + 1))
 
-        if math.isinf(dstMinWeght):
+        if math.isinf(distances[dst]):
             return -1
 
-        return dstMinWeght
+        return distances[dst]
 
 testCases = [
     {
