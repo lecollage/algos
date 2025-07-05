@@ -26,31 +26,32 @@ class Solution:
 
         k += 1
 
-        queue = Queue()
+        queue = PriorityQueue()
 
         queue.put((0, src, 0))
 
-        distances = [float("inf")] * n
+        minNodeEdges = [float("inf")] * n
 
         while not queue.empty():
             current_distance, current_node, current_edges = queue.get()
 
-            # print(current_distance, current_node, current_stops, current_path)
+            if current_node == dst: 
+                return current_distance
 
-            if current_edges >= k:
-                 continue
+            if current_edges > minNodeEdges[current_node]:
+                continue
+
+            minNodeEdges[current_node] = current_edges
 
             for neighbour, weight in graph[current_node]:
                 nextDistance = current_distance + weight
+                nextEdges = current_edges + 1
 
-                if nextDistance < distances[neighbour]:
-                    distances[neighbour] = nextDistance
-                    queue.put((nextDistance, neighbour, current_edges + 1))
+                if nextEdges <= k:
+                    queue.put((nextDistance, neighbour, nextEdges))
 
-        if math.isinf(distances[dst]):
-            return -1
+        return -1
 
-        return distances[dst]
 
 testCases = [
     {
