@@ -37,16 +37,15 @@ class Solution:
 
             # print(current_distance, current_node, current_stops, current_path)
 
-            if current_distance > distances[current_node]:
-                continue
-
-            distances[current_node] = current_distance
-
             if current_edges >= k:
                  continue
 
             for neighbour, weight in graph[current_node]:
-                queue.put((current_distance + weight, neighbour, current_edges + 1))
+                nextDistance = current_distance + weight
+
+                if nextDistance < distances[neighbour]:
+                    distances[neighbour] = nextDistance
+                    queue.put((nextDistance, neighbour, current_edges + 1))
 
         if math.isinf(distances[dst]):
             return -1
