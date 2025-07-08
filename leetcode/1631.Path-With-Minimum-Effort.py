@@ -24,14 +24,15 @@ class Solution:
             [0,1],
         ]
         queue = PriorityQueue()
+        path = [f'{0}:{0}']
 
-        queue.put((0,0,0)) # diff, i, j 
+        queue.put((0,0,0,path)) # diff, i, j 
         differences[0][0] = 0
 
         def isEnd(i, j) -> bool:
             return i == n-1 and j == m-1
 
-        def isValid(i: int, j: int, grid: List[List[int]]) -> bool:
+        def isValid(i: int, j: int) -> bool:
             if i < 0 or i >= len(grid):
                 return False
             
@@ -41,39 +42,36 @@ class Solution:
             return True
         
         while not queue.empty():
-            currentDiff, i, j = queue.get()
+            diff, i, j, path = queue.get()
+
+            # print(diff, i, j, visited)
+
+            if isEnd(i, j):
+                return diff
             
-            print(currentDiff, i, j, differences)
+            for dI, dJ in directions:
+                nextI = i + dI
+                nextJ = j + dJ
 
-            if currentDiff > differences[i][j]:
-                continue
+                if isValid(nextI, nextJ) and f'{nextI}:{nextJ}' not in path:
+                    nextDiff = abs(grid[i][j] - grid[nextI][nextJ])
 
-            if isEnd(i,j):
-                break
+                    queue.put((max(nextDiff, diff), nextI, nextJ, path + [f'{nextI}:{nextJ}']))
 
-            for dirI, dirJ in directions:
-                nextI = i + dirI
-                nextJ = j + dirJ
-
-                if isValid(nextI, nextJ, grid):
-                    nextDiff = currentDiff
-
-                    # go uphill
-                    if grid[nextI][nextJ] > grid[i][j]:
-                        nextDiff = grid[nextI][nextJ] - grid[i][j]
-
-                    if differences[nextI][nextJ] > nextDiff:
-                        differences[nextI][nextJ] = nextDiff
-                        queue.put((nextDiff, nextI, nextJ))
+        return -1
         
-        return differences[n-1][m-1]
 # @lc code=end
 
 
 testCases = [
     {
         "grid": [
-            # [1,10,6,7,9,10,4,9]
+            [1,10,6,7,9,10,4,9]
+        ],
+        "expected": 9
+    },
+    {
+        "grid": [
             [1,10,6,7]
         ],
         "expected": 9
