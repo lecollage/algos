@@ -16,7 +16,7 @@ class Solution:
 
         n = len(grid)
         m = len(grid[0])
-        distances = [[1000000000 for _ in range(m)] for _ in range(n)]
+        distances = [[float('inf') for _ in range(m)] for _ in range(n)]
         directions = [
             [-1,0],
             [0,-1],
@@ -47,6 +47,11 @@ class Solution:
             if isEnd(i, j):
                 return pathWeight
             
+            if distances[i][j] <= pathWeight:
+                continue
+
+            distances[i][j]=pathWeight
+            
             for dI, dJ in directions:
                 nextI = i + dI
                 nextJ = j + dJ
@@ -55,9 +60,7 @@ class Solution:
                     edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
                     newPathWeight = max(edgeWeight, pathWeight)
 
-                    if distances[nextI][nextJ] > newPathWeight:
-                        distances[nextI][nextJ]=newPathWeight
-                        queue.put((newPathWeight, nextI, nextJ))
+                    queue.put((newPathWeight, nextI, nextJ))
 
         return -1
 
