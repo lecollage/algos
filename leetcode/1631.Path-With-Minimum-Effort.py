@@ -16,7 +16,7 @@ class Solution:
 
         n = len(grid)
         m = len(grid[0])
-        differences = [[float("inf")] * m for _ in range(n)]
+        visited = [[False] * m for _ in range(n)]
         directions = [
             [-1,0],
             [0,-1],
@@ -24,10 +24,8 @@ class Solution:
             [0,1],
         ]
         queue = PriorityQueue()
-        path = [f'{0}:{0}']
 
-        queue.put((0,0,0,path)) # diff, i, j 
-        differences[0][0] = 0
+        queue.put((0,0,0)) # diff, i, j 
 
         def isEnd(i, j) -> bool:
             return i == n-1 and j == m-1
@@ -42,25 +40,57 @@ class Solution:
             return True
         
         while not queue.empty():
-            diff, i, j, path = queue.get()
+            diff, i, j = queue.get()
 
             # print(diff, i, j, visited)
 
             if isEnd(i, j):
                 return diff
             
+            if visited[i][j]:
+                continue
+
+            visited[i][j]=True
+            
             for dI, dJ in directions:
                 nextI = i + dI
                 nextJ = j + dJ
 
-                if isValid(nextI, nextJ) and f'{nextI}:{nextJ}' not in path:
-                    nextDiff = abs(grid[i][j] - grid[nextI][nextJ])
+                if isValid(nextI, nextJ) :
+                    edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
+                    newPathWeight = max(edgeWeight, diff)
 
-                    queue.put((max(nextDiff, diff), nextI, nextJ, path + [f'{nextI}:{nextJ}']))
+                    queue.put((newPathWeight, nextI, nextJ))
 
         return -1
         
 # @lc code=end
+
+
+'''
+from queue import PriorityQueue
+
+class Solution:
+    def minimumEffortPath(self, heights: List[List[int]]) -> int:
+        # начало - обычная Дейкстра, так что привожу фактический код
+        n, m = len(heights), len(heights[0])
+        visited = [[False] * m for _ in range(n)]
+        q = PriorityQueue()
+        q.put((0, 0, 0))
+        while not q.empty():
+            d, i, j = q.get()
+            if i == n - 1 and j == m - 1:
+                return d
+            if visited[i][j]:
+                continue
+            visited[i][j] = True
+            # дальше псевдокод
+            for neighbour in neighbours: # граф имплицитный, так что соседей ищем по координатам
+               if not visited[neighbour]: # опять же по координатам обращаемся в visited
+                    edge_weight = ... # находим вес ребра в соседа в соответствии с условием задачи
+                    new_path_weight = ... # определяем, как меняется вес пути от добавления нового ребра в соответствии с функцией агрегации весов ребер в пути
+                    q.put((new_path_weight, neighbour))
+'''
 
 
 testCases = [
