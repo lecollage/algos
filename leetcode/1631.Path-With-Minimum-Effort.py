@@ -16,7 +16,7 @@ class Solution:
 
         n = len(grid)
         m = len(grid[0])
-        visited = [[False] * m for _ in range(n)]
+        distances = [[1000000000 for _ in range(m)] for _ in range(n)]
         directions = [
             [-1,0],
             [0,-1],
@@ -40,17 +40,12 @@ class Solution:
             return True
         
         while not queue.empty():
-            diff, i, j = queue.get()
+            pathWeight, i, j = queue.get()
 
-            # print(diff, i, j, visited)
+            # print(pathWeight, i, j, distances)
 
             if isEnd(i, j):
-                return diff
-            
-            if visited[i][j]:
-                continue
-
-            visited[i][j]=True
+                return pathWeight
             
             for dI, dJ in directions:
                 nextI = i + dI
@@ -58,12 +53,14 @@ class Solution:
 
                 if isValid(nextI, nextJ) :
                     edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
-                    newPathWeight = max(edgeWeight, diff)
+                    newPathWeight = max(edgeWeight, pathWeight)
 
-                    queue.put((newPathWeight, nextI, nextJ))
+                    if distances[nextI][nextJ] > newPathWeight:
+                        distances[nextI][nextJ]=newPathWeight
+                        queue.put((newPathWeight, nextI, nextJ))
 
         return -1
-        
+
 # @lc code=end
 
 
@@ -96,13 +93,13 @@ class Solution:
 testCases = [
     {
         "grid": [
-            [1,10,6,7,9,10,4,9]
+            [1,10,6,7]
         ],
         "expected": 9
     },
     {
         "grid": [
-            [1,10,6,7]
+            [1,10,6,7,9,10,4,9]
         ],
         "expected": 9
     },
