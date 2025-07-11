@@ -3,9 +3,9 @@ from typing import List
 from queue import PriorityQueue
 
 #
-# @lc app=leetcode id=787 lang=python3
+# @lc app=leetcode id=1631 lang=python3
 #
-# 787. Cheapest Flights Within K Stops
+# 1631. Path With Minimum Effort
 #
 
 # @lc code=start
