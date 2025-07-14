@@ -47,24 +47,25 @@ class Solution:
             if isEnd(i, j):
                 return pathWeight
             
-            if distances[i][j] <= pathWeight:
+            if pathWeight > distances[i][j]:
                 continue
 
-            distances[i][j]=pathWeight
-            
             for dI, dJ in directions:
                 nextI = i + dI
                 nextJ = j + dJ
 
-                if isValid(nextI, nextJ) :
+                if isValid(nextI, nextJ):
                     edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
                     newPathWeight = max(edgeWeight, pathWeight)
 
-                    queue.put((newPathWeight, nextI, nextJ))
+                    if distances[nextI][nextJ] > newPathWeight:
+                        distances[nextI][nextJ] = newPathWeight
+                        queue.put((newPathWeight, nextI, nextJ))
 
         return -1
 
 # @lc code=end
+
 
 
 '''

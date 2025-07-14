@@ -44,11 +44,11 @@ class Solution:
             negativePathScore, i, j = queue.get()
             pathScore = -negativePathScore
 
-            print(pathScore, i, j, grid[i][j])
+            # print(pathScore, i, j, grid[i][j])
 
             if isEnd(i, j):
                 return pathScore
-            
+
             if visited[i][j]:
                 continue
 
