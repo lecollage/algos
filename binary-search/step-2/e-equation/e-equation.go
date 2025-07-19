@@ -91,10 +91,8 @@ func calculate(c float64) float64 {
 
 		if good(middle, c) {
 			right = middle
-
 		} else {
 			left = middle
-
 		}
 	}
 
