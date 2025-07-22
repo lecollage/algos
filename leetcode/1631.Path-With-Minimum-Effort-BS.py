@@ -35,7 +35,7 @@ class Solution:
             
             return True
         
-        def good(left, right): 
+        def good(maxAllowed): 
             queue = deque()
             visited = [[False for _ in range(m)] for _ in range(n)]
 
@@ -52,7 +52,7 @@ class Solution:
 
                 visited[i][j] = True
 
-                print(i,j,diff, (left, right))
+                # print(i,j,diff, (left, right))
 
                 for di, dj in directions:
                     nextI = i + di
@@ -62,31 +62,30 @@ class Solution:
                         nextDiff = abs(grid[nextI][nextJ]-grid[i][j])
                         nextDiff = max(nextDiff,diff)
 
-                        # if nextDiff == left:
-                            # queue.appendleft((nextI, nextJ, nextDiff))
-
-                        if nextDiff >= left and nextDiff < right:
+                        if nextDiff <= maxAllowed:
                             queue.append((nextI, nextJ, nextDiff))
             
             return False
         
-        # print(good(0, 1000000))
-
-        # return -1
 
         left = 0
         right = 10**6 + 1
         middle = 1
 
-        while right-left>1:
-            middle = round((left+right)/2)
+        while left < right:
+            middle = (left+right)//2
 
-            if good(left, middle):
+            if good(middle):
                 right = middle
             else:
                 left = middle
 
         return left
+
+
+        # print(good(4, 6))
+
+        # return -1
 
 # @lc code=end
 

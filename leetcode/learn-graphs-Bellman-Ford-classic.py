@@ -3,11 +3,19 @@ def bellmanFord(n, m, edges, src):
     distances = [INF] * n
     distances[src] = 0
 
-    for _ in range(n-1):
+    wasAnyRelaxation = True
+
+    while wasAnyRelaxation:
+        wasAnyRelaxation = False
+
         for u,v,w in edges:
             if distances[u] != INF:
-                distances[v] = min(distances[u] + w, distances[v])
+                nextDistance = distances[u] + w
 
+                if nextDistance < distances[v]:
+                    distances[v] = nextDistance
+                    wasAnyRelaxation = True
+        
     return distances
 
 '''
