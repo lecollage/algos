@@ -1,0 +1,145 @@
+from typing import List
+from queue import PriorityQueue, Queue
+
+class Solution:
+    def shortestPath(self, grid: List[List[int]], k: int) -> int:
+        MAX = 10**6
+
+        n = len(grid)
+        m = len(grid[0])
+
+        queue = PriorityQueue()
+
+        queue.put((0, 0, 0, k))
+
+        minDistances = [[float("inf") for _ in range(m)] for _ in range(n)]
+        directions = [
+            [-1,0],
+            [0,-1],
+            [1,0],
+            [0,1],
+        ]
+
+        def isValid(i: int, j: int) -> bool:
+            if i < 0 or i >= len(grid):
+                return False
+            
+            if j < 0 or j >= len(grid[i]):
+                return False
+            
+            return True
+
+        minDistance = MAX
+
+        while not queue.empty():
+            distance, i, j, obstacles = queue.get()
+
+            # print((i,j), (distance, obstacles))
+
+            if i == n-1 and j == m-1:
+                # print('END', i, j, distance)
+                minDistance = min(distance, minDistance)
+
+            for dirI, dirJ in directions:
+                nextI = i + dirI
+                nextJ = j + dirJ
+                
+
+                if isValid(nextI, nextJ):
+                    nextObstacles = obstacles
+                    nextDistance = distance + 1
+
+                    if grid[nextI][nextJ] == 1:
+                        nextObstacles -= 1
+
+                    if nextObstacles >= 0 and nextDistance <= minDistances[nextI][nextJ]:
+                        # print((i,j), (distance, obstacles), (nextI, nextJ), (nextDistance, nextObstacles))
+                        queue.put((nextDistance, nextI, nextJ, nextObstacles))
+                        minDistances[nextI][nextJ] = nextDistance
+
+        # print(minDistances)
+
+        if minDistance == MAX: 
+            return -1    
+
+        return minDistance
+    
+
+testCases = [
+    {
+        "grid": [
+            [0,0,0],
+            [1,1,0],
+            [0,0,0],
+            [0,1,1],
+            [0,0,0]
+        ],
+        "k": 1,
+        "expected": 6
+    },
+    {
+        "grid": [[0,1,1],[1,1,1],[1,0,0]],
+        "k": 1,
+        "expected": -1
+    },
+    {
+        "grid": [
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,1,1,1,1,1,1,1],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,1,0,0,0,0,0,0,0,0],
+            [0,1,0,1,1,1,1,1,1,1],
+            [0,1,0,1,1,1,1,0,0,0],
+            [0,1,0,0,0,0,0,0,1,0],
+            [0,1,1,1,1,1,1,0,1,0],
+            [0,0,0,0,0,0,0,0,1,0]
+        ],
+        "k": 1,
+        "expected": 20
+    },
+    {
+        "grid": [
+            [0,0,0,0],
+            [0,1,1,1],
+            [0,0,1,1],
+            [0,0,1,0]
+        ],
+        "k": 1,
+        "expected": 6
+    }
+]
+
+'''
+[
+    [2, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
+    [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    [3, 4, 5, inf, inf, inf, inf, inf, inf, 12],
+    [4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    [5, 6, inf, inf, inf, inf, inf, inf, inf, 14],
+    [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    [7, 8, 9, inf, inf, inf, inf, inf, inf, inf],
+    [8, 9, 10, inf, inf, inf, inf, 17, 18, 19],
+    [9, 10, 11, 12, 13, 14, 15, 16, inf, 20],
+    [10, 11, inf, inf, inf, inf, inf, 17, inf, 21],
+    [11, 12, 13, 14, 15, 16, 17, 18, inf, 22]
+    ]
+
+'''
+
+
+for testCase in testCases:
+    print('')
+
+    grid = testCase["grid"]
+    k = testCase["k"]
+    expected = testCase["expected"]
+
+    s = Solution()
+
+    result = s.shortestPath(grid, k)
+    print(grid, k, result)
+    assert result == expected, f"result {result} should be expected: {expected}"
