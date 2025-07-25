@@ -2,17 +2,9 @@ from typing import List
 from queue import PriorityQueue, Queue
 
 class Solution:
-    def shortestPath(self, grid: List[List[int]], k: int) -> int:
-        MAX = 10**6
-
+    def shortestPath(self, grid: List[List[int]], max_obstacles: int) -> int:
         n = len(grid)
         m = len(grid[0])
-
-        queue = PriorityQueue()
-
-        queue.put((0, 0, 0, k))
-
-        minDistances = [[float("inf") for _ in range(m)] for _ in range(n)]
         directions = [
             [-1,0],
             [0,-1],
@@ -28,42 +20,35 @@ class Solution:
                 return False
             
             return True
+        
+        queue = Queue()
+        visited = [[[False for _ in range(max_obstacles + 1)] for _ in range(m)] for _ in range(n)]
 
-        minDistance = MAX
+        # print(visited)
+
+        queue.put((0, 0, 0, 0))
+        visited[0][0][0] = True
 
         while not queue.empty():
-            distance, i, j, obstacles = queue.get()
+            i, j, k, distance = queue.get()
 
-            # print((i,j), (distance, obstacles))
+            # print('step1: ', i, j, k, distance)
 
             if i == n-1 and j == m-1:
-                # print('END', i, j, distance)
-                minDistance = min(distance, minDistance)
+                return distance
 
             for dirI, dirJ in directions:
-                nextI = i + dirI
-                nextJ = j + dirJ
-                
+                nextI = i+dirI
+                nextJ = j+dirJ
 
                 if isValid(nextI, nextJ):
-                    nextObstacles = obstacles
-                    nextDistance = distance + 1
+                    nextK = k + grid[nextI][nextJ]
 
-                    if grid[nextI][nextJ] == 1:
-                        nextObstacles -= 1
+                    if nextK <= max_obstacles and not visited[nextI][nextJ][nextK]:
+                        queue.put((nextI, nextJ, nextK, distance+1))
+                        visited[nextI][nextJ][nextK] = True
 
-                    if nextObstacles >= 0 and nextDistance <= minDistances[nextI][nextJ]:
-                        # print((i,j), (distance, obstacles), (nextI, nextJ), (nextDistance, nextObstacles))
-                        queue.put((nextDistance, nextI, nextJ, nextObstacles))
-                        minDistances[nextI][nextJ] = nextDistance
-
-        # print(minDistances)
-
-        if minDistance == MAX: 
-            return -1    
-
-        return minDistance
-    
+        return -1
 
 testCases = [
     {
@@ -151,7 +136,7 @@ testCases = [
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         ],
         "k": 5,
-        "expected": 6
+        "expected": 387
     }
 ]
 
