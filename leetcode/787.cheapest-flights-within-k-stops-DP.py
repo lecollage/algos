@@ -12,39 +12,61 @@ If there is no such route, return -1.
 '''
 
 class Solution:
-    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
-        oldMinDistances = [float("inf")] * n
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, max_stops: int) -> int:
+        dp = [[float("inf") for _ in range(n)] for _ in range(max_stops+1)]
 
-        oldMinDistances[src] = 0
+        for u,v,weight in flights:
+            if u == src:
+                dp[0][v] = weight
 
-        # max simple path length by edges
-        for _ in range(k+1):
-            currentMinDistances = oldMinDistances.copy()
+        for k in range(1,max_stops+1,1):
+            for u,v,weight in flights:
+                dp[k][v] = min(dp[k-1][u] + weight, dp[k-1][v], dp[k][v])
 
-            for u, v, weight in flights:
-                currentMinDistances[v] = min(currentMinDistances[v], oldMinDistances[u]+weight)
+        # print(dp)
 
-            oldMinDistances = currentMinDistances
-
-        if oldMinDistances[dst] == float("inf"):
+        if dp[max_stops][dst] == float("inf"):
             return -1
 
-        return oldMinDistances[dst]
-
+        return dp[max_stops][dst]
 
 
 testCases = [
     {
         "flights": [
-            [0,1,2],
-            [1,2,1],
+            [3,0,8],
+            [1,4,1],
+            [1,0,4],
+            [1,3,3],
+            [3,4,1],
+            [2,3,3],
             [2,0,10]
         ],
-        "n": 3,
+        "n": 5,
         "src": 1,
-        "dst": 2,
-        "k": 1,
+        "dst": 4,
+        "k": 4,
         "expected": 1
+    },    
+    {
+        "flights": [
+            [0,1,2]
+        ],
+        "n": 2,
+        "src": 1,
+        "dst": 0,
+        "k": 0,
+        "expected": -1
+    },
+    {
+        "flights": [
+            [1,0,5]
+        ],
+        "n": 2,
+        "src": 0,
+        "dst": 1,
+        "k": 1,
+        "expected": -1
     },
     {
         "flights": [
@@ -121,6 +143,18 @@ testCases = [
         "dst": 2,
         "k": 4,
         "expected": 11
+    },
+    {
+        "flights": [
+            [0,1,2],
+            [1,2,1],
+            [2,0,10]
+        ],
+        "n": 3,
+        "src": 1,
+        "dst": 2,
+        "k": 1,
+        "expected": 1
     },
 ]
 
