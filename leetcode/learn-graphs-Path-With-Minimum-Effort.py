@@ -37,58 +37,51 @@ class Solution:
             
             return True
         
-        # build array of edges
+        def isGood(threshold):
+            queue = deque()
+            visited = [[False for _ in range(m)] for _ in range(n)]
 
-        edges = []
-        queue = deque()
-        visited = [[False for _ in range(m)] for _ in range(n)]
+            queue.appendleft((0,0)) # i, j
 
-        queue.appendleft((0,0)) # i, j
+            while queue:
+                i, j = queue.popleft()
 
-        while queue:
-            i, j = queue.popleft()
+                # print(i, j)
 
-            # print(i, j)
+                if isEnd(i,j):
+                    return True
 
-            for dI, dJ in directions:
-                nextI = i + dI
-                nextJ = j + dJ
+                for dI, dJ in directions:
+                    nextI = i + dI
+                    nextJ = j + dJ
 
-                if isValid(nextI, nextJ) and not visited[nextI][nextJ]:
-                    edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
+                    if isValid(nextI, nextJ) and not visited[nextI][nextJ]:
+                        edgeWeight = abs(grid[i][j] - grid[nextI][nextJ])
 
-                    edges.append(((i,j), (nextI, nextJ), edgeWeight))
-                    queue.appendleft((nextI, nextJ))
-                    visited[nextI][nextJ] = True
+                        if edgeWeight <= threshold:
+                            queue.appendleft((nextI, nextJ))
+                            visited[nextI][nextJ] = True
 
-        print(edges)
+            return False
 
-        # perform Bellman Ford to calculate shortest path from 0 to m-1, n-1
+        # print(isGood(9))
 
-        distances = [[INF for _ in range(m)] for _ in range(n)]
-        distances[0][0] = 0
+        left = 0
+        right = 10**6
 
-        wasAnyRelaxation = True
+        while right>left:
+            middle = (right+left)//2
 
-        while wasAnyRelaxation:
-            wasAnyRelaxation = False
+            x = isGood(middle)
 
-            for u, v, w in edges:
-                ui, uj = u
-                vi, vj = v
+            # print(left, middle, right, x)
 
-                print(ui, uj, vi, vj, w, distances)
+            if x:
+                right = middle
+            else:
+                left = middle+1
 
-                if distances[ui][uj] != INF:
-                    nextDistance = w
-
-                    if nextDistance < distances[vi][vj]:
-                        distances[vi][vj] = nextDistance
-                        wasAnyRelaxation = True
-
-        print(distances)
-
-        return distances[n-1][m-1]
+        return right
 
 # @lc code=end
 
@@ -96,17 +89,17 @@ class Solution:
 testCases = [
     {
         "grid": [
+            [1,10,6,7]
+        ],
+        "expected": 9
+    },
+    {
+        "grid": [
             [1,2,3],
             [3,8,4],
             [5,3,5]
         ],
         "expected": 1
-    },
-    {
-        "grid": [
-            [1,10,6,7]
-        ],
-        "expected": 9
     },
     {
         "grid": [
