@@ -66,11 +66,11 @@ class Solution:
 
         # print(isGood(9))
 
-        left = 0
-        right = 10**6
+        left = -1
+        right = 10**6+1
 
-        while right>left:
-            middle = (right+left)//2
+        while right>left+1:
+            middle = left + (right-left)//2
 
             x = isGood(middle)
 
@@ -79,11 +79,17 @@ class Solution:
             if x:
                 right = middle
             else:
-                left = middle+1
+                left = middle
 
         return right
 
 # @lc code=end
+
+'''
+ l  r
+[.  .  .  .  .  .  .]
+
+'''
 
 
 testCases = [
@@ -116,7 +122,13 @@ testCases = [
         "expected": 2
     },
     {
-        "grid": [[1,2,1,1,1],[1,2,1,2,1],[1,2,1,2,1],[1,2,1,2,1],[1,1,1,2,1]],
+        "grid": [
+            [1,2,1,1,1],
+            [1,2,1,2,1],
+            [1,2,1,2,1],
+            [1,2,1,2,1],
+            [1,1,1,2,1]
+        ],
         "expected": 0
     },
     {
