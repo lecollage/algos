@@ -59,9 +59,7 @@ class Solution:
 
             # i -> q
 
-            trionicSumPart3 = 0
-
-            sums = []
+            sumsPart3 = []
 
             while j < n and nums[i] < nums[j]:
                 i += 1
@@ -69,13 +67,18 @@ class Solution:
                 part3 = True
 
                 trionicSumPart3 += nums[i]
-                sums.append(trionicSumPart3)
+                sumsPart3.append(trionicSumPart3)
 
-            if len(sums) > 0:
-                trionicSumPart3 = max(sums)
+                if nums[q] < 0 and nums[i] > nums[q]:
+                    q = i
+
+
+            if len(sumsPart3) > 0:
+                trionicSumPart3 = max(sumsPart3)
 
             print(
-                trionicSumPart3
+                trionicSumPart3,
+                sumsPart3
             )
 
             # i -> r
@@ -124,21 +127,29 @@ class Solution:
 
 
 testCases = [
+    # {
+    #     "arr": [0,-2,-1,-3,0,2,-1],
+    #     "expected": -4
+    # },
+    # {
+    #     "arr": [1,4,2,7],
+    #     "expected": 14
+    # },
+    # {
+    #     "arr": [2,993,-791,-635,-569],
+    #     "expected": -431
+    # },
+    # {
+    #     "arr": [395,731,-892,-619,-238,634],
+    #     "expected": 11
+    # },
+    # {
+    #     "arr": [-754,167,-172,202,735,-941,992],
+    #     "expected": 988
+    # },
     {
-        "arr": [0,-2,-1,-3,0,2,-1],
-        "expected": -4
-    },
-    {
-        "arr": [1,4,2,7],
-        "expected": 14
-    },
-    {
-        "arr": [2,993,-791,-635,-569],
-        "expected": -431
-    },
-    {
-        "arr": [395,731,-892,-619,-238,634],
-        "expected": 11
+        "arr": [-533,224,-324,251,231,479],
+        "expected": 637
     },
     
 ]
