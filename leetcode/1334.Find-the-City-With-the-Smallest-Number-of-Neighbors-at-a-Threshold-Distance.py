@@ -29,7 +29,7 @@ class Solution:
         for k in range(n):
             for u in range(n):
                 for v in range(n):
-                    if dp[u][v] > dp[u][k] + dp[k][v]:
+                    if dp[u][v] > dp[u][k] + dp[k][v] and dp[u][k] + dp[k][v] < distanceThreshold:
                         dp[u][v] = dp[u][k] + dp[k][v]
                         p[u][v] = p[u][k]
 
@@ -46,11 +46,20 @@ class Solution:
     [5, 2, 1, 0]
 ]
 
+0 -> 1 -> 2
+
 [
-    [0, None, None, None],
-    [None, 1, None, None],
-    [None, None, 2, None],
-    [None, None, None, 3]
+    [0, 3, inf, inf],
+    [3, 0, 1, 4],
+    [inf, 1, 0, 1],
+    [inf, 4, 1, 0]
+]
+
+[
+    [0, 1, None, None],
+    [1, 1, 2, 2],
+    [None, 2, 2, 3],
+    [None, 3, 3, 3]
 ]
 '''
 
