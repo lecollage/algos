@@ -15,10 +15,11 @@ class Solution:
         p = [[None for _ in range(n)] for _ in range(n)]
 
         for u,v,w in edges:
-            dp[u][v] = w
-            dp[v][u] = w
-            p[u][v] = v
-            p[v][u] = v
+            if w <= distanceThreshold:
+                dp[u][v] = w
+                dp[v][u] = w
+                p[u][v] = v
+                p[v][u] = u
 
         for i in range(n):
             dp[i][i] = 0
@@ -29,14 +30,31 @@ class Solution:
         for k in range(n):
             for u in range(n):
                 for v in range(n):
-                    if dp[u][v] > dp[u][k] + dp[k][v] and dp[u][k] + dp[k][v] < distanceThreshold:
+                    if dp[u][v] > dp[u][k] + dp[k][v] and dp[u][k] + dp[k][v] <= distanceThreshold:
                         dp[u][v] = dp[u][k] + dp[k][v]
                         p[u][v] = p[u][k]
 
         print(dp)
         print(p)
 
-        return 0
+        minCityIndex = -1
+        minCityCount = -1
+
+        for u in range(n):
+            count = 0
+
+            for v in range(n):
+                if u != v and p[u][v] != None:
+                    count += 1
+
+            if minCityIndex == -1:
+                minCityIndex = u
+                minCityCount = count
+            elif count <= minCityCount:
+                minCityCount = count
+                minCityIndex = u
+
+        return minCityIndex
 
 '''
 [
@@ -60,6 +78,24 @@ class Solution:
     [1, 1, 2, 2],
     [None, 2, 2, 3],
     [None, 3, 3, 3]
+]
+
+
+[
+    [0, 1, 1, None],
+    [0, 1, 2, 2],
+    [1, 1, 2, 3],
+    [None, 2, 2, 3]
+]
+
+----------
+
+[
+    [0, 1, None, None, None],
+    [0, 1, None, None, 4],
+    [None, None, 2, 3, 3],
+    [None, None, 2, 3, 4],
+    [None, 1, 3, 3, 4]
 ]
 '''
 
