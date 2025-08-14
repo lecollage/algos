@@ -21,15 +21,16 @@ class Solution:
     def openLock(self, deadends: List[str], target: str) -> int:
         targetTuple = (int(target[0]), int(target[1]), int(target[2]), int(target[3]))
 
-        deadendsTuples = set()
-
-        for deadend in deadends:
-            deadendsTuples.add((int(deadend[0]), int(deadend[1]), int(deadend[2]), int(deadend[3])))
-
         # print(deadendsTuples)
 
         q = deque()
         visited = set()
+
+        for deadend in deadends:
+            visited.add((int(deadend[0]), int(deadend[1]), int(deadend[2]), int(deadend[3])))
+
+        if (0,0,0,0) in visited:
+            return -1
 
         q.append([(0, 0, 0, 0), 0])
         visited.add((0, 0, 0, 0))
@@ -44,9 +45,6 @@ class Solution:
             el, cost = q.popleft()
 
             # print(el, cost)
-
-            if el in deadendsTuples:
-                continue
 
             if el == targetTuple:
                 return cost

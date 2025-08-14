@@ -42,10 +42,11 @@ class Solution:
             u = ord(original[i]) - ord("a")
             v = ord(changed[i]) - ord("a")
             w = cost[i]
+            
+            if w < d[u][v]:
+                d[u][v] = w
 
             # print(u, v, w)
-
-            d[u][v] = w
 
         print(d)
 
@@ -132,7 +133,15 @@ testCases = [
         "original": ["a","b","c","c","e","z","z"],
         "changed":  ["b","c","b","e","b","e","a"],
         "cost":     [2,5,5,1,2,20,7],
-        "expected": 25
+        "expected": 23
+    },
+    {
+        "source": "abcdz",
+        "target": "abcdb",
+        "original": ["a","b","c","c","e","z","z"],
+        "changed":  ["b","c","b","e","b","e","a"],
+        "cost":     [2,5,5,1,2,20,7],
+        "expected": 9
     },
 ]
 
