@@ -16,6 +16,7 @@ class Solution:
 
         def DFS(node: int) -> bool:
             print(node, visited)
+
             if visited[node] == 1:
                 return False
             
