@@ -11,34 +11,56 @@ class Solution:
 
         graph = [[] for _ in range(numCourses)]
 
-        for v,u in prerequisites:
-            graph[u].append(v)
+        for _, prerequisite in enumerate(prerequisites):
+            if len(prerequisite) > 0:
+                v,u = prerequisite
+                graph[u].append(v)
 
         print(graph)
 
-        tin = [-1] * n
-        tout = [-1] * n
+        tin = [-1] * numCourses
+        tout = [[-1, i] for i in range(numCourses)]
 
         def DFS(node: int):
-            if visited[node]:
-                return
+            if visited[node] == 1:
+                return False
+            
+            if visited[node] == 2:
+                return True
 
-            visited[node] = True
+            visited[node] = 1
             tin[node] = self.time
             self.time += 1
 
             for neighbour in graph[node]:
-                DFS(neighbour)
+                if not DFS(neighbour):
+                    return False
 
-            tout[node] = self.time
+            tout[node][0] = self.time
             self.time += 1
+            visited[node] = 2
+
+            return True
                 
         visited = [0] * numCourses
 
-        DFS(0)
+        for node in range(numCourses):
+            if visited[node] == 0 and not DFS(node):
+                return []
+
+        tout.sort(key = lambda x: -x[0]) # reverse
 
         print(tin)
         print(tout)
+
+        result = []
+
+        for _, indx in tout:
+            result.append(indx)
+
+        print(result)
+
+        return result
 
         
 
@@ -50,28 +72,40 @@ inputs = [
         [
             [1,0]
         ],
-        [0,1]
+        [[0,1]]
     ],
     [
         4,
         [
             [1,0],[2,0],[3,1],[3,2]
         ],
-        [0,1,2,3]
+        [[0,1,2,3], [0,2,1,3]]
     ],
     [
         1,
         [
             []
         ],
-        [0]
+        [[0]]
+    ],
+    [
+        4,
+        [
+            [1,0],[2,0],[0,2]
+        ],
+        [[]]
     ],
 ]
 
-for n, cources, expect in inputs:
+for n, cources, expects in inputs:
     print()
     s = Solution()
     res = s.findOrder(n, cources)
-    print(res == expect)
-    assert res == expect, f"result {res} should be expected: {expect}"
+
+    result = False
+
+    for expect in expects:
+        result = result or expect == res
+
+    assert result == True, f"result {res} should be in expects: {expects}"
 
