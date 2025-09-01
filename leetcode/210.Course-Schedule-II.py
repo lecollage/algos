@@ -2,8 +2,6 @@ from typing import List
 
 # @lc code=start
 class Solution:
-    time = 0
-
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         # graph
         # visited
@@ -18,8 +16,7 @@ class Solution:
 
         print(graph)
 
-        tin = [-1] * numCourses
-        tout = [[-1, i] for i in range(numCourses)]
+        result = []
 
         def DFS(node: int):
             if visited[node] == 1:
@@ -29,40 +26,39 @@ class Solution:
                 return True
 
             visited[node] = 1
-            tin[node] = self.time
-            self.time += 1
 
             for neighbour in graph[node]:
                 if not DFS(neighbour):
                     return False
 
-            tout[node][0] = self.time
-            self.time += 1
             visited[node] = 2
+            result.append(node)
 
             return True
-                
+
         visited = [0] * numCourses
 
         for node in range(numCourses):
             if visited[node] == 0 and not DFS(node):
                 return []
 
-        tout.sort(key = lambda x: -x[0]) # reverse
-
-        print(tin)
-        print(tout)
-
-        result = []
-
-        for _, indx in tout:
-            result.append(indx)
-
+        result.reverse()
         print(result)
 
         return result
 
-        
+        # tout.sort(key = lambda x: -x[0]) # reverse
+
+        # print(tin)
+        # print(tout)
+
+        # result = []
+
+        # for _, indx in tout:
+        #     result.append(indx)
+
+        # print(result)
+
 
 # @lc code=end
 

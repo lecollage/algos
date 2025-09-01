@@ -31,7 +31,6 @@ class Solution:
 
         distances[0] = 0
 
-
         while not queue.empty():
             distance, node = queue.get()
 
