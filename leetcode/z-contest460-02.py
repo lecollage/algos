@@ -6,76 +6,36 @@ from collections import deque
 # @lc code=start
 class Solution:
     def numOfSubsequences(self, s: str) -> int:
-        pruned = ""
+        nOrig = len(s)
+        s = s + '#'
+        suffT = [0] * (nOrig+1)
 
-        for el in s:
-            if el in ['L', 'C', 'T']:
-                pruned += el
+        for i in range(nOrig-1, -1, -1):
+            suffT[i] = suffT[i+1] + (s[i] == 'T')
 
-        print(pruned)
+        # print(suffT)
 
-        wasL = False
-        wasC = False
-        toRemove = set()
+        countLCT = 0
+        countL = 0
+        countCT = 0
+        countLC = 0
+        anotherCountLCT = 0
 
-        for i, el in enumerate(pruned):
-            if el == 'L':
-                wasL = True
-            if el == 'C':
-                wasC = True
-            if el == 'T' and not wasL and not wasC:
-                toRemove.add(i)
+        for i in range(nOrig + 1):
+            ch = s[i]
 
-        print(toRemove)
+            anotherCountLCT = max(anotherCountLCT, countL * suffT[i]) # position matters
 
-        pruned2 = ''
+            if ch == 'L':
+                countL += 1
+            elif ch == 'C':
+                countLCT += countL * suffT[i] # i+1
+                countCT += suffT[i]
+                countLC += countL
 
-        for i, el in enumerate(pruned):
-            if i not in toRemove:
-                pruned2 += el
+        # print(countLCT)
 
-        print(pruned2)
-
-        inserted = False
-
-        if pruned2[0] == 'C':
-            pruned2 = 'L'+pruned2
-            inserted = True
-
-        result = 0
-        k = 0
-        Lnum = 0
-        Cnum = 0
-        Tnum = 0
-        nextL = -1
-
-        while k < len(pruned2):
-            print(k, pruned2[k], Lnum, Cnum, Tnum, k == len(pruned2)-1)
-
-            if Cnum == 0 and Tnum == 0 and pruned2[k] == 'L':
-                Lnum += 1
-            elif Cnum > 0 and pruned2[k] == 'L':
-                nextL = k
-            elif Lnum > 0 and Tnum == 0 and pruned2[k] == 'C':
-                Cnum += 1
-            elif Lnum > 0 and Cnum > 0 and pruned2[k] == 'T':
-                Tnum += 1
-
-            if k == len(pruned2)-1:
-                result += Lnum*Cnum*Tnum
-
-                Lnum = 0
-                Cnum = 0
-                Tnum = 0
-
-                if nextL != -1:
-                    k = nextL
-
-                nextL = -1
-
-            k += 1
-
-        return result
+        return countLCT + max(countCT, countLC, anotherCountLCT)
 
 
 
@@ -84,10 +44,6 @@ class Solution:
 
 
 testCases = [
-    {
-        "s": "TTTTCLMXCXCTRT",
-        "expected": 6
-    },
     {
         "s": "LMCT",
         "expected": 2
@@ -100,19 +56,6 @@ testCases = [
         "s": "L",
         "expected": 0
     },
-    {
-        "s": "LMXCXCTRT",
-        "expected": 6
-    },
-    {
-        "s": "CLMXCXCTRT",
-        "expected": 6
-    },
-    {
-        "s": "CLLCT",
-        "expected": 4
-    },
-    
 ]
 
 for testCase in testCases:

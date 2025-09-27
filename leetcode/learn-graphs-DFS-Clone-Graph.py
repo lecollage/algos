@@ -41,26 +41,25 @@ class Solution:
 
         clonnedNode = Node(node.val)
 
-        visited = set()
+        visited = {}
+
+        visited[clonnedNode.val] = clonnedNode
 
         def DFS(node: Optional['Node'], clonnedNode: Node):
             if not node:
                 return
 
-            if node in visited:
-                return
-            
             print(node.val, clonnedNode.val)
-            
-            visited.add(node)
 
             for neighbor in node.neighbors:
-                clonnedNeighbor = Node(neighbor.val)
+                clonnedNeighbor = visited[neighbor.val] if neighbor.val in visited else Node(neighbor.val)
                 print('   ', neighbor.val)
 
                 clonnedNode.neighbors.append(clonnedNeighbor)
 
-                DFS(neighbor, clonnedNeighbor)
+                if clonnedNeighbor.val not in visited:
+                    visited[clonnedNeighbor.val] = clonnedNeighbor
+                    DFS(neighbor, clonnedNeighbor)
         
         DFS(node, clonnedNode)
 
