@@ -8,10 +8,14 @@ class Solution:
     def numOfSubsequences(self, s: str) -> int:
         nOrig = len(s)
         s = s + '#'
-        suffT = [0] * (nOrig+1)
+
+        countT = 0
 
         for i in range(nOrig-1, -1, -1):
-            suffT[i] = suffT[i+1] + (s[i] == 'T')
+            ch = s[i]
+
+            if ch == 'T':
+                countT += 1
 
         # print(suffT)
 
@@ -24,22 +28,20 @@ class Solution:
         for i in range(nOrig + 1):
             ch = s[i]
 
-            anotherCountLCT = max(anotherCountLCT, countL * suffT[i]) # position matters
+            anotherCountLCT = max(anotherCountLCT, countL * countT) # position matters
 
             if ch == 'L':
                 countL += 1
             elif ch == 'C':
-                countLCT += countL * suffT[i] # i+1
-                countCT += suffT[i]
+                countLCT += countL * countT # i+1
+                countCT += countT
                 countLC += countL
+            elif ch == 'T':
+                countT -= 1
 
         # print(countLCT)
 
         return countLCT + max(countCT, countLC, anotherCountLCT)
-
-
-
-
 # @lc code=end
 
 
