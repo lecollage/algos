@@ -52,29 +52,7 @@ class Solution:
                 else:
                     m[arr[0]] = [i]
 
-        adjList = [set() for _ in range(n)]
-
         print(m)
-
-        for i in range(n):
-            if i > 0:
-                adjList[i].add(i-1)
-            if i < n-1:
-                adjList[i].add(i+1)
-    
-            if len(x[i]) != 1:
-                for p in set(x[i]):
-                    if p not in m:
-                        continue
-
-                    for k in m[p]:
-                        adjList[k].add(i)
-            else:
-                for k in m[nums[i]]:
-                    if k != i:
-                        adjList[i].add(k)
-
-        print(adjList)
 
         q = deque()
         visited = [False]*n
@@ -89,13 +67,18 @@ class Solution:
             if node == n-1:
                 return distance
 
-            for neigbour in adjList[node]:
-                if not visited[neigbour]:
-                    q.append((neigbour, distance+1))
+            if node > 0 and not visited[node-1]:
+                q.append((node-1, distance+1))
+            if node < n-1 and not visited[node+1]:
+                q.append((node+1, distance+1))
+
+            m[x[node]]
+            
+            q.append((neigbour, distance+1))
+
 
         return -1
 # @lc code=end
-
 
 testCases = [
     # {

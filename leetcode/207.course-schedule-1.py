@@ -24,6 +24,8 @@ class Solution:
                 return True
 
             visited[node] = 1
+            
+            
 
             for neighbour in graph[node]:
                 if not DFS(neighbour):
