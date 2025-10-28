@@ -46,22 +46,20 @@ class Solution:
         if not root:
             return []
 
-        q = deque()
-
-        q.append(root)
+        q = deque([root])
         levelMaxes = []
 
         while(len(q)):
             curr_len = len(q)
             # print('')
 
-            maxLevelEl = None
+            maxLevelEl = float("-inf")
 
             for _ in range(curr_len):
                 node = q.popleft()
                 # print(node.val)
 
-                maxLevelEl = node.val if maxLevelEl == None else max(maxLevelEl, node.val)
+                maxLevelEl = max(maxLevelEl, node.val)
 
                 if node.left:
                     q.append(node.left)
