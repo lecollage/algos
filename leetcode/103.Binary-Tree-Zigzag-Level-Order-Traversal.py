@@ -49,31 +49,31 @@ class Solution:
         q = deque([root])
         ans = []
 
+        leftFirst = True
+
         while(len(q)):
             currLen = len(q)
-            level = []
+            level = deque()
 
             for _ in range(currLen):
                 node = q.popleft()
 
-                level.append(node.val)
+                if leftFirst:
+                    level.append(node.val)
+                else:
+                    level.appendleft(node.val)
+
+                # print(node.val,leftFirst,level)
 
                 if node.left:
                     q.append(node.left)
                 if node.right:
                     q.append(node.right)
 
-            ans.append(level)
+            leftFirst = not leftFirst
+            ans.append(list(level))
 
-        zigzag = []
-
-        for i, arr in enumerate(ans):
-            if (i+1)%2 == 0:
-                arr.reverse()
-
-            zigzag.append(arr)
-
-        return zigzag
+        return ans
 # @lc code=end
 
 adjLists = [
