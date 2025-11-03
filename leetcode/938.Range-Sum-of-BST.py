@@ -56,10 +56,10 @@ class Solution:
             if node.val >= low and node.val <= high:
                 sumValue += node.val
 
-            if node.left:
+            if node.left and node.val > low:
                 q.append(node.left)
 
-            if node.right:
+            if node.right and node.val < high:
                 q.append(node.right)
 
         return sumValue
