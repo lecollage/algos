@@ -41,39 +41,31 @@ def buildTree(nodes: list) -> Optional[TreeNode]:
 
 # @lc code=start
 class Solution:
-    def getMinimumDifference(self, root: Optional[TreeNode]) -> int:
-        arr = []
-        minDiff = 10**9
-
-        def dfs(node: Optional[TreeNode]):
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        def dfs(node: Optional[TreeNode], minVal, maxVal) -> bool:
             if not node:
-                return
+                return True
+            
+            if node.val <= minVal or node.val >= maxVal:
+                return False
+            
+            return dfs(node.left, minVal, node.val) and dfs(node.right, node.val, maxVal)
 
-            dfs(node.left)
-
-            arr.append(node.val)
-
-            dfs(node.right)
-
-        dfs(root)
-
-        # print(arr)
-
-
-        for i in range(0,len(arr)-1):
-            minDiff = min(minDiff, arr[i+1]-arr[i])
-
-        return minDiff
+        return dfs(root, -float("inf"), float("inf"))
 # @lc code=end
 
 adjLists = [
     [
-        [4,2,6,1,3],
-        1,
+        [2,1,3],
+        True,
     ],
     [
-        [1,0,48,None,None,12,49],
-        1,
+        [5,1,4,None,None,3,6],
+        False,
+    ],
+    [
+        [2,2,2],
+        False,
     ],
 ]
 
@@ -81,7 +73,7 @@ for [tree, expect] in adjLists:
     t = buildTree(tree)
 
     s = Solution()
-    res = s.getMinimumDifference(t)
+    res = s.isValidBST(t)
     print(res == expect, res)
     print('')
     print('')
