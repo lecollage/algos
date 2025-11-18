@@ -12,29 +12,47 @@ class Solution:
     def dfs(self, node: int, parent: int):
         for neighbour, weight in self.adjList[node]:
             if parent != neighbour:
-                self.dfs(self.adjList[neighbour], node)
+                # print('neighbour: ', neighbour)
+                self.dfs(neighbour, node)
 
-                self.size[node]+=self.size[neighbour]
+                self.size[node] += self.size[neighbour]
                 self.dp[node] += self.dp[neighbour] + weight*self.size[neighbour]
 
         self.size[node] += 1
 
+    def dfs2(self, node: int, parent: int):
+        for neighbour, weight in self.adjList[node]:
+            if parent != neighbour:
+                self.dp[neighbour] = weight * (self.n - 2*self.size[neighbour]) + self.dp[node]
 
+                self.dfs2(neighbour, node)
 
     def sumOfDistancesInTree(self, n: int, edges: List[List[int]]) -> List[int]:
+        # if len(edges) == 0:
+        #     return []
+
+        self.n = n
         self.adjList = [[] for _ in range(n)]
 
         for u, v, *w in edges:
             self.adjList[u].append((v, w[0] if w else 1))
             self.adjList[v].append((u, w[0] if w else 1))
 
+        # print(self.adjList)
+
         self.weights = [0]*n
         self.dp = [0]*n
         self.size = [0]*n
-        
 
+        self.dfs(0, -1)
 
+        # print(self.dp)
 
+        self.dfs2(0, -1)
+
+        # print(self.dp)
+
+        return self.dp
 # @lc code=end
 
 '''
@@ -54,6 +72,11 @@ adjLists = [
         1,
         [],
         [0]
+    ],
+    [
+        2, 
+        [[1,0]],
+        [1,1]
     ]
 ]
 
