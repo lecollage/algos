@@ -6,7 +6,7 @@ from heapq import *
 from string import ascii_lowercase
 #
 # @lc app=leetcode id=127 lang=python3
-#isited.add(newWord)
+#
 # 127. Word Ladder
 #
 
