@@ -37,31 +37,29 @@ class Solution:
         return s
 
     def minJumps(self, nums: List[int]) -> int:
-        # resource.setrlimit(resource.RLIMIT_AS, (1000*1024*200,1000*1024*200))
-
         n = len(nums)
-        primes = {}
 
+        positions = {}
         for i, num in enumerate(nums):
-            factors = self.getListOfFactors(num)
-            
-            for factor in factors:
-                if factor in primes:
-                    primes[factor].append(i)
-                else:
-                    primes[factor] = [i]
+            if num in positions:
+                positions[num].append(i)
+            else:
+                positions[num] = [i]
 
-        print('primes: ', primes)
+        factors = {}
+        for num in set(nums):
+            factors[num] = self.getListOfFactors(num)
 
-        q = deque([(0, 0)])# indx, distance
+        q = deque([(n-1, 0)]) # indx, distance
         visited = [False]*n
+        usedPrimes = set()
 
-        visited[0] = True
+        visited[n-1] = True
 
         while(len(q)):
             node, distance = q.popleft()
 
-            if node == n-1:
+            if node == 0:
                 return distance
 
             if node > 0 and not visited[node-1]:
@@ -75,15 +73,14 @@ class Solution:
             # print('node: ', node)
             # print('primes[nums[node]]: ', primes[nums[node]])
 
-            if nums[node] in primes:
-                indexesToJump = primes[nums[node]]
-
-                for i in indexesToJump:
-                    if not visited[i]:
-                        q.append((i, distance+1))
-                        visited[i] = True
-
-                del primes[nums[node]]
+            for prime in factors[nums[node]]:
+                if prime in usedPrimes:
+                    continue
+                usedPrimes.add(prime)
+                for pos in positions[prime]:
+                    if not visited[pos]:
+                        q.append((pos, distance+1))
+                        visited[pos] = True
 
         return -1
 # @lc code=end
