@@ -20,9 +20,11 @@ class Solution:
             
             stack.append(nums[i])
 
-            # print(i, stack)
+            print(i, stack)
 
         answer.append(stack[0])
+
+        prevMax = stack[0]
 
         for i in range(k, n, 1):
             while len(stack) > 0 and (stack[-1] < nums[i] or len(stack) >= k):
@@ -30,6 +32,8 @@ class Solution:
             
             stack.append(nums[i])
             answer.append(stack[0])
+            
+            print(i, stack)
 
         return answer
 # @lc code=end
