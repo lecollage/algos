@@ -6,34 +6,72 @@ from collections import deque
 #
 # 239. Sliding Window Maximum
 #
-
 # @lc code=start
+
+class MyStack:
+    def __init__(self):
+        self.arr = [(0, float('-inf'))]
+
+    def push(self, el: int):
+        _, currMax = self.arr[-1]
+        
+        self.arr.append((el, max(currMax, el)))
+
+    def pop(self) -> int:
+        return self.arr.pop()[0]
+
+    def getMax(self):
+        _, currMax = self.arr[-1]
+
+        return currMax
+    
+    def length(self):
+        return len(self.arr) - 1
+    
+    def isEmpty(self):
+        return len(self.arr) <= 1
+    
+
+class MyQueue:
+    def __init__(self):
+        self.stackHead = MyStack()
+        self.stackTail = MyStack()
+
+    def _move(self):
+        while not self.stackTail.isEmpty():
+            self.stackHead.push(self.stackTail.pop())
+
+    def push(self, el: int):
+        self.stackTail.push(el)
+
+    def pop(self):
+        if self.stackHead.isEmpty():
+            self._move()
+
+        return self.stackHead.pop()
+            
+    def getMax(self):
+        if self.stackHead.isEmpty():
+            self._move()
+
+        return max(self.stackHead.getMax(), self.stackTail.getMax())
+
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         n = len(nums)
         answer = []
-        stack = []
 
-        for i in range(k):
-            while len(stack) > 0 and stack[-1] < nums[i]:
-                stack.pop()
-            
-            stack.append(nums[i])
+        q = MyQueue()
 
-            print(i, stack)
+        for i in range(k): # 0..k-1
+            q.push(nums[i])
 
-        answer.append(stack[0])
+        answer.append(q.getMax())
 
-        prevMax = stack[0]
-
-        for i in range(k, n, 1):
-            while len(stack) > 0 and (stack[-1] < nums[i] or len(stack) >= k):
-                stack.pop()
-            
-            stack.append(nums[i])
-            answer.append(stack[0])
-            
-            print(i, stack)
+        for i in range(k, n): # k..n-1
+            q.pop()
+            q.push(nums[i])
+            answer.append(q.getMax())
 
         return answer
 # @lc code=end
