@@ -17,12 +17,12 @@ class Solution:
         for i in range(k): # 0..k-1
             el = nums[i]
 
-            while len(q) > 0 and el > q[-1][0]:
+            while len(q) > 0 and el > nums[q[-1]]:
                 q.pop()
 
-            q.append((nums[i], i))
+            q.append(i)
 
-        answer.append(q[0][0])
+        answer.append(nums[q[0]])
 
         # print(stack)
 
@@ -32,16 +32,16 @@ class Solution:
             el = nums[i]
             # print(i, 'BEFORE', stack,  el, i-k)
 
-            while len(q) > 0 and el > q[-1][0]:
+            while len(q) > 0 and el > nums[q[-1]]:
                 x = q.pop()
                 # print(i, 'POPPED-1', x)
 
-            while len(q) > 0 and i-k >= q[0][1]:
+            while len(q) > 0 and i-k >= q[0]:
                 x = q.popleft()
                 # print(i, 'POPPED-2', x)
 
-            q.append((nums[i], i))
-            answer.append(q[0][0])
+            q.append(i)
+            answer.append(nums[q[0]])
             # print(i, 'AFTER', stack)
             # print()
 
