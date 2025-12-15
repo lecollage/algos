@@ -6,8 +6,8 @@ from collections import deque
 #
 # 239. Sliding Window Maximum
 #
-# @lc code=start
 
+# @lc code=start
 class MyStack:
     def __init__(self):
         self.arr = [(0, float('-inf'))]
