@@ -12,19 +12,19 @@ class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         n = len(nums)
         answer = []
-        stack = []
+        q = deque()
 
         for i in range(k): # 0..k-1
             el = nums[i]
 
-            while len(stack) > 0 and el > stack[-1][0]:
-                stack.pop()
+            while len(q) > 0 and el > q[-1][0]:
+                q.pop()
 
-            stack.append((nums[i], i))
+            q.append((nums[i], i))
 
-        answer.append(stack[0][0])
+        answer.append(q[0][0])
 
-        print(stack)
+        # print(stack)
 
         i = k
 
@@ -32,16 +32,16 @@ class Solution:
             el = nums[i]
             # print(i, 'BEFORE', stack,  el, i-k)
 
-            while len(stack) > 0 and el > stack[-1][0]:
-                x = stack.pop()
+            while len(q) > 0 and el > q[-1][0]:
+                x = q.pop()
                 # print(i, 'POPPED-1', x)
 
-            while len(stack) > 0 and i-k >= stack[0][1]:
-                x = stack.pop(0)
+            while len(q) > 0 and i-k >= q[0][1]:
+                x = q.popleft()
                 # print(i, 'POPPED-2', x)
 
-            stack.append((nums[i], i))
-            answer.append(stack[0][0])
+            q.append((nums[i], i))
+            answer.append(q[0][0])
             # print(i, 'AFTER', stack)
             # print()
 
