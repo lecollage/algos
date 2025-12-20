@@ -11,48 +11,42 @@ from collections import deque
 class Solution:
     def longestSubarray(self, nums: List[int], limit: int) -> int:
         n = len(nums)
-        q = deque() # min -> max monotonic
 
         maxQLen = 0
+        left = 0
+        right = 0
+        minIndex = 0
+        maxIndex = 0
 
         for i in range(n):
-            while len(q) > 0 and q[0] < i:
-                q.popleft()
-
-            while len(q) > 0 and q[-1] < i:
-                q.pop()
-
-            if len(q) == 0:
-                q.append(i)
+            while right < i:
+                right += 1
 
             j = i + 1
             stop = False
-            additional = 0
 
-            while j < n and nums[q[-1]] - nums[q[0]] <= limit and not stop:
-                el = nums[j]
-
-                if el <= nums[q[0]] and j != q[0]:
-                    if nums[q[-1]] - el <= limit:
-                        q.appendleft(j)
+            while j < n and nums[maxIndex] - nums[minIndex] <= limit and not stop:
+                if nums[j] <= nums[minIndex]:
+                    if nums[j] - nums[minIndex] <= limit:
+                        minIndex = j
+                        right = j
                     else:
                         stop = True
-                elif el >= nums[q[-1]] and j != q[-1]:
-                    if el - nums[q[0]] <= limit:
-                        q.append(j)
+                elif nums[j] >= nums[maxIndex]:
+                    if nums[maxIndex] - nums[j] <= limit:
+                        maxIndex = j
+                        right = j
                     else:
                         stop = True
-                elif j != q[-1] and j != q[0] and el < nums[q[-1]] and el > nums[q[0]]:
-                    print('additional', i, j, el, nums[q[-1]], nums[q[0]], additional, q)
-                    additional += 1
+                elif nums[j] > nums[minIndex] and nums[j] < nums[maxIndex]:
+                    right = j
 
-                print(i, j, el, nums[q[-1]], nums[q[0]], additional, q)
+                print(i, j, left, right, minIndex, maxIndex, maxQLen)
 
                 j += 1
 
-            maxQLen = max(maxQLen, len(q) + additional)
+            maxQLen = max(maxQLen, right - i)
 
-            print(i, q, maxQLen)
             print()
 
         return maxQLen

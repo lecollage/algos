@@ -14,8 +14,8 @@ class MyStack:
 
     def push(self, el: int):
         _, currMax = self.arr[-1]
-        
-        self.arr.append((el, max(currMax, el)))
+
+        self.arr.append((el, max(currMax, el), ...))
 
     def pop(self) -> int:
         return self.arr.pop()[0]

@@ -8,6 +8,31 @@ from collections import deque
 #
 
 # @lc code=start
+
+
+
+'''
+[5, 4, 3, 2, 4...]
+
+q: 5 4 3 2
+q: 5 4 3
+q: 5 4
+
+q: 5 4 4
+
+q: 4 4
+
+-----------------
+
+max-min<=limit
+
+q: 5 4 3 2
+q: 4 3 2
+q: 4 4 3 2
+
+
+
+'''
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         n = len(nums)
@@ -30,20 +55,16 @@ class Solution:
 
         while i < n: # k..n-1
             el = nums[i]
-            # print(i, 'BEFORE', stack,  el, i-k)
 
             while len(q) > 0 and el > nums[q[-1]]:
-                x = q.pop()
-                # print(i, 'POPPED-1', x)
-
-            while len(q) > 0 and i-k >= q[0]:
-                x = q.popleft()
-                # print(i, 'POPPED-2', x)
+                q.pop()
 
             q.append(i)
+
+            while len(q) > 0 and i-k >= q[0]:
+                q.popleft()
+
             answer.append(nums[q[0]])
-            # print(i, 'AFTER', stack)
-            # print()
 
             i+=1
 
