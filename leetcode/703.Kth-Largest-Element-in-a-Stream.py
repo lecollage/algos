@@ -18,27 +18,13 @@ class KthLargest:
 
         heapq.heapify(self.heap)
 
-        print(k, self.heap, range(0, k-1), range(k-1, len(nums)))
-
         for _ in range(0, min(k-1, len(nums))):
-            x = heapq.heappop(self.heap)
-            print(1, self.heap1, self.heap)
-            heapq.heappush(self.heap1, -1 * x)
+            heapq.heappush(self.heap1, -1 * heapq.heappop(self.heap))
 
         while len(self.heap) > 0:
-            x = heapq.heappop(self.heap)
-            print(1, self.heap2, self.heap)
-            heapq.heappush(self.heap2, x)
-
-        print(self.heap1)
-        print(self.heap2)
-        print()
+            heapq.heappush(self.heap2, heapq.heappop(self.heap))
 
     def add(self, val: int) -> int:
-        print(val, 'before', self.heap1)
-        print(val, 'before', self.heap2)
-        print(val, 'before', self.heap1[0], -1 * self.heap2[0])
-
         if len(self.heap1) == 0 or val > self.heap1[0]:
             heapq.heappush(self.heap1, val)
         elif len(self.heap2) == 0 or val >= -1 * self.heap2[0] or self.k-1 == 0:
@@ -46,9 +32,6 @@ class KthLargest:
 
         if len(self.heap1) >= self.k:
             heapq.heappush(self.heap2, -1 * heapq.heappop(self.heap1))
-        
-        print(val, 'after', self.heap1)
-        print(val, 'after', self.heap2)
 
         return -1 * self.heap2[0] if len(self.heap2) > 0 else self.heap1[0]
 # @lc code=end
