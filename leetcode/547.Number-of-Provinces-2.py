@@ -4,14 +4,16 @@ from typing import Optional, List
 # @lc code=start
 class DSU:
     def __init__(self, size):
-        self.root = [i for i in range(size)]
+        self.parents = [i for i in range(size)]
         self.rank = [1] * size
 
     def find(self, x):
-        if x == self.root[x]:
+        if x == self.parents[x]:
             return x
-        self.root[x] = self.find(self.root[x])
-        return self.root[x]
+
+        self.parents[x] = self.find(self.parents[x])
+
+        return self.parents[x]
 
     def union(self, x, y):
         rootX = self.find(x)
@@ -19,36 +21,42 @@ class DSU:
 
         if rootX != rootY:
             if self.rank[rootX] > self.rank[rootY]:
-                self.root[rootY] = rootX
+                self.parents[rootY] = rootX
             elif self.rank[rootX] < self.rank[rootY]:
-                self.root[rootX] = rootY
+                self.parents[rootX] = rootY
             else:
-                self.root[rootY] = rootX
+                self.parents[rootY] = rootX
                 self.rank[rootX] += 1
 
     def check(self, verticeA: int, verticeB: int) -> bool:
         return self.find(verticeA) == self.find(verticeB)
-        
+    
+    def countOfComponents(self) -> int:
+        count = 0
 
+        for i, node in enumerate(self.parents):
+            if node == i:
+                count += 1
+
+        return count
+        
 class Solution:
     def findCircleNum(self, mtx: List[List[int]]) -> int:
         n = len(mtx)
         dsu = DSU(n)
 
-        # dsu.parents[-1] = -1
-        print(dsu.root)
+        print(dsu.parents)
 
         for i in range(n):
             for j in range(n):
                 if mtx[i][j] == 1:
-                    if not dsu.check(i, j):
-                        dsu.union(i, j)
+                    dsu.union(i, j)
+                    dsu.union(j, i)
 
-        print(dsu.root)
 
-        unique = set(dsu.root)
+        print(dsu.parents)
 
-        return len(unique)
+        return dsu.countOfComponents()
 # @lc code=end
 
 '''
