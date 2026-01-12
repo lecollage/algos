@@ -40,54 +40,57 @@ class DSU:
         return count
 
 class Solution:
-    def numIslands(self, grid: List[List[str]]) -> int:
-        n = len(grid)
-        m = len(grid[0])
-        dsu = DSU(n * m)
- 
-        # i*m+j
-        # 0 -> -1
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        # points[i] = [xi, yi]
+        # |xi - xj| + |yi - yj|
 
-        for i in range(n):
-            for j in range(m):
-                if grid[i][j] == "0":
-                    dsu.root[i*m+j] = -1
-                else:
-                    if i > 0 and grid[i-1][j] == "1":
-                        dsu.union((i-1)*m + j, i*m + j)
+        # [xi, yi]
+        edges = []
 
-                    if j > 0 and grid[i][j-1] == "1":
-                        dsu.union(i*m + (j-1), i*m + j)
+        for i in range(len(points)):
+            for j in range(i+1, len(points)):
+                edges.append((i, j))
 
-        # print(dsu.root)
+        def calcWeight(x) -> int:
+            i = x[0]
+            j = x[1]
 
-        return dsu.countOfComponents()
+            return abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1])
+
+        edges.sort(key=calcWeight)
+
+        dsu = DSU(len(points))
+        weight = 0
+        edgesAdded = 0
+
+        for i, j in edges:
+            if not dsu.check(i, j):
+                dsu.union(i, j)
+                weight += calcWeight((i, j))
+                edgesAdded += 1
+
+                if edgesAdded == len(points)-1:
+                    return weight
+
+        return 0
 # @lc code=end
 
 '''
-
 '''
 
 testCases = [
     [
-        [
-            ["1","1","1","1","0"],
-            ["1","1","0","1","0"],
-            ["1","1","0","0","0"],
-            ["0","0","0","0","0"]
-        ],
-        1
+        [[0,0],[2,2],[3,10],[5,2],[7,0]],
+        20
     ],
     [
-        [
-            ["1","1","0","0","0"],
-            ["1","1","0","0","0"],
-            ["0","0","1","0","0"],
-            ["0","0","0","1","1"]
-        ],
-        3
+        [[3,12],[-2,5],[-4,1]],
+        18
     ],
-    
+    [
+        [[0,0]],
+        0
+    ]
 ]
 
 for [a, expected] in testCases:
@@ -95,7 +98,7 @@ for [a, expected] in testCases:
 
     s = Solution()
 
-    result = s.numIslands(a)
+    result = s.minCostConnectPoints(a)
     print(a)
     assert result == expected, f"result {result} should be expected: {expected}"
 
