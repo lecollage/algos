@@ -7,21 +7,20 @@ class DSU:
         self.rank = [0] * size
         self.experience = [0] * size
 
-    def find(self, x):
+    def get_find(self, x: int):
         if x == self.parents[x]:
-            return x
+            return (x, self.experience[x])
 
-        return self.find(self.parents[x])
+        root, exp = self.get_find(self.parents[x])
 
-    def get(self, x: int) -> int:
-        if x == self.parents[x]:
-            return self.experience[x]
+        self.parents[x] = root
+        self.experience[x] += exp - self.experience[root]
 
-        return self.get(self.parents[x]) + self.experience[x]
+        return (root, self.experience[x]+self.experience[root])
 
     def union(self, x, y):
-        rootX = self.find(x)
-        rootY = self.find(y)
+        rootX = self.get_find(x)[0]
+        rootY = self.get_find(y)[0]
 
         if rootX != rootY:
             if self.rank[rootX] > self.rank[rootY]:
@@ -35,22 +34,9 @@ class DSU:
                 self.rank[rootX] += 1
                 self.experience[rootY] -= self.experience[rootX]
 
-    def isConnected(self, verticeA: int, verticeB: int) -> bool:
-        return self.find(verticeA) == self.find(verticeB)
-
-    def countOfComponents(self) -> int:
-        count = 0
-
-        for i, el in enumerate(self.parents):
-            if i == el:
-                count += 1
-
-        return count
-    
     def add(self, player: int, exp: int):
-        parent = self.find(player)
+        parent = self.get_find(player)[0]
         self.experience[parent] += exp
-
 # @lc code=end
 
 '''
@@ -99,7 +85,7 @@ for _ in range(m):
     if op == 'join':
         dsu.union(int(param[0])-1, int(param[1])-1)
     if op == 'get':
-        print(dsu.get(int(param[0])-1))
+        print(dsu.get_find(int(param[0])-1)[1])
     
 
 
@@ -125,6 +111,7 @@ get 1
 get 2
 get 3
 get 4
+
 
 '''
 
